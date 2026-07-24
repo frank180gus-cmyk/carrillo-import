@@ -1306,8 +1306,7 @@ function updateSearchPaginationButtons(totalFilteredItems) {
             document.getElementById('productModal').classList.add('hidden');
         }
 
-     window.editProduct = function(id) {
-    // 🚀 BÚSQUEDA ROBUSTA: Comparamos convirtiendo a String para evitar que falle por tipo de dato
+    window.editProduct = function(id) {
     const prod = allProducts.find(p => String(p.id) === String(id) || String(p.firebaseId) === String(id));
     
     if (!prod) {
@@ -1315,9 +1314,11 @@ function updateSearchPaginationButtons(totalFilteredItems) {
         return;
     }
 
-    // Rellenamos los campos con los datos reales del producto
     document.getElementById('f_editingId').value = prod.id;
-    document.getElementById('f_name').value = prod.name || "";
+    
+    // 🚀 CORRECCIÓN AQUÍ: Si no tiene nombre, toma el código para que el campo nunca quede vacío
+    document.getElementById('f_name').value = prod.name && prod.name.trim() !== "" ? prod.name : (prod.code || "");
+    
     document.getElementById('f_code').value = prod.code || "";
     document.getElementById('f_brand').value = (prod.brand === 'GENÉRICO' ? '' : prod.brand) || "";
     document.getElementById('f_category').value = prod.category || "desgaste";
@@ -1327,7 +1328,6 @@ function updateSearchPaginationButtons(totalFilteredItems) {
     document.getElementById('f_highlight').checked = !!prod.highlight;
     document.getElementById('f_oferta').checked = !!prod.oferta;
     
-    // Actualizamos el título del modal con el nombre real
     document.getElementById('modalTitle').textContent = "Editar Repuesto: " + (prod.name || prod.code);
     document.getElementById('productModal').classList.remove('hidden');
 }
@@ -1384,6 +1384,7 @@ if (esDuplicado) {
             // Si ya existía, conservamos su ID original y su firebaseId exacto
             id: existingProd ? existingProd.id : Date.now(),
             firebaseId: existingProd ? existingProd.firebaseId : null,
+            name: name, // 👈 ¡Faltaba esta línea crucial para que guarde el nuevo nombre!
             code: code,
             brand: document.getElementById('f_brand').value.trim() || 'GENÉRICO',
             category: document.getElementById('f_category').value,
