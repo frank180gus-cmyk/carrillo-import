@@ -1755,10 +1755,10 @@ await updateDashboardStats();
     updateRecommendedPaginationButtons(disponibles.length);
 };
 window.changePage = function(dir) {
-    currentPage += dir;
-    if(currentPage < 1) currentPage = 1;
-    renderRecommendedInventory();
-};
+            currentPage += dir;
+            if(currentPage < 1) currentPage = 1;
+            renderRecommendedInventory();
+        };
 
 window.toggleHighlight = async function(id, status) {
     const prod = allProducts.find(p => p.id === id);
