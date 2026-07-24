@@ -1410,7 +1410,7 @@ renderOfertasList();
 await updateDashboardStats();
 });
 
-     async function saveProductFirebase(producto) {
+    async function saveProductFirebase(producto) {
     try {
         const { collection, addDoc, doc, setDoc } = window.firebaseFunctions;
         const datosAEnviar = { 
@@ -1427,12 +1427,15 @@ await updateDashboardStats();
             await addDoc(collection(window.firebaseDB, "products"), datosAEnviar);
         }
 
-        // 🚀 LÍNEA Mágica Automática (Cero ticks extra):
+        // 🚀 Forzamos la actualización automática del catálogo público
         localStorage.setItem('carrillo_cache_time', '0');
+
+        // 🚨 Alerta visual de éxito
+        alert("¡Producto guardado y actualizado correctamente! ✅");
 
     } catch (error) {
         console.error("❌ Error guardando:", error);
-        alert("Error al guardar.");
+        alert("❌ Error al guardar el producto.");
     }
 }
     window.deleteProduct = async function(id) {
