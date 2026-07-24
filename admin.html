@@ -1306,27 +1306,29 @@ function updateSearchPaginationButtons(totalFilteredItems) {
             document.getElementById('productModal').classList.add('hidden');
         }
 
-        window.editProduct = function(id) {
-    // CAMBIO: Ahora buscamos en 'allProducts' (lista maestra) en lugar de 'products'
-    const prod = allProducts.find(p => p.id === id);
+     window.editProduct = function(id) {
+    // 🚀 BÚSQUEDA ROBUSTA: Comparamos convirtiendo a String para evitar que falle por tipo de dato
+    const prod = allProducts.find(p => String(p.id) === String(id) || String(p.firebaseId) === String(id));
     
     if (!prod) {
-        alert("Error: Producto no encontrado en la base de datos.");
+        alert("❌ Error: No se encontró el producto en la memoria del sistema.");
         return;
     }
 
+    // Rellenamos los campos con los datos reales del producto
     document.getElementById('f_editingId').value = prod.id;
-    document.getElementById('f_name').value = prod.name;
-    document.getElementById('f_code').value = prod.code;
-    document.getElementById('f_brand').value = prod.brand === 'GENÉRICO' ? '' : prod.brand;
-    document.getElementById('f_category').value = prod.category;
+    document.getElementById('f_name').value = prod.name || "";
+    document.getElementById('f_code').value = prod.code || "";
+    document.getElementById('f_brand').value = (prod.brand === 'GENÉRICO' ? '' : prod.brand) || "";
+    document.getElementById('f_category').value = prod.category || "desgaste";
     document.getElementById('f_stock').value = prod.stock || "Disponible";
-    document.getElementById('f_imageUrl').value = prod.image.includes('placehold.co') ? '' : prod.image;
-    document.getElementById('f_specs').value = prod.specs;
-    document.getElementById('f_highlight').checked = prod.highlight;
-    document.getElementById('f_oferta').checked = prod.oferta || false;
+    document.getElementById('f_imageUrl').value = (prod.image && !prod.image.includes('placehold.co')) ? prod.image : "";
+    document.getElementById('f_specs').value = prod.specs || "";
+    document.getElementById('f_highlight').checked = !!prod.highlight;
+    document.getElementById('f_oferta').checked = !!prod.oferta;
     
-    document.getElementById('modalTitle').textContent = "Editar Repuesto: " + prod.name;
+    // Actualizamos el título del modal con el nombre real
+    document.getElementById('modalTitle').textContent = "Editar Repuesto: " + (prod.name || prod.code);
     document.getElementById('productModal').classList.remove('hidden');
 }
 
