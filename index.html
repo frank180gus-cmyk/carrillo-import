@@ -1,0 +1,1014 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carrillo Import E.I.R.L. | Catálogo de Repuestos para Maquinaria Pesada</title>
+<meta name="description" content="Repuestos originales HTK, CAT y H-TRACK para maquinaria pesada. Importación directa, stock real, envíos a todo el Perú.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          base:    '#0a0a0b',
+          panel:   '#151517',
+          panel2:  '#1c1c1f',
+          line:    '#28282c',
+          yellow:  '#FFC72C',
+          yellowD: '#E0A400',
+          red:     '#D81E2C',
+          steel:   '#9CA0A8',
+          paper:   '#F2F1EC',
+        },
+        fontFamily: {
+          display: ['Oswald', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        },
+        boxShadow: {
+          card: '0 10px 30px -12px rgba(0,0,0,0.6)',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root { color-scheme: dark; }
+  body { background:#0a0a0b; }
+  ::selection { background:#FFC72C; color:#0a0a0b; }
+
+  /* ---- Placa metálica ---- */
+  .plate {
+    position: relative;
+    border-radius: 10px;
+    border: 1px solid rgba(255,199,44,0.18);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.05), inset 0 -3px 8px rgba(0,0,0,.5);
+    background-image:
+      radial-gradient(circle at 11px 11px, rgba(255,255,255,.20) 1.4px, transparent 1.6px),
+      radial-gradient(circle at calc(100% - 11px) 11px, rgba(255,255,255,.20) 1.4px, transparent 1.6px),
+      radial-gradient(circle at 11px calc(100% - 11px), rgba(255,255,255,.20) 1.4px, transparent 1.6px),
+      radial-gradient(circle at calc(100% - 11px) calc(100% - 11px), rgba(255,255,255,.20) 1.4px, transparent 1.6px),
+      linear-gradient(155deg, #2a2a2e 0%, #121214 55%, #1a1a1d 100%);
+  }
+  .plate-sm {
+    position: relative;
+    border-radius: 8px;
+    border: 1px solid rgba(255,199,44,0.16);
+    background-image:
+      radial-gradient(circle at 7px 7px, rgba(255,255,255,.18) 1.2px, transparent 1.4px),
+      radial-gradient(circle at calc(100% - 7px) 7px, rgba(255,255,255,.18) 1.2px, transparent 1.4px),
+      radial-gradient(circle at 7px calc(100% - 7px), rgba(255,255,255,.18) 1.2px, transparent 1.4px),
+      radial-gradient(circle at calc(100% - 7px) calc(100% - 7px), rgba(255,255,255,.18) 1.2px, transparent 1.4px),
+      linear-gradient(155deg, #232326 0%, #0f0f11 60%);
+  }
+
+  /* ---- Fondo tipo plano técnico ---- */
+  .blueprint {
+    background-color:#0e1013;
+    background-image:
+      linear-gradient(rgba(255,199,44,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,199,44,0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* ---- Franja de peligro decorativa ---- */
+  .hazard {
+    height: 7px;
+    background-image: repeating-linear-gradient(135deg, #FFC72C 0 16px, #101012 16px 32px);
+  }
+  #contenedor-ofertones {
+    display: block; /* Se muestra al iniciar en "Todo el Catálogo" */
+}
+
+  /* ---- Marquesina de marcas ---- */
+  .marquee-track { display: flex; animation: marquee 26s linear infinite; width: max-content; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+  /* ---- Tarjetas de producto ---- */
+  .product-card { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+  .product-card:hover { transform: translateY(-4px); border-color: rgba(255,199,44,0.4); box-shadow: 0 16px 34px -14px rgba(0,0,0,0.7); }
+  .product-card img { transition: transform .4s ease; }
+  .product-card:hover img { transform: scale(1.08); }
+
+  .card-in { animation: cardIn .45s ease both; }
+  @keyframes cardIn { from { opacity:0; transform: translateY(14px); } to { opacity:1; transform: translateY(0); } }
+
+  .tab-btn { transition: all .2s ease; }
+
+  /* Estilo personalizado de barra scroll fina para móvil y PC */
+  .custom-scrollbar::-webkit-scrollbar { height: 5px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: #FFC72C; border-radius: 10px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: #28282c; border-radius: 10px; }
+
+  ::-webkit-scrollbar { height: 6px; width: 6px; }
+  ::-webkit-scrollbar-thumb { background:#3a3a3e; border-radius: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid #FFC72C; outline-offset: 2px;
+  }
+</style>
+</head>
+<body class="bg-base font-body text-white antialiased">
+
+<!-- FRANJA DE PELIGRO DECORATIVA -->
+<div class="hazard"></div>
+
+<!-- BARRA DE ALERTA SUPERIOR -->
+<div class="bg-yellow text-black text-xs md:text-sm font-bold py-2 px-4 text-center tracking-wider">
+    <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+    IMPORTACIÓN DIRECTA DE REPUESTOS DE ALTA RESISTENCIA — ENVÍOS A TODO EL PERÚ
+</div>
+
+<!-- CABECERA PRINCIPAL -->
+<header class="border-b border-line bg-base/95 sticky top-0 z-40 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+        <!-- Fila superior: Logo y WhatsApp -->
+        <div class="flex items-center justify-between">
+            <img src="https://i.ibb.co/4nVF36HB/LOGO.png" alt="Logo Carrillo Import" class="h-10 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.6)] bg-white/20 p-1 rounded-lg">
+            <a href="https://wa.link/opxc7b" target="_blank" class="flex items-center gap-2 bg-panel border border-line p-2 px-3 rounded-lg hover:border-yellow/50 transition-all">
+                <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </div>
+                <div class="hidden md:block">
+                    <p class="text-[10px] text-steel font-bold">Atención Directa</p>
+                    <p class="text-xs font-semibold text-white">Stefany: +51 971 345 125</p>
+                </div>
+            </a>
+        </div>
+        <!-- Fila inferior: Buscador -->
+        <div class="mt-3 relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                <i class="fa-solid fa-magnifying-glass text-yellow"></i>
+            </span>
+            <input type="text" id="searchBar" oninput="filterProducts()" placeholder="Buscar repuestos..." class="w-full bg-panel border border-line rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:border-yellow focus:ring-1 focus:ring-yellow outline-none transition-all">
+        </div>
+    </div>
+</header>
+
+<!-- BANNER DE BIENVENIDA -->
+<section class="relative bg-gradient-to-b from-panel/60 via-base to-base py-14 px-4 border-b border-line overflow-hidden w-full">
+    <div class="absolute inset-0 opacity-40 blueprint" style="mask-image:radial-gradient(ellipse at center, black 0%, transparent 70%)"></div>
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+        <span class="border border-yellow/30 text-yellow bg-yellow/5 text-xs uppercase tracking-[0.25em] font-bold px-3 py-1 rounded-full">
+            Catálogo Técnico 2026
+        </span>
+        <h2 class="font-display text-4xl md:text-6xl mt-5 mb-3 text-white uppercase tracking-tight leading-[0.95]">
+            Máxima tracción<br class="hidden md:block"> y <span class="text-yellow">potencia</span>
+        </h2>
+        <p class="text-white text-sm md:text-base max-w-2xl mx-auto mb-8">
+    Evita paradas innecesarias en tus obras. Componentes certificados de alto impacto para tren de rodaje, sistemas de desgaste y filtración de motores críticos.
+</p>
+        <div class="flex justify-center gap-4 flex-wrap">
+            <div class="plate p-4 px-7 text-center min-w-[150px]">
+                <p class="text-yellow font-bold text-lg md:text-xl font-display tracking-wide">CALIDAD CERTIFICADAL</p>
+                <p class="text-[10px] text-steel uppercase tracking-widest mt-0.5">ALTA RESISTENCIA</p>
+            </div>
+            <div class="plate p-4 px-7 text-center min-w-[150px]">
+                <p class="text-yellow font-bold text-lg md:text-xl font-display tracking-wide">STOCK REAL</p>
+                <p class="text-[10px] text-steel uppercase tracking-widest mt-0.5">Despacho Inmediato</p>
+            </div>
+            <div class="plate p-4 px-7 text-center min-w-[150px]">
+                <p class="text-yellow font-bold text-lg md:text-xl font-display tracking-wide">ENVÍO NACIONAL</p>
+                <p class="text-[10px] text-steel uppercase tracking-widest mt-0.5">A todo el Perú</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MARQUESINA DE MARCAS -->
+<div class="w-full overflow-hidden border-b border-line bg-panel/50 py-3">
+    <div class="marquee-track flex gap-10 whitespace-nowrap font-display text-steel/60 tracking-[0.35em] text-xs uppercase">
+        <span>Komatsu</span><span class="text-yellow/50">•</span>
+        <span>Caterpillar</span><span class="text-yellow/50">•</span>
+        <span>Kobelco</span><span class="text-yellow/50">•</span>
+        <span>H-Track</span><span class="text-yellow/50">•</span>
+        <span>HTK</span><span class="text-yellow/50">•</span>
+        <span>Komatsu</span><span class="text-yellow/50">•</span>
+        <span>Caterpillar</span><span class="text-yellow/50">•</span>
+        <span>Kobelco</span><span class="text-yellow/50">•</span>
+        <span>H-Track</span><span class="text-yellow/50">•</span>
+        <span>HTK</span><span class="text-yellow/50">•</span>
+    </div>
+    <!-- MARCAS AUTORIZADAS CON EFECTO LUZ -->
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="grid grid-cols-2 gap-4">
+        <!-- MARCA 1 -->
+        <div class="plate p-6 flex flex-col items-center justify-center gap-2 group transition-all">
+            <p class="text-[9px] text-yellow font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100">Distribuidor Autorizado</p>
+            <img src="https://i.ibb.co/kgFb3mgk/marca.png" alt="HTK" class="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+        </div>
+        <!-- MARCA 2 -->
+        <div class="plate p-6 flex flex-col items-center justify-center gap-2 group transition-all">
+            <p class="text-[9px] text-yellow font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100">Distribuidor Autorizado</p>
+            <img src="https://i.ibb.co/gFT5nY2c/marca2.png" alt="H-TRACK" class="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 🚨 BOTÓN DE ACCESO RÁPIDO A RESEÑAS -->
+<div class="max-w-7xl mx-auto px-4 pt-4 pb-2 flex justify-center md:justify-start">
+    <button onclick="scrollToReviews()" class="bg-zinc-900/80 hover:bg-zinc-900 border border-line hover:border-yellow/50 text-steel hover:text-white transition-all text-xs font-bold py-2.5 px-5 rounded-full flex items-center gap-2 group shadow-lg">
+        <span>Ver reseñas y envíos en campo</span>
+        <span class="text-yellow text-sm group-hover:translate-y-0.5 transition-transform duration-200">👇</span>
+    </button>
+</div>
+
+<!-- NAVEGACIÓN DE FILTROS -->
+<nav id="filtersNavSection" class="w-full px-4 py-6 sticky top-[73px] bg-base/95 z-30 backdrop-blur-sm border-b border-line">
+    <div class="max-w-7xl mx-auto flex gap-2 overflow-x-auto pb-2 justify-start md:justify-center">
+        <button onclick="switchTab('all')" id="tab-all" class="tab-btn bg-yellow text-black font-semibold text-xs md:text-sm py-2 px-5 rounded-lg shrink-0 flex items-center gap-1.5">
+            <i class="fa-solid fa-fire"></i> Los Más Vendidos / Todo el Catálogo
+        </button>
+        <button onclick="switchTab('desgaste')" id="tab-desgaste" class="tab-btn bg-panel hover:bg-panel2 text-steel font-semibold text-xs md:text-sm py-2 px-5 rounded-lg shrink-0 border border-line">
+            <i class="fa-solid fa-shield mr-2 text-yellow"></i>Línea Desgaste (HTK)
+        </button>
+        <button onclick="switchTab('filtracion')" id="tab-filtracion" class="tab-btn bg-panel hover:bg-panel2 text-steel font-semibold text-xs md:text-sm py-2 px-5 rounded-lg shrink-0 border border-line">
+            <i class="fa-solid fa-filter mr-2 text-yellow"></i>Filtración y Motor (CAT)
+        </button>
+        <button onclick="switchTab('rodaje')" id="tab-rodaje" class="tab-btn bg-panel hover:bg-panel2 text-steel font-semibold text-xs md:text-sm py-2 px-5 rounded-lg shrink-0 border border-line">
+            <i class="fa-solid fa-gears mr-2 text-yellow"></i>Tren de Rodaje (H-TRACK)
+        </button>
+    </div>
+</nav>
+
+<!--  GALERÍA DE PRODUCTOS -->
+<main id="mainProductsSection" class="max-w-7xl mx-auto px-4 py-4 flex-1 w-full min-h-[40vh]">
+  
+  <!-- CONTENEDOR EXCLUSIVO: COMPONENTES DE ALTA ROTACIÓN (MÁXIMO 5 PRODUCTOS CON DESPLAZAMIENTO HORIZONTAL FIJO PARA PC Y CELULAR) -->
+  <div id="anchorSection" class="mb-6 bg-panel border border-line p-5 rounded-2xl">
+      <div class="flex items-center justify-between mb-4 border-b border-line pb-3">
+          <h3 class="font-display text-base tracking-wide uppercase text-yellow flex items-center gap-2">
+              <i class="fa-solid fa-star animate-pulse"></i> Componentes de Alta Rotación / Más Solicitados
+          </h3>
+          <span class="bg-yellow/10 text-yellow text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-yellow/20">Anclaje de Alto Valor</span>
+      </div>
+      <!-- Flexbox deslizable horizontal con barra de scroll fina abajo -->
+      <div id="anchorGrid" class="flex gap-6 overflow-x-auto custom-scrollbar pb-3 snap-x snap-mandatory">
+          <!-- Se inyectan de forma estricta los 5 fijos manuales desde el JavaScript -->
+      </div>
+  </div>
+
+  <!-- Rejilla normal que se ocultará en la pestaña principal y se activará en el resto -->
+  <div id="catalogGridSection" class="hidden space-y-6">
+      <div id="noProductsMessage" class="hidden text-center py-16">
+        <i class="fa-solid fa-circle-question text-5xl text-line mb-4"></i>
+        <p class="text-steel text-lg">No encontramos repuestos que coincidan con tu búsqueda.</p>
+        <button onclick="resetSearch()" class="mt-4 bg-yellow text-black px-5 py-2 rounded-lg font-bold text-sm">Ver todo el catálogo</button>
+      </div>
+
+      <!-- Contenedor donde JS pintará tus tarjetas normales -->
+      <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-8">
+        <!-- PRODUCTOS SE GENERAN DINÁMICAMENTE POR CATEGORÍAS -->
+      </div>
+
+      <!-- BOTONERA DE PAGINACIÓN DE CATEGORÍAS ABAJO -->
+      <div class="flex flex-col items-center justify-center gap-4 pt-4 pb-6" id="productPaginationContainer">
+          <div class="flex items-center justify-center gap-2">
+              <button onclick="prevProductPage()" id="btnPrevProductPage" class="disabled:opacity-40 disabled:hover:border-line bg-zinc-900 hover:bg-zinc-800 border border-line hover:border-yellow text-white text-xs font-bold py-2.5 px-4 rounded-xl transition-all active:scale-95 flex items-center gap-1.5" disabled>
+                  <i class="fa-solid fa-chevron-left text-yellow text-[10px]"></i>
+                  <span>Anterior</span>
+              </button>
+              <span class="bg-zinc-950 border border-line text-xs text-white font-mono font-bold px-4 py-2.5 rounded-xl">
+                  PÁG. CATEGORÍA: <span class="text-yellow" id="currentProductPageText">1</span>
+              </span>
+              <button onclick="nextProductPage()" id="btnNextProductPage" class="disabled:opacity-40 disabled:hover:border-line bg-zinc-900 hover:bg-zinc-800 border border-line hover:border-yellow text-white text-xs font-bold py-2.5 px-4 rounded-xl transition-all active:scale-95 flex items-center gap-1.5">
+                  <span>Siguiente</span>
+                  <i class="fa-solid fa-chevron-right text-yellow text-[10px]"></i>
+              </button>
+          </div>
+      </div>
+  </div>
+
+
+<!-- SECCIÓN DE OFERTONES -->
+<section id="contenedor-ofertones" class="mb-6 bg-panel border border-line p-5 rounded-2xl">
+    <div class="flex items-center justify-between mb-4 border-b border-line pb-3">
+        <h3 class="font-display text-base tracking-wide uppercase text-yellow flex items-center gap-2">
+            <i class="fa-solid fa-fire animate-pulse text-red"></i> ¡OFERTONES DEL MES!
+        </h3>
+        <span class="bg-red/10 text-red text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-red/20">Promociones Activas</span>
+    </div>
+    <!-- Añadimos las mismas clases que tiene tu anchorGrid de arriba -->
+    <div id="ofertasGrid" class="flex gap-6 overflow-x-auto custom-scrollbar pb-3 snap-x snap-mandatory">
+        <!-- El JS inyectará aquí los productos -->
+    </div>
+</section>
+</main>
+
+<!-- 📦 SECCIÓN PREMIUM: RESEÑAS Y ENVÍOS EXITOSOS -->
+<section id="reviewsTabSection" class="hidden max-w-7xl mx-auto px-6 py-12 space-y-8 min-h-[70vh]">
+    <div class="flex justify-start">
+        <button onclick="backToCatalog()" class="bg-zinc-900 hover:bg-zinc-800 border border-line hover:border-yellow text-white text-xs font-bold py-3 px-6 rounded-xl flex items-center gap-2 transition-all shadow-lg group">
+            <i class="fa-solid fa-arrow-left text-yellow group-hover:-translate-x-1 transition-transform"></i>
+            <span>Volver al Catálogo Técnico</span>
+        </button>
+    </div>
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pt-4 border-t border-zinc-900">
+        <div class="text-center md:text-left">
+            <span class="text-[10px] bg-yellow/10 text-yellow font-extrabold px-3 py-1 rounded-full uppercase tracking-widest border border-yellow/20">Garantía Carrillo Import</span>
+            <h2 class="text-2xl font-black text-white mt-3 uppercase tracking-tight">Envíos y Trabajos en Campo 🇵🇪</h2>
+            <p class="text-xs text-steel mt-1 max-w-lg">Fotos reales enviadas por nuestros clientes de todo el Perú operando con total potencia.</p>
+        </div>
+    </div>
+
+    <!-- Muestra exactamente un tope de 6 reseñas por página -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 pb-6 pt-2" id="clientGalleryGrid">
+        <div class="w-full text-center py-12 text-steel text-xs col-span-full">
+            <i class="fa-solid fa-spinner animate-spin text-yellow text-xl mb-2"></i>
+            <p>Sincronizando entregas recientes...</p>
+        </div>
+    </div>
+
+    <!-- BOTONERA DE PAGINACIÓN DE ENVÍOS EN CAMPO EN EL LUGAR CORRECTO ABAJO -->
+    <div class="flex flex-col items-center justify-center gap-4 pt-12 pb-8" id="paginationContainer">
+        <div class="flex items-center justify-center gap-2">
+            <button onclick="prevPage()" id="btnPrevPage" class="disabled:opacity-40 disabled:hover:border-line bg-zinc-900 hover:bg-zinc-800 border border-line hover:border-yellow text-white text-xs font-bold py-2.5 px-4 rounded-xl transition-all active:scale-95 flex items-center gap-1.5" disabled>
+                <i class="fa-solid fa-chevron-left text-yellow text-[10px]"></i>
+                <span>Anterior</span>
+            </button>
+            <span class="bg-zinc-950 border border-line text-xs text-white font-mono font-bold px-4 py-2.5 rounded-xl" id="pageIndicator">
+                PÁGINA: <span class="text-yellow" id="currentPageText">1</span>
+            </span>
+            <button onclick="nextPage()" id="btnNextPage" class="disabled:opacity-40 disabled:hover:border-line bg-zinc-900 hover:bg-zinc-800 border border-line hover:border-yellow text-white text-xs font-bold py-2.5 px-4 rounded-xl transition-all active:scale-95 flex items-center gap-1.5">
+                <span>Siguiente</span>
+                <i class="fa-solid fa-chevron-right text-yellow text-[10px]"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- CTA WHATSAPP -->
+<section class="max-w-7xl mx-auto px-4 pb-14">
+    <div class="plate flex flex-col md:flex-row items-center justify-between gap-6 p-6 md:p-8">
+        <div class="text-center md:text-left">
+            <h3 class="font-display text-2xl text-white uppercase tracking-wide">¿No encuentras tu repuesto?</h3>
+            <p class="text-steel text-sm mt-1">Escríbenos el código o modelo de tu máquina y te cotizamos en minutos.</p>
+        </div>
+        <a href="https://wa.link/opxc7b" target="_blank" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shrink-0">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            Consultar por WhatsApp
+        </a>
+    </div>
+</section>
+
+<!-- MODAL DETALLE DE PRODUCTO -->
+<div id="productModal" class="fixed inset-0 bg-black/85 z-50 hidden flex items-start justify-center p-4 backdrop-blur-sm overflow-y-auto py-8">
+    <div class="bg-panel border border-line w-full max-w-2xl rounded-2xl overflow-hidden shadow-card relative">
+        <button onclick="closeModal()" aria-label="Cerrar" class="absolute top-4 right-4 text-steel hover:text-white bg-panel2 w-8 h-8 rounded-full flex items-center justify-center transition-all z-10">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+
+        <div class="grid grid-cols-1 md:grid-cols-2">
+            <div class="blueprint p-6 flex items-center justify-center min-h-[250px] border-b md:border-b-0 md:border-r border-line">
+                <img id="modalImg" src="" alt="" class="max-h-64 object-contain rounded-lg">
+            </div>
+            <div class="p-6 flex flex-col justify-between">
+                <div>
+                    <span id="modalBrand" class="text-xs font-bold text-yellow uppercase tracking-widest bg-yellow/10 border border-yellow/20 px-2 py-0.5 rounded">MARCA</span>
+                    <h3 id="modalTitle" class="font-display text-xl text-white mt-2 mb-1 uppercase">Nombre del repuesto</h3>
+                    <div class="plate-sm inline-block px-3 py-1.5 mb-4">
+                        <p id="modalCode" class="text-xs font-mono font-bold text-yellow tracking-wide">CÓDIGO: -</p>
+                    </div>
+                    <div class="border-t border-line pt-4 mb-6">
+                        <h4 class="text-xs font-bold text-steel uppercase tracking-wider mb-2">Especificaciones Técnicas</h4>
+                        <p id="modalSpecs" class="text-xs text-zinc-300 leading-relaxed">Detalles específicos del repuesto...</p>
+                        <div class="mt-6">
+                            <h4 class="text-xs font-bold text-steel uppercase tracking-wider mb-2">Opiniones del producto</h4>
+                            <div class="flex items-center gap-2">
+                                <div id="modalStars" class="text-yellow text-lg">★★★★★</div>
+                                <span id="modalRating" class="text-sm text-white">4.8 / 5</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="reviewsBox" class="space-y-3 max-h-40 overflow-y-auto mt-4"></div>
+                    <div class="mt-6 border-t border-line pt-4">
+                        <h4 class="text-xs font-bold text-steel uppercase tracking-wider mb-3">Deja tu opinión</h4>
+                        <input id="reviewName" type="text" placeholder="Tu nombre" class="w-full p-2 rounded bg-panel2 text-white text-sm mb-2">
+                        <select id="reviewStars" class="w-full p-2 rounded bg-panel2 text-white text-sm mb-2">
+                            <option value="5">★★★★★ (5 estrellas)</option>
+                            <option value="4">★★★★☆ (4 estrellas)</option>
+                            <option value="3">★★★☆☆ (3 estrellas)</option>
+                            <option value="2">★★☆☆☆ (2 estrellas)</option>
+                            <option value="1">★☆☆☆☆ (1 estrella)</option>
+                        </select>
+                        <textarea id="reviewComment" placeholder="Escribe tu comentario..." class="w-full p-2 rounded bg-panel2 text-white text-sm mb-2"></textarea>
+                        <button onclick="sendReview()" class="bg-yellow text-black px-4 py-2 rounded font-bold text-xs">Enviar opinión</button>
+                    </div>
+                </div>
+                <a id="modalWaBtn" href="" target="_blank" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-xs">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> COTIZAR POR WHATSAPP AL INSTANTE
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PIE DE PÁGINA -->
+<footer class="bg-black border-t border-line mt-4 py-8">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="text-center md:text-left">
+            <p class="font-display text-lg text-white uppercase">CARRILLO <span class="text-yellow">IMPORT</span> E.I.R.L.</p>
+            <p class="text-xs text-steel mt-1">© 2026 Carrillo Import. Todos los derechos reservados. Distribuidor Autorizado.</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-steel">
+            <span><i class="fa-regular fa-clock mr-1 text-yellow"></i>Lun - Sáb (8:00 AM - 6:00 PM)</span>
+            <span class="hidden md:inline text-line">•</span>
+            <span><i class="fa-solid fa-location-dot mr-1 text-yellow"></i>Lima, Perú</span>
+        </div>
+    </div>
+</footer>
+
+<!-- SDK de Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, orderBy, limit, startAfter, serverTimestamp, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyC_S-TfI_6RUPgzggr063FBOSJ0DdDtyu8",
+    authDomain: "carrillo-import.firebaseapp.com",
+    projectId: "carrillo-import",
+    storageBucket: "carrillo-import.firebasestorage.app",
+    messagingSenderId: "118552134014",
+    appId: "1:118552134014:web:49708302b46e3bcddab32f",
+    measurementId: "G-K8F6ZXPXG3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.firebaseDB = db;
+window.firebaseFunctions = { collection, addDoc, query, where, getDocs, orderBy, limit, startAfter, serverTimestamp, doc, setDoc, deleteDoc };
+</script>
+
+<script>
+    let products = [];
+    let currentTab = 'all';
+    let currentProductId = null;
+
+
+    // Cambiar nomnre del vendedor
+const NOMBRE_VENDEDOR = "Maria Stefany";
+
+
+    // RENDEREADOR REFORMADO CON CAROUSEL HORIZONTAL MANUAL FIJO (5 MÁXIMO)
+   function renderProducts(productsList) {
+    const grid = document.getElementById('productGrid');
+    const anchorGrid = document.getElementById('anchorGrid');
+    const anchorSection = document.getElementById('anchorSection');
+    const catalogGridSection = document.getElementById('catalogGridSection');
+    const noProducts = document.getElementById('noProductsMessage');
+    
+    grid.innerHTML = '';
+    if (anchorGrid) anchorGrid.innerHTML = '';
+
+    // 🚨 VISTA "ALL" (Vitrina + Catálogo)
+    if (currentTab === 'all') {
+        anchorSection.classList.remove('hidden');
+        catalogGridSection.classList.add('hidden'); 
+
+        // Filtramos sobre la lista que recibimos (productsList) para que la lupa funcione
+        let manualStars = productsList.filter(p => p.highlight === true);
+        let stars = manualStars.slice(0, 5); // 🚨 LÍMITE ESTRICTO: 5 productos
+
+        if (stars.length > 0) {
+            stars.forEach((prod, idx) => {
+                appendCardToGrid(anchorGrid, prod, idx, true);
+            });
+        } else {
+            anchorGrid.innerHTML = `<p class="text-steel text-xs py-4 text-center w-full">No hay productos destacados.</p>`;
+        }
+    } 
+    // 🚨 VISTA DE CATEGORÍAS
+    else {
+        anchorSection.classList.add('hidden');
+        catalogGridSection.classList.remove('hidden');
+
+        let filteredByCategory = productsList; // Usamos la lista filtrada que ya viene de filterProducts
+
+        if (filteredByCategory.length === 0) {
+            noProducts.classList.remove('hidden');
+            grid.classList.add('hidden');
+            updateProductPaginationButtons(0);
+            return;
+        }
+
+        noProducts.classList.add('hidden');
+        grid.classList.remove('hidden');
+
+        const startIdx = (currentProductPage - 1) * productsPerPage;
+        const pagedItems = filteredByCategory.slice(startIdx, startIdx + productsPerPage);
+
+        pagedItems.forEach((prod, idx) => {
+            appendCardToGrid(grid, prod, idx, false);
+        });
+
+        updateProductPaginationButtons(filteredByCategory.length);
+    }
+}
+
+    function appendCardToGrid(targetGrid, prod, idx, isSlider) {
+        if (!targetGrid) return;
+        // Cambia la línea 521 por esta:
+const waText = encodeURIComponent(`Hola ${NOMBRE_VENDEDOR}, me interesa cotizar el producto ${prod.name} (Código: ${prod.code}, Marca: ${prod.brand}). Por favor, bríndeme precios.`);
+        const waLink = `https://wa.me/51971345125?text=${waText}`;
+
+        const card = document.createElement('div');
+        card.className = isSlider 
+            ? "product-card card-in bg-panel border border-line rounded-xl overflow-hidden flex flex-col justify-between cursor-pointer w-72 shrink-0 shadow-xl snap-center"
+            : "product-card card-in bg-panel border border-line rounded-xl overflow-hidden flex flex-col justify-between cursor-pointer";
+        
+        card.style.animationDelay = `${Math.min(idx * 45, 400)}ms`;
+        card.setAttribute('onclick', `openModal(${prod.id})`);
+
+        let stockLabel = prod.stock || "Disponible";
+
+        card.innerHTML = `
+            <div>
+                <div class="blueprint h-48 w-full flex items-center justify-center p-4 border-b border-line relative overflow-hidden">
+                    <img src="${prod.image}" alt="${prod.name}" class="h-full object-contain">
+                    <span class="absolute top-3 left-3 text-white text-[9px] font-bold px-2 py-1 rounded tracking-widest uppercase shadow" 
+                          style="background-color: ${stockLabel === 'Bajo stock' ? '#d97706' : stockLabel === 'Agotado' ? '#dc2626' : '#16a34a'};">
+                        ${stockLabel === "Disponible" ? "🟢 " : stockLabel === "Bajo stock" ? "🟡 " : "🔴 "}${stockLabel}
+                    </span>
+                    <span class="absolute top-3 right-3 bg-zinc-900/80 text-zinc-300 text-[10px] px-2 py-0.5 rounded font-mono font-bold border border-zinc-700">${prod.brand}</span>
+                </div>
+                <div class="p-4">
+                    <p class="text-[10px] text-steel font-bold uppercase tracking-wider">${prod.brand} • ${(prod.category || 'REPUESTO').toUpperCase()}</p>
+                    <h3 class="font-display text-base mt-1 text-white tracking-wide truncate uppercase" title="${prod.name}">${prod.name}</h3>
+                    <div class="plate-sm mt-3 flex items-center justify-between px-3 py-2">
+                        <span class="text-[10px] text-steel font-bold">CÓDIGO</span>
+                        <span class="text-xs font-mono font-bold text-yellow">${prod.code}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 pt-0">
+                <a href="${waLink}" target="_blank" onclick="event.stopPropagation();" class="w-full bg-yellow hover:bg-yellowD text-black font-bold text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-1.5 transition-colors">
+                    <i class="fa-brands fa-whatsapp text-sm"></i> COTIZAR COMPONENTE
+                </a>
+            </div>
+        `;
+        targetGrid.appendChild(card);
+    }
+function switchTab(category) {
+    currentTab = category;
+    currentCategoryFilter = category === 'all' ? '' : category;
+
+    // Lógica para mostrar/ocultar el contenedor de ofertas
+    const seccionOfertas = document.getElementById("contenedor-ofertones");
+    if (category === 'all') {
+        seccionOfertas.style.display = 'block';
+    } else {
+        seccionOfertas.style.display = 'none';
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = "tab-btn bg-panel hover:bg-panel2 text-steel font-semibold text-xs md:text-sm py-2 px-5 rounded-lg shrink-0 border border-line";
+    });
+
+    const activeBtn = document.getElementById(`tab-${category}`);
+    if(activeBtn) {
+        activeBtn.className = "tab-btn bg-yellow text-black font-semibold text-xs md:text-sm py-2 px-5 rounded-lg shrink-0";
+    }
+
+    currentProductPage = 1;
+    filterProducts();
+}
+
+function filterProducts() {
+    const query = document.getElementById('searchBar').value.toLowerCase().trim();
+    
+    const anchorSection = document.getElementById('anchorSection');
+    const catalogGridSection = document.getElementById('catalogGridSection');
+    const seccionOfertones = document.getElementById("contenedor-ofertones");
+
+    // Si hay texto en la lupa, ocultamos destacados y ofertas, y mostramos la cuadrícula de resultados
+    if (query.length > 0) {
+        if (anchorSection) anchorSection.classList.add('hidden');
+        if (catalogGridSection) catalogGridSection.classList.remove('hidden');
+        if (seccionOfertones) seccionOfertones.style.display = 'none';
+    } else if (currentTab === 'all') {
+        if (anchorSection) anchorSection.classList.remove('hidden');
+        if (catalogGridSection) catalogGridSection.classList.add('hidden');
+        if (seccionOfertones) seccionOfertones.style.display = 'block';
+    } else {
+        if (anchorSection) anchorSection.classList.add('hidden');
+        if (catalogGridSection) catalogGridSection.classList.remove('hidden');
+        if (seccionOfertones) seccionOfertones.style.display = 'none';
+    }
+
+    const filtered = products.filter(prod => {
+        const catProd = (prod.category || "").toLowerCase().trim();
+        const catTab = currentTab.toLowerCase().trim();
+            
+        // Si estás escribiendo en la lupa, busca globalmente; si está vacía, respeta la pestaña seleccionada
+        const matchesCategory = (query.length > 0 || currentTab === 'all' || catProd === catTab);
+        
+        const matchesQuery = (
+            (prod.name || "").toLowerCase().includes(query) ||
+            (prod.code || "").toLowerCase().includes(query) ||
+            (prod.brand || "").toLowerCase().includes(query)
+        );
+        
+        return matchesCategory && matchesQuery;
+    });
+    
+    // Reiniciamos a la página 1 cada vez que escribas algo nuevo en la búsqueda
+    currentProductPage = 1;
+    renderProducts(filtered);
+}
+
+    function resetSearch() {
+        document.getElementById('searchBar').value = '';
+        switchTab('all');
+    }
+
+    async function openModal(id) {
+        currentProductId = id;
+        const prod = products.find(p => p.id === id);
+        if (!prod) return;
+
+        document.getElementById('modalTitle').innerText = prod.name;
+        document.getElementById('modalImg').src = prod.image;
+        document.getElementById('modalImg').alt = prod.name;
+        document.getElementById('modalBrand').innerText = `Marca: ${prod.brand}`;
+        document.getElementById('modalCode').innerText = `CÓDIGO ORIGINAL: ${prod.code}`;
+        document.getElementById('modalSpecs').innerText = prod.specs || "No hay especificaciones adicionales.";
+
+        const { collection, query, where, getDocs, orderBy, limit } = window.firebaseFunctions;
+
+        const ratingQuery = query(
+            collection(window.firebaseDB, "reviews"),
+            where("productoId", "==", id),
+            orderBy("fecha", "desc"),
+            limit(5) // 🔥 Límite estricto de 5 opiniones por modal para ahorrar lecturas
+        );
+        const ratingSnapshot = await getDocs(ratingQuery);
+
+        let totalStars = 0;
+        let totalReviews = ratingSnapshot.size;
+
+        ratingSnapshot.forEach(doc => {
+            const review = doc.data();
+            totalStars += Number(review.estrellas || 0);
+        });
+
+        let rating = 0;
+        if (totalReviews > 0) rating = totalStars / totalReviews;
+        rating = Number(rating.toFixed(1));
+
+        document.getElementById("modalRating").innerText = totalReviews > 0 ? `${rating} / 5 (${totalReviews} opiniones)` : "Sin opiniones";
+        document.getElementById("modalStars").innerHTML = "★".repeat(Math.round(rating)) + "☆".repeat(5 - Math.round(rating));
+
+        const reviewsBox = document.getElementById("reviewsBox");
+        reviewsBox.innerHTML = `<p class="text-steel text-xs">Cargando opiniones...</p>`;
+
+        let reviewsHTML = "";
+        if (totalReviews > 0) {
+            ratingSnapshot.forEach(doc => {
+                const review = doc.data();
+                reviewsHTML += `
+                <div class="bg-panel2 border border-line rounded-lg p-3">
+                    <div class="text-yellow text-sm">${"★".repeat(review.estrellas)}${"☆".repeat(5 - review.estrellas)}</div>
+                    <p class="text-white text-xs font-bold mt-1">${review.nombre}</p>
+                    <p class="text-steel text-xs mt-1">${review.comentario}</p>
+                </div>`;
+            });
+        } else {
+            reviewsHTML = `<p class="text-steel text-xs">Este producto aún no tiene opiniones.</p>`;
+        }
+
+        reviewsBox.innerHTML = reviewsHTML;
+
+        const waText = encodeURIComponent(`Hola Sr. stefany, estuve viendo el catálogo y deseo una cotización urgente del repuesto: ${prod.name} (Código técnico: ${prod.code}). Quedo atento a su respuesta.`);
+        document.getElementById('modalWaBtn').href = `https://wa.me/51971345125?text=${waText}`;
+
+        document.getElementById('productModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    window.sendReview = async function(){
+        const nombre = document.getElementById("reviewName").value.trim();
+        const estrellas = Number(document.getElementById("reviewStars").value);
+        const comentario = document.getElementById("reviewComment").value.trim();
+
+        if(!nombre || !comentario){
+            alert("Completa todos los campos");
+            return;
+        }
+
+        const { collection, addDoc, serverTimestamp } = window.firebaseFunctions;
+        await addDoc(collection(window.firebaseDB, "reviews"), {
+            nombre: nombre,
+            estrellas: estrellas,
+            comentario: comentario,
+            productoId: currentProductId,
+            fecha: serverTimestamp()
+        });
+
+        alert("Reseña enviada correctamente");
+        document.getElementById("reviewName").value = "";
+        document.getElementById("reviewComment").value = "";
+        openModal(currentProductId);
+    };
+
+    function closeModal() {
+        document.getElementById('productModal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('productModal');
+        if (event.target === modal) closeModal();
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    function normalizeImageUrl(url) {
+        if (!url) return 'https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN';
+        url = url.trim();
+        if (url.includes('drive.google.com')) {
+            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) return `https://lh3.googleusercontent.com/d/${match[1]}`;
+        }
+        return url;
+    }
+
+    // Tope fijo de 6 registros por página para Envíos en campo
+    let currentPage = 1;
+    const itemsPerPage = 6; 
+    let pagesHistory = []; 
+    let hasMorePages = true;
+
+    let currentCategoryFilter = ""; 
+    let currentProductPage = 1;
+    const productsPerPage = 6; // Pestañas de categoría muestran de 6 en 6 repuestos
+    let currentSortFilter = "mas_vendidos"; 
+
+    async function loadClientGalleryInPublicSite() {
+        const galleryGrid = document.getElementById("clientGalleryGrid");
+        if (!galleryGrid) return;
+
+        try {
+            const { collection, getDocs, query, orderBy, limit, startAfter } = window.firebaseFunctions;
+            let q;
+            if (currentPage === 1) {
+                q = query(collection(window.firebaseDB, "deliveries"), orderBy("fecha", "desc"), limit(itemsPerPage));
+            } else {
+                const previousPageEndDoc = pagesHistory[currentPage - 2];
+                q = query(collection(window.firebaseDB, "deliveries"), orderBy("fecha", "desc"), startAfter(previousPageEndDoc), limit(itemsPerPage));
+            }
+
+            const snapshot = await getDocs(q);
+            if (snapshot.empty) {
+                hasMorePages = false;
+                updatePaginationButtons();
+                return;
+            }
+
+            let galleryHTML = "";
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                galleryHTML += `
+                    <div class="bg-zinc-900/50 border border-line rounded-2xl overflow-hidden group hover:border-yellow/50 transition-all duration-300 flex flex-col justify-between">
+                        <div class="h-48 overflow-hidden relative blueprint">
+                            <img src="${normalizeImageUrl(d.image)}" alt="Trabajo en Campo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-3 right-3 bg-black/80 backdrop-blur-sm text-yellow text-[10px] font-extrabold px-3 py-1.5 rounded-full border border-yellow/20 flex items-center gap-1 shadow-lg">
+                                <i class="fa-solid fa-location-dot text-[9px]"></i><span>${d.location || 'Perú'}</span>
+                            </div>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col justify-between gap-4">
+                            <div class="space-y-1.5">
+                                <span class="text-[9px] uppercase tracking-widest text-steel font-bold block">Cliente / Proyecto</span>
+                                <h4 class="text-sm font-bold text-white leading-tight truncate uppercase" title="${d.client || 'Sin nombre'}">${d.client || 'Sin nombre'}</h4>
+                            </div>
+                            <div class="pt-3 border-t border-zinc-900/80 flex items-center justify-between text-[11px]">
+                                <span class="text-steel font-medium">Repuesto:</span>
+                                <span class="text-yellow font-bold truncate max-w-[150px] uppercase bg-yellow/5 border border-yellow/10 px-2 py-0.5 rounded">${d.product || 'No especificado'}</span>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+
+            galleryGrid.innerHTML = galleryHTML;
+            pagesHistory[currentPage - 1] = snapshot.docs[snapshot.docs.length - 1];
+            hasMorePages = snapshot.docs.length === itemsPerPage;
+            updatePaginationButtons();
+        } catch (error) {
+            console.error("Error en galería:", error);
+        }
+    }
+
+    window.nextPage = async function() {
+        if (!hasMorePages) return;
+        currentPage++;
+        await loadClientGalleryInPublicSite();
+        scrollToGalleryTitle();
+    };
+
+    window.prevPage = async function() {
+        if (currentPage <= 1) return;
+        currentPage--;
+        await loadClientGalleryInPublicSite();
+        scrollToGalleryTitle();
+    };
+
+    function updatePaginationButtons() {
+        const pageText = document.getElementById("currentPageText");
+        const btnPrev = document.getElementById("btnPrevPage");
+        const btnNext = document.getElementById("btnNextPage");
+        if (pageText) pageText.innerText = currentPage;
+        if (btnPrev) btnPrev.disabled = (currentPage === 1);
+        if (btnNext) btnNext.disabled = !hasMorePages;
+    }
+
+    function scrollToGalleryTitle() {
+        const gallerySection = document.getElementById("reviewsTabSection");
+        if (gallerySection) gallerySection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 🚨 REVERSIONADO A CONSULTA ESTABLE: JALA LOS 12 COMPONENTES COMPLETOS SIN ERRORES DE INDEX DE FIREBASE
+   async function loadProductsFromFirebase() {
+        const productsGrid = document.getElementById("productGrid");
+        if (!productsGrid) return;
+
+        try {
+            const cachedData = localStorage.getItem('carrillo_products_cache');
+            const cachedTime = localStorage.getItem('carrillo_cache_time');
+            const cacheDuration = 12 * 60 * 60 * 1000; 
+
+            if (cachedData && cachedTime && (Date.now() - cachedTime < cacheDuration)) {
+                products = JSON.parse(cachedData);
+                filterProducts();
+                loadOfertas('all');
+                return;
+            }
+
+            // Consulta SIN LÍMITE para jalar todos tus productos reales
+            const { collection, getDocs, query, orderBy } = window.firebaseFunctions;
+            
+            let q = query(
+                collection(window.firebaseDB, "products"), 
+                orderBy("id", "desc")
+            );
+            let snapshot = await getDocs(q);
+
+            products = [];
+            snapshot.forEach(doc => {
+                const p = doc.data();
+                products.push({
+                    id: p.id || Date.now(),
+                    name: p.name || "",
+                    code: p.code || "",
+                    brand: p.brand || "GENÉRICO",
+                    category: p.category || "all",
+                    image: p.image,
+                    specs: p.specs || "",
+                    highlight: p.highlight || false,
+                    oferta: p.oferta || false,
+                    stock: p.stock || "Disponible"
+                });
+            });
+
+            localStorage.setItem('carrillo_products_cache', JSON.stringify(products));
+            localStorage.setItem('carrillo_cache_time', Date.now());
+
+            filterProducts();
+            loadOfertas('all');
+        } catch (error) {
+            console.error("Error cargando repuestos:", error);
+        }
+    }
+
+    window.changeProductSort = function(sortValue) {
+        currentSortFilter = sortValue;
+        if (sortValue === "marca") {
+            products.sort((a, b) => a.brand.localeCompare(b.brand));
+        } else {
+            products.sort((a, b) => b.id - a.id);
+        }
+        filterProducts();
+    };
+
+    window.nextProductPage = function() {
+        currentProductPage++;
+        filterProducts();
+        scrollToProductsTitle();
+    };
+
+    window.prevProductPage = function() {
+        if (currentProductPage <= 1) return;
+        currentProductPage--;
+        filterProducts();
+        scrollToProductsTitle();
+    };
+
+    function updateProductPaginationButtons(totalItems) {
+        const pageText = document.getElementById("currentProductPageText");
+        const btnPrev = document.getElementById("btnPrevProductPage");
+        const btnNext = document.getElementById("btnNextProductPage");
+        const maxPage = Math.max(1, Math.ceil(totalItems / productsPerPage));
+
+        if (pageText) pageText.innerText = `${currentProductPage} / ${maxPage}`;
+        if (btnPrev) btnPrev.disabled = (currentProductPage === 1);
+        if (btnNext) btnNext.disabled = (currentProductPage >= maxPage);
+    }
+
+    function scrollToProductsTitle() {
+        const target = document.getElementById("productGrid");
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
+
+   window.onload = function () {   
+    loadProductsFromFirebase();
+};
+
+    function scrollToReviews() {
+        const filters = document.getElementById('filtersNavSection');
+        const mainProducts = document.getElementById('mainProductsSection');
+        const reviews = document.getElementById('reviewsTabSection');
+        const topBtn = document.querySelector('button[onclick="scrollToReviews()"]')?.parentElement;
+
+        if (filters) filters.style.display = 'none';
+        if (mainProducts) mainProducts.style.display = 'none';
+        if (topBtn) topBtn.style.display = 'none';
+        
+        if (reviews) {
+        reviews.classList.remove('hidden');
+        loadClientGalleryInPublicSite(); // 🔥 Solo lee de Firebase cuando el usuario realmente entra a la sección
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    }
+
+    function backToCatalog() {
+        const filters = document.getElementById('filtersNavSection');
+        const mainProducts = document.getElementById('mainProductsSection');
+        const reviews = document.getElementById('reviewsTabSection');
+        const topBtn = document.querySelector('button[onclick="scrollToReviews()"]')?.parentElement;
+
+        if (reviews) reviews.classList.add('hidden');
+        if (filters) filters.style.display = 'block';
+        if (mainProducts) mainProducts.style.display = 'block';
+        if (topBtn) topBtn.style.display = 'flex';
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+ window.loadOfertas = function(categoria = 'all') {
+    const container = document.getElementById('ofertasGrid');
+    if (!container) return;
+
+    const ofertaProducts = products.filter(p => p.oferta === true && (categoria === 'all' || p.category === categoria)).slice(0, 5);
+    
+    if (ofertaProducts.length === 0) {
+        container.innerHTML = '<p class="text-steel text-xs py-10 text-center w-full">No hay ofertas disponibles en esta categoría.</p>';
+        return;
+    }
+
+   container.innerHTML = ofertaProducts.map(prod => {
+        // Generamos el link de WhatsApp igual que en los destacados
+       const waText = encodeURIComponent(`Hola ${NOMBRE_VENDEDOR}, me interesa cotizar el producto en OFERTA ${prod.name} (Código: ${prod.code}, Marca: ${prod.brand}).`);
+        const waLink = `https://wa.me/51971345125?text=${waText}`;
+
+        return `
+        <div class="product-card bg-panel border border-line rounded-xl overflow-hidden flex flex-col justify-between cursor-pointer w-72 shrink-0 shadow-xl snap-center" onclick="openModal(${prod.id})">
+            <div class="blueprint h-48 w-full flex items-center justify-center p-4 border-b border-line relative overflow-hidden">
+                <img src="${prod.image}" class="h-full object-contain">
+                <span class="absolute top-3 left-3 text-white text-[9px] font-bold px-2 py-1 rounded tracking-widest uppercase shadow" 
+      style="background-color: #dc2626;">🔥 OFERTA</span>
+            </div>
+            <div class="p-4">
+                <p class="text-[10px] text-steel font-bold uppercase tracking-wider">${prod.brand} • ${(prod.category || 'REPUESTO').toUpperCase()}</p>
+                <h3 class="font-display text-base mt-1 text-white tracking-wide truncate uppercase">${prod.name}</h3>
+                <div class="plate-sm mt-3 flex items-center justify-between px-3 py-2">
+                    <span class="text-[10px] text-steel font-bold">CÓDIGO</span>
+                    <span class="text-xs font-mono font-bold text-yellow">${prod.code}</span>
+                </div>
+            </div>
+            <div class="p-4 pt-0">
+                <a href="${waLink}" target="_blank" onclick="event.stopPropagation();" class="w-full bg-yellow hover:bg-yellowD text-black font-bold text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-1.5 transition-colors">
+                    <i class="fa-brands fa-whatsapp text-sm"></i> COTIZAR COMPONENTE
+                </a>
+            </div>
+        </div>
+    `}).join('');
+};
+
+
+</script>
+</body>
+</html>
