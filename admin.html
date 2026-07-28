@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -801,9 +800,9 @@ window.loadAllProductsForSelection = async function() {
             const paginatedItems = filtered.slice(start, start + perPage);
 
             paginatedItems.forEach(prod => {
-                let categoryLabel = "Línea Desgaste (HTK)";
-                if (prod.category === "filtracion") categoryLabel = "Filtración y Motor (CAT)";
-                if (prod.category === "rodaje") categoryLabel = "Tren de Rodaje (H-TRACK)";
+              let categoryLabel = "Línea Desgaste (HTK)";
+                if (prod.category === "filtracion" || prod.brand === "CAT") categoryLabel = "Filtración y Motor (CAT)";
+                if (prod.category === "rodaje" || prod.brand === "HTRACK" || prod.brand === "HTTRACK") categoryLabel = "Tren de Rodaje (H-TRACK)";
 
                 tbody.innerHTML += `
                     <tr class="hover:bg-zinc-900/40 transition-all align-middle">
@@ -1292,11 +1291,10 @@ window.loadAllProductsForSelection = async function() {
             });
         }
 
-        
+       // =========================================================
+        // 🚀 IMPORTACIÓN MASIVA DESDE EXCEL / CSV (CORREGIDA Y ESTABLE)
         // =========================================================
-        // 🚀 NUEVA FUNCIÓN: IMPORTACIÓN MASIVA DESDE EXCEL / CSV
-        // =========================================================
-       window.importCatalogFromCSV = function(event) {
+        window.importCatalogFromCSV = function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
@@ -1307,10 +1305,24 @@ window.loadAllProductsForSelection = async function() {
                     const rows = results.data;
                     if (rows.length <= 1) {
                         alert("⚠️ El archivo está vacío o solo contiene los títulos.");
+                        event.target.value = '';
                         return;
                     }
 
-                    if (!confirm(`Se han detectado ${rows.length - 1} repuestos en tu archivo (excluyendo títulos). ¿Deseas importarlos a Firebase ahora?`)) {
+                    // Ignoramos estrictamente la fila 1 de títulos y filtramos filas que tengan al menos Código y Nombre
+                    const validRows = rows.slice(1).filter(r => {
+                        const code = (r[0] || "").trim();
+                        const name = (r[1] || "").trim();
+                        return code !== "" && name !== "" && code.toLowerCase() !== "código";
+                    });
+
+                    if (validRows.length === 0) {
+                        alert("⚠️ No se encontraron repuestos válidos debajo de los títulos. Revisa que tu archivo esté guardado como CSV UTF-8.");
+                        event.target.value = '';
+                        return;
+                    }
+
+                    if (!confirm(`Se han detectado ${validRows.length} repuestos en tu archivo. ¿Deseas importarlos a Firebase ahora?`)) {
                         event.target.value = '';
                         return;
                     }
@@ -1318,16 +1330,29 @@ window.loadAllProductsForSelection = async function() {
                     let importadosCount = 0;
                     let duplicadosCount = 0;
 
-                    // 🚨 Empezamos desde i = 1 para saltarnos la primera fila de títulos (Código, Nombre, etc.)
-                    for (let i = 1; i < rows.length; i++) {
-                        let row = rows[i];
-                        const code = (row[0] || "").trim();
-                        const name = (row[1] || "").trim();
-                        const specs = (row[2] || "").trim() || "Repuesto de alta resistencia.";
+                    for (let i = 0; i < validRows.length; i++) {
+                        let row = validRows[i];
+                        const code = (row[0] || "").trim();          // Columna A: Código
+                        const name = (row[1] || "").trim();          // Columna B: Nombre del Repuesto
+                        const rawCategory = (row[2] || "").trim().toUpperCase(); // Columna C: Categoría (HTRACK, CAT, HTK)
+                        const specs = (row[3] || "").trim() || "Repuesto de alta resistencia."; // Columna D: Especificaciones Técnicas
 
-                        if (!code || !name) continue; // Si falta código o nombre, salta la fila
+                        // Mapeo dinámico y exacto de marcas y categorías
+                        let categoryValue = "desgaste";
+                        let brandValue = "HTK";
 
-                        // Validar si ya existe en la memoria o Firebase
+                        if (rawCategory.includes("HTRACK") || rawCategory.includes("RODAJE")) {
+                            categoryValue = "rodaje";
+                            brandValue = "HTRACK";
+                        } else if (rawCategory.includes("CAT") || rawCategory.includes("FILTRACION") || rawCategory.includes("MOTOR")) {
+                            categoryValue = "filtracion";
+                            brandValue = "CAT";
+                        } else {
+                            categoryValue = "desgaste";
+                            brandValue = "HTK";
+                        }
+
+                        // Validación de duplicados por código en memoria
                         const yaExiste = allProducts.some(p => p.code.toLowerCase() === code.toLowerCase());
                         if (yaExiste) {
                             duplicadosCount++;
@@ -1339,8 +1364,8 @@ window.loadAllProductsForSelection = async function() {
                             firebaseId: null,
                             name: name,
                             code: code,
-                            brand: "HTK",
-                            category: "desgaste",
+                            brand: brandValue,
+                            category: categoryValue,
                             image: "https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN",
                             specs: specs,
                             highlight: false,
@@ -1348,13 +1373,14 @@ window.loadAllProductsForSelection = async function() {
                             stock: "Disponible"
                         };
 
-                        await saveProductFirebase(nuevoProd, true);
+                        // Guardado directo y limpio en Firebase
+                        await saveProductFirebase(nuevoProd);
                         allProducts.unshift(nuevoProd);
                         importadosCount++;
                     }
 
                     localStorage.setItem('carrillo_cache_time', '0');
-                    alert(`✅ ¡Importación finalizada!\n\n• Productos nuevos añadidos: ${importadosCount}\n• Duplicados omitidos: ${duplicadosCount}`);
+                    alert(`✅ ¡Importación finalizada!\n\n• Nuevos añadidos: ${importadosCount}\n• Duplicados omitidos: ${duplicadosCount}`);
                     event.target.value = '';
                     await loadAllProductsForSelection();
                     await loadProductsFromFirebase();
@@ -1365,6 +1391,7 @@ window.loadAllProductsForSelection = async function() {
                 }
             });
         };
+        
 
 // METODO PARA CAMBIAR EL filterAdminList
    window.filterAdminList = function() {
@@ -1567,10 +1594,10 @@ await updateDashboardStats();
                     const ref = doc(window.firebaseDB, "products", prod.firebaseId);
                     await deleteDoc(ref);
                     
-                    // 🚀 Actualización instantánea en memoria local
+                    // 🚀 Eliminación limpia en la memoria local
                     allProducts = allProducts.filter(p => p.id !== id && p.firebaseId !== id);
 
-                    // Refrescamos la tabla local y las estadísticas al instante
+                    // 🚨 LLAMADA CLAVE: Refrescamos la tabla local correcta y el dashboard al instante
                     renderAdminTableLocally();
                     renderRecommendedInventory();
                     renderRecommendedList();
@@ -1895,94 +1922,6 @@ window.loadOfertas = function() {
         </tr>
     `).join('') : '<tr><td class="p-4 text-steel text-center">No hay productos en oferta actualmente.</td></tr>';
 };
-
-
-// =========================================================
-        // 🚀 NUEVA FUNCIÓN: IMPORTACIÓN MASIVA DESDE EXCEL / CSV
-        // =========================================================
-        window.importCatalogFromCSV = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            Papa.parse(file, {
-                header: false,
-                skipEmptyLines: true,
-                complete: async function(results) {
-                    const rows = results.data;
-                    if (rows.length <= 1) {
-                        alert("⚠️ El archivo está vacío o solo contiene los títulos.");
-                        return;
-                    }
-
-                    if (!confirm(`Se han detectado ${rows.length - 1} repuestos en tu archivo. ¿Deseas importarlos a Firebase ahora?`)) {
-                        event.target.value = '';
-                        return;
-                    }
-
-                    let importadosCount = 0;
-                    let duplicadosCount = 0;
-
-                    for (let i = 1; i < rows.length; i++) {
-                        let row = rows[i];
-                        const code = (row[0] || "").trim();
-                        const name = (row[1] || "").trim();
-                        const rawCategory = (row[2] || "").trim().toUpperCase(); // Columna C: Categoria
-                        const specs = (row[3] || "").trim() || "Repuesto de alta resistencia."; // Columna D: Especificaciones
-
-                        if (!code || !name) continue;
-
-                        // 🔍 Mapeo automático según lo que escribas en el Excel (HTK, CAT, HTRACK)
-                        let categoryValue = "desgaste";
-                        let brandValue = "HTK";
-
-                        if (rawCategory.includes("CAT") || rawCategory.includes("FILTRACION")) {
-                            categoryValue = "filtracion";
-                            brandValue = "CAT";
-                        } else if (rawCategory.includes("HTRACK") || rawCategory.includes("RODAJE")) {
-                            categoryValue = "rodaje";
-                            brandValue = "HTTRACK";
-                        } else if (rawCategory.includes("HTK") || rawCategory.includes("DESGASTE")) {
-                            categoryValue = "desgaste";
-                            brandValue = "HTK";
-                        }
-
-                        const yaExiste = allProducts.some(p => p.code.toLowerCase() === code.toLowerCase());
-                        if (yaExiste) {
-                            duplicadosCount++;
-                            continue; 
-                        }
-
-                        const nuevoProd = {
-                            id: Date.now() + Math.floor(Math.random() * 10000),
-                            firebaseId: null,
-                            name: name,
-                            code: code,
-                            brand: brandValue,
-                            category: categoryValue,
-                            image: "https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN",
-                            specs: specs,
-                            highlight: false,
-                            oferta: false,
-                            stock: "Disponible"
-                        };
-
-                        await saveProductFirebase(nuevoProd);
-                        allProducts.unshift(nuevoProd);
-                        importadosCount++;
-                    }
-
-                    localStorage.setItem('carrillo_cache_time', '0');
-                    alert(`✅ ¡Importación finalizada!\n\n• Nuevos añadidos: ${importadosCount}\n• Duplicados omitidos: ${duplicadosCount}`);
-                    event.target.value = '';
-                    await loadAllProductsForSelection();
-                    await loadProductsFromFirebase();
-                },
-                error: function(err) {
-                    alert("❌ Error al leer el archivo CSV.");
-                    console.error(err);
-                }
-            });
-        };
 
 
     </script>
