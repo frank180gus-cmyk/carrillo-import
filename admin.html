@@ -777,7 +777,14 @@ window.loadAllProductsForSelection = async function() {
             tbody.innerHTML = '';
 
             const queryText = (document.getElementById('adminSearchInput')?.value || "").toLowerCase().trim();
-            let filtered = allProducts.filter(p => (p.name || "").toLowerCase().includes(queryText) || (p.code || "").toLowerCase().includes(queryText));
+            
+            // 🔍 Buscador mejorado que filtra por nombre, código o marca de forma segura
+            let filtered = allProducts.filter(p => {
+                const name = (p.name || "").toLowerCase();
+                const code = (p.code || "").toLowerCase();
+                const brand = (p.brand || "").toLowerCase();
+                return name.includes(queryText) || code.includes(queryText) || brand.includes(queryText);
+            });
 
             if (filtered.length === 0) {
                 document.getElementById('noResults')?.classList.remove('hidden');
@@ -794,12 +801,16 @@ window.loadAllProductsForSelection = async function() {
             const paginatedItems = filtered.slice(start, start + perPage);
 
             paginatedItems.forEach(prod => {
+                let categoryLabel = "Línea Desgaste (HTK)";
+                if (prod.category === "filtracion") categoryLabel = "Filtración y Motor (CAT)";
+                if (prod.category === "rodaje") categoryLabel = "Tren de Rodaje (H-TRACK)";
+
                 tbody.innerHTML += `
                     <tr class="hover:bg-zinc-900/40 transition-all align-middle">
                         <td class="p-4"><img src="${prod.image}" class="w-12 h-12 object-contain bg-black border border-line rounded p-1" onerror="this.src='https://placehold.co/100'"></td>
                         <td class="p-4 font-mono"><div class="text-white font-bold text-xs">${prod.code}</div><div class="text-[10px] text-steel uppercase">${prod.brand}</div></td>
                         <td class="p-4"><div class="font-bold text-white text-xs max-w-xs truncate">${prod.name}</div></td>
-                        <td class="p-4 text-xs text-steel">${prod.category}</td>
+                        <td class="p-4 text-xs text-steel">${categoryLabel}</td>
                         <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold text-green-500 bg-green-500/10">${prod.stock || 'Disponible'}</span></td>
                         <td class="p-4 text-center">
                             <button onclick="editProduct(${prod.id})" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold py-1.5 px-3 rounded-lg mr-2">Editar</button>
@@ -1546,36 +1557,35 @@ await updateDashboardStats();
     }
 }
     window.deleteProduct = async function(id) {
-    if (!confirm('¿Deseas eliminar este producto permanentemente?')) return;
-    
-    // Buscamos el producto exacto por su ID en la lista maestra
-    const prod = allProducts.find(p => p.id === id);
-
-    if (prod && prod.firebaseId) {
-        try {
-            const { doc, deleteDoc } = window.firebaseFunctions;
-            const ref = doc(window.firebaseDB, "products", prod.firebaseId);
-            await deleteDoc(ref); // Borra exactamente este documento de Firebase
+            if (!confirm('¿Deseas eliminar este producto permanentemente?')) return;
             
-            // 🚀 ELIMINACIÓN EN MEMORIA LOCAL
-            allProducts = allProducts.filter(p => p.id !== id);
-            products = products.filter(p => p.id !== id);
+            const prod = allProducts.find(p => p.id === id || p.firebaseId === id);
 
-            renderAdminTable(products);
-            renderRecommendedInventory();
-            renderRecommendedList();
-            renderOfertasList();
-            await updateDashboardStats();
+            if (prod && prod.firebaseId) {
+                try {
+                    const { doc, deleteDoc } = window.firebaseFunctions;
+                    const ref = doc(window.firebaseDB, "products", prod.firebaseId);
+                    await deleteDoc(ref);
+                    
+                    // 🚀 Actualización instantánea en memoria local
+                    allProducts = allProducts.filter(p => p.id !== id && p.firebaseId !== id);
 
-            alert("Producto eliminado correctamente.");
-        } catch (error) {
-            console.error("❌ Error al eliminar:", error);
-            alert("Error al eliminar el producto.");
-        }
-    } else {
-        alert("No se pudo encontrar el identificador único del producto.");
-    }
-};
+                    // Refrescamos la tabla local y las estadísticas al instante
+                    renderAdminTableLocally();
+                    renderRecommendedInventory();
+                    renderRecommendedList();
+                    renderOfertasList();
+                    await updateDashboardStats();
+
+                    alert("Producto eliminado correctamente.");
+                } catch (error) {
+                    console.error("❌ Error al eliminar:", error);
+                    alert("Error al eliminar el producto.");
+                }
+            } else {
+                alert("No se pudo encontrar el identificador único del producto.");
+            }
+        };
 
         // =========================================================
         // FUNCIÓN NAVEGACIÓN DE PESTAÑAS (SCROLL TO TOP DEFINITIVO)
@@ -1904,7 +1914,7 @@ window.loadOfertas = function() {
                         return;
                     }
 
-                    if (!confirm(`Se han detectado ${rows.length - 1} repuestos en tu archivo (excluyendo títulos). ¿Deseas importarlos a Firebase ahora?`)) {
+                    if (!confirm(`Se han detectado ${rows.length - 1} repuestos en tu archivo. ¿Deseas importarlos a Firebase ahora?`)) {
                         event.target.value = '';
                         return;
                     }
@@ -1916,9 +1926,25 @@ window.loadOfertas = function() {
                         let row = rows[i];
                         const code = (row[0] || "").trim();
                         const name = (row[1] || "").trim();
-                        const specs = (row[2] || "").trim() || "Repuesto de alta resistencia.";
+                        const rawCategory = (row[2] || "").trim().toUpperCase(); // Columna C: Categoria
+                        const specs = (row[3] || "").trim() || "Repuesto de alta resistencia."; // Columna D: Especificaciones
 
                         if (!code || !name) continue;
+
+                        // 🔍 Mapeo automático según lo que escribas en el Excel (HTK, CAT, HTRACK)
+                        let categoryValue = "desgaste";
+                        let brandValue = "HTK";
+
+                        if (rawCategory.includes("CAT") || rawCategory.includes("FILTRACION")) {
+                            categoryValue = "filtracion";
+                            brandValue = "CAT";
+                        } else if (rawCategory.includes("HTRACK") || rawCategory.includes("RODAJE")) {
+                            categoryValue = "rodaje";
+                            brandValue = "HTTRACK";
+                        } else if (rawCategory.includes("HTK") || rawCategory.includes("DESGASTE")) {
+                            categoryValue = "desgaste";
+                            brandValue = "HTK";
+                        }
 
                         const yaExiste = allProducts.some(p => p.code.toLowerCase() === code.toLowerCase());
                         if (yaExiste) {
@@ -1931,8 +1957,8 @@ window.loadOfertas = function() {
                             firebaseId: null,
                             name: name,
                             code: code,
-                            brand: "HTK",
-                            category: "desgaste",
+                            brand: brandValue,
+                            category: categoryValue,
                             image: "https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN",
                             specs: specs,
                             highlight: false,
@@ -1946,7 +1972,7 @@ window.loadOfertas = function() {
                     }
 
                     localStorage.setItem('carrillo_cache_time', '0');
-                    alert(`✅ ¡Importación finalizada!\n\n• Productos nuevos añadidos: ${importadosCount}\n• Duplicados omitidos: ${duplicadosCount}`);
+                    alert(`✅ ¡Importación finalizada!\n\n• Nuevos añadidos: ${importadosCount}\n• Duplicados omitidos: ${duplicadosCount}`);
                     event.target.value = '';
                     await loadAllProductsForSelection();
                     await loadProductsFromFirebase();
