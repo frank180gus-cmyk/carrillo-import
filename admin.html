@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración | Carrillo Import</title>
     <link rel="icon" href="logodecatalogo.png" type="image/png">
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -22,18 +20,13 @@
             }
         }
     </script>
-    <!-- FontAwesome para Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-   <style>
-    body {
-        background-color: #09090b;
-    }
-    /* Estilos nuevos para las tablas */
-    table { border-collapse: separate; border-spacing: 0 8px; }
-    tr { background: #151517; transition: all 0.3s; }
-    tr:hover { transform: scale(1.01); background: #27272A; }
-</style>
-    <!-- Chart.js para la gráfica de Stock -->
+    <style>
+        body { background-color: #09090b; }
+        table { border-collapse: separate; border-spacing: 0 8px; }
+        tr { background: #151517; transition: all 0.3s; }
+        tr:hover { background: #27272A; }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -54,201 +47,137 @@
         </div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL DEL PANEL (Oculto hasta loguearse) -->
+    <!-- CONTENIDO PRINCIPAL DEL PANEL -->
     <div id="adminPanelContent" class="hidden flex-1 flex flex-col">
-     <header class="bg-panel border-b border-line px-6 py-4 flex items-center justify-between">
-    <!-- Contenedor Izquierdo: Logo -->
-    <div class="flex items-center">
-        <img src="https://i.ibb.co/4nVF36HB/LOGO.png" alt="Logo Carrillo Import" class="h-10 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.6)] bg-white/20 p-1 rounded-lg">
-    </div>
-    
-    <!-- Contenedor Derecho: Botón Salir -->
-    <button onclick="cerrarSesion()" class="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-sm py-2 px-5 rounded-xl transition-all">
-        Salir <i class="fa-solid fa-right-from-bracket"></i>
-    </button>
-</header>
-        <!-- CONTENEDOR PRINCIPAL TIPO ROBLOX -->
+        <header class="bg-panel border-b border-line px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <img src="https://i.ibb.co/4nVF36HB/LOGO.png" alt="Logo Carrillo Import" class="h-10 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.6)] bg-white/20 p-1 rounded-lg">
+            </div>
+            <button onclick="cerrarSesion()" class="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-sm py-2 px-5 rounded-xl transition-all">
+                Salir <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </header>
+
         <div class="flex flex-col md:flex-row min-h-screen w-full bg-base text-white">
 
-            <!-- SIDEBAR LATERAL (Estilo Roblox) -->
+            <!-- SIDEBAR LATERAL (ORDENADO CON RECOMENDADOS Y OFERTAS JUNTOS) -->
             <aside class="w-full md:w-64 bg-zinc-950 border-r border-line p-5 flex flex-col gap-6 shrink-0">
-                <!-- Logo del Admin -->
                 <div class="flex items-center gap-3 px-2">
-                   
                     <div>
                         <h2 class="font-display text-xs tracking-wider uppercase text-white font-bold leading-none">Carrillo <span class="text-yellow">Import</span></h2>
                         <p class="text-[9px] text-steel tracking-widest uppercase mt-1">Administración</p>
                     </div>
                 </div>
 
-                <!-- Menú de Navegación -->
-<nav class="flex flex-col gap-1.5 flex-1">
-    <button onclick="switchAdminTab('recommended')" id="btn-tab-recommended" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
-        <i class="fa-solid fa-star text-base"></i> <span>Recomendados</span>
-    </button>
-    <button onclick="switchAdminTab('dashboard')" id="btn-tab-dashboard" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
-        <i class="fa-solid fa-chart-pie text-base"></i> <span>Dashboard</span>
-    </button>
-    <button onclick="switchAdminTab('inventory')" id="btn-tab-inventory" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
-        <i class="fa-solid fa-boxes-stacked text-base"></i> <span>Inventario</span>
-    </button>
-    <button onclick="switchAdminTab('comments')" id="btn-tab-comments" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
-        <i class="fa-solid fa-comments text-base"></i> <span>Comentarios</span>
-    </button>
-    <button onclick="switchAdminTab('ofertas')" id="btn-tab-ofertas" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
-        <i class="fa-solid fa-tags text-base"></i> <span>Ofertas</span>
-    </button>
-    <button onclick="switchAdminTab('deliveries')" id="btn-tab-deliveries" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
-        <i class="fa-solid fa-truck-fast text-base"></i> <span>Envíos en Campo</span>
-    </button>
-</nav>
+                <nav class="flex flex-col gap-1.5 flex-1">
+                    <button onclick="switchAdminTab('dashboard')" id="btn-tab-dashboard" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
+                        <i class="fa-solid fa-chart-pie text-base"></i> <span>Dashboard</span>
+                    </button>
+                    <button onclick="switchAdminTab('recommended')" id="btn-tab-recommended" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
+                        <i class="fa-solid fa-star text-base"></i> <span>Recomendados</span>
+                    </button>
+                    <button onclick="switchAdminTab('ofertas')" id="btn-tab-ofertas" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
+                        <i class="fa-solid fa-tags text-base"></i> <span>Ofertas</span>
+                    </button>
+                    <button onclick="switchAdminTab('inventory')" id="btn-tab-inventory" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
+                        <i class="fa-solid fa-boxes-stacked text-base"></i> <span>Inventario</span>
+                    </button>
+                    <button onclick="switchAdminTab('comments')" id="btn-tab-comments" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
+                        <i class="fa-solid fa-comments text-base"></i> <span>Comentarios</span>
+                    </button>
+                    <button onclick="switchAdminTab('deliveries')" id="btn-tab-deliveries" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
+                        <i class="fa-solid fa-truck-fast text-base"></i> <span>Envíos en Campo</span>
+                    </button>
+                </nav>
 
-                <!-- Botón de Salir -->
                 <button onclick="cerrarSesion()" class="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold text-red-400 hover:bg-red-500/10 transition-all mt-auto border border-transparent w-full">
                     <i class="fa-solid fa-right-from-bracket text-base"></i>
                     <span>Salir</span>
                 </button>
             </aside>
 
-            <!-- AREA DE CONTENIDO (Derecha) -->
+            <!-- AREA DE CONTENIDO -->
             <main class="flex-1 p-6 md:p-8 space-y-8 overflow-y-auto">
                     
                <!-- 🚚 SECCIÓN: GESTIÓN DE ENVÍOS EN CAMPO -->
-<div id="view-deliveries" class="admin-view hidden space-y-6">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <h2 class="text-xl font-black text-white uppercase tracking-tight">Envíos y Trabajos Realizados</h2>
-            <p class="text-xs text-steel mt-1">Sube las fotos reales de tus clientes.</p>
-        </div>
-        <button onclick="openDeliveryModal()" class="bg-yellow text-black text-xs font-bold py-2 px-4 rounded-lg">
-            <i class="fa-solid fa-plus"></i> Agregar Envío
-        </button>
-    </div>
+                <div id="view-deliveries" class="admin-view hidden space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-xl font-black text-white uppercase tracking-tight">Envíos y Trabajos Realizados</h2>
+                            <p class="text-xs text-steel mt-1">Sube las fotos reales de tus clientes.</p>
+                        </div>
+                        <button onclick="openDeliveryModal()" class="bg-yellow text-black text-xs font-bold py-2 px-4 rounded-lg">
+                            <i class="fa-solid fa-plus"></i> Agregar Envío
+                        </button>
+                    </div>
 
-    <!-- Tabla de Envíos -->
-    <div class="bg-panel border border-line rounded-xl overflow-hidden">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="border-b border-line bg-zinc-950/40 text-[11px] font-bold text-steel uppercase tracking-wider">
-                    <th class="px-6 py-4">Foto</th>
-                    <th class="px-6 py-4">Cliente / Empresa</th>
-                    <th class="px-6 py-4">Repuesto Vendido</th>
-                    <th class="px-6 py-4">Ubicación / Destino</th>
-                    <th class="px-6 py-4 text-right">Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="deliveriesTableBody" class="text-xs divide-y divide-zinc-900 text-white">
-                <!-- Se carga con JS -->
-            </tbody>
-        </table>
-    </div>
+                    <div class="bg-panel border border-line rounded-xl overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-line bg-zinc-950/40 text-[11px] font-bold text-steel uppercase tracking-wider">
+                                    <th class="px-6 py-4">Foto</th>
+                                    <th class="px-6 py-4">Cliente / Empresa</th>
+                                    <th class="px-6 py-4">Repuesto Vendido</th>
+                                    <th class="px-6 py-4">Ubicación / Destino</th>
+                                    <th class="px-6 py-4 text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deliveriesTableBody" class="text-xs divide-y divide-zinc-900 text-white"></tbody>
+                        </table>
+                    </div>
 
-    <!-- BOTONERA DE PAGINACIÓN -->
-    <div class="flex items-center justify-center gap-2 pt-6 pb-2">
-        <button type="button" onclick="window.prevDeliveriesPage()" id="btnPrevDeliveriesPage" class="bg-zinc-900 border border-line text-white text-xs font-bold py-2 px-4 rounded-xl">Anterior</button>
-        <span class="bg-zinc-950 border border-line text-xs text-white px-4 py-2 rounded-xl">PÁG: <span id="currentDeliveriesPageText">1</span></span>
-        <button type="button" onclick="window.nextDeliveriesPage()" id="btnNextDeliveriesPage" class="bg-zinc-900 border border-line text-white text-xs font-bold py-2 px-4 rounded-xl">Siguiente</button>
-    </div>
-</div> 
+                    <div class="flex items-center justify-center gap-2 pt-6 pb-2">
+                        <button type="button" onclick="window.prevDeliveriesPage()" id="btnPrevDeliveriesPage" class="bg-zinc-900 border border-line text-white text-xs font-bold py-2 px-4 rounded-xl">Anterior</button>
+                        <span class="bg-zinc-950 border border-line text-xs text-white px-4 py-2 rounded-xl">PÁG: <span id="currentDeliveriesPageText">1</span></span>
+                        <button type="button" onclick="window.nextDeliveriesPage()" id="btnNextDeliveriesPage" class="bg-zinc-900 border border-line text-white text-xs font-bold py-2 px-4 rounded-xl">Siguiente</button>
+                    </div>
+                </div> 
 
-<!-- 📊 SECCIÓN DE DASHBOARD (ESTADÍSTICAS) -->
-<div id="view-dashboard" class="admin-view space-y-6">
-    <h2 class="text-lg font-bold mb-1 text-yellow">Panel de Control (Dashboard)</h2>
+                <!-- 📊 SECCIÓN DE DASHBOARD -->
+                <div id="view-dashboard" class="admin-view space-y-6">
+                    <h2 class="text-lg font-bold mb-1 text-yellow">Panel de Control (Dashboard)</h2>
                     <p class="text-xs text-steel mb-4">Resumen del estado actual de tus repuestos e inventario.</p>
-                    <!-- GRID CONTENEDOR NUEVO (Métricas + Gráfica de Dona) -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        
-                        <!-- COLUMNA 1: Las 4 Tarjetas de Métricas -->
                         <div class="lg:col-span-2 grid grid-cols-2 gap-4">
-                            <!-- CARD 1: TOTAL -->
                             <div class="bg-panel border border-line p-4 rounded-2xl flex items-center gap-4">
-                                <div class="w-12 h-12 bg-blue-500/10 text-blue-400 flex items-center justify-center rounded-xl text-xl">
-                                    <i class="fa-solid fa-boxes-stacked"></i>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] text-steel uppercase font-bold">Total Repuestos</p>
-                                    <h3 id="statTotal" class="text-xl font-extrabold">0</h3>
-                                </div>
+                                <div class="w-12 h-12 bg-blue-500/10 text-blue-400 flex items-center justify-center rounded-xl text-xl"><i class="fa-solid fa-boxes-stacked"></i></div>
+                                <div><p class="text-[10px] text-steel uppercase font-bold">Total Repuestos</p><h3 id="statTotal" class="text-xl font-extrabold">0</h3></div>
                             </div>
-
-                            <!-- CARD 2: DISPONIBLES -->
                             <div class="bg-panel border border-line p-4 rounded-2xl flex items-center gap-4">
-                                <div class="w-12 h-12 bg-green-500/10 text-green-400 flex items-center justify-center rounded-xl text-xl">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] text-steel uppercase font-bold">Disponibles</p>
-                                    <h3 id="statAvailable" class="text-xl font-extrabold">0</h3>
-                                </div>
+                                <div class="w-12 h-12 bg-green-500/10 text-green-400 flex items-center justify-center rounded-xl text-xl"><i class="fa-solid fa-circle-check"></i></div>
+                                <div><p class="text-[10px] text-steel uppercase font-bold">Disponibles</p><h3 id="statAvailable" class="text-xl font-extrabold">0</h3></div>
                             </div>
-
-                            <!-- CARD 3: BAJO STOCK -->
                             <div class="bg-panel border border-line p-4 rounded-2xl flex items-center gap-4">
-                                <div class="w-12 h-12 bg-yellow/10 text-yellow flex items-center justify-center rounded-xl text-xl">
-                                    <i class="fa-solid fa-triangle-exclamation"></i>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] text-steel uppercase font-bold">Bajo Stock</p>
-                                    <h3 id="statLow" class="text-xl font-extrabold">0</h3>
-                                </div>
+                                <div class="w-12 h-12 bg-yellow/10 text-yellow flex items-center justify-center rounded-xl text-xl"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                                <div><p class="text-[10px] text-steel uppercase font-bold">Bajo Stock</p><h3 id="statLow" class="text-xl font-extrabold">0</h3></div>
                             </div>
-
-                            <!-- CARD 4: AGOTADOS -->
                             <div class="bg-panel border border-line p-4 rounded-2xl flex items-center gap-4">
-                                <div class="w-12 h-12 bg-red-500/10 text-red-400 flex items-center justify-center rounded-xl text-xl">
-                                    <i class="fa-solid fa-circle-xmark"></i>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] text-steel uppercase font-bold">Agotados</p>
-                                    <h3 id="statOut" class="text-xl font-extrabold">0</h3>
-                                </div>
+                                <div class="w-12 h-12 bg-red-500/10 text-red-400 flex items-center justify-center rounded-xl text-xl"><i class="fa-solid fa-circle-xmark"></i></div>
+                                <div><p class="text-[10px] text-steel uppercase font-bold">Agotados</p><h3 id="statOut" class="text-xl font-extrabold">0</h3></div>
                             </div>
                         </div>
-
-                        <!-- COLUMNA 2: Espacio para el Gráfico -->
                         <div class="bg-panel border border-line p-4 rounded-2xl flex flex-col items-center justify-center min-h-[200px]">
                             <p class="text-[10px] text-steel uppercase font-bold mb-2 self-start">Distribución de Inventario</p>
-                            <div class="w-full max-w-[150px] h-[150px] relative">
-                                <canvas id="stockChart"></canvas>
-                            </div>
+                            <div class="w-full max-w-[150px] h-[150px] relative"><canvas id="stockChart"></canvas></div>
                         </div>
                     </div>
 
-                    <!-- 🚨 SEGUNDA FILA: LOS DOS CUADROS SOLICITADOS -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-                        <!-- CUADRO 1: ALERTAS DE STOCK CRÍTICO -->
                         <div class="bg-panel border border-line p-5 rounded-2xl">
                             <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                                    <i class="fa-solid fa-triangle-exclamation text-yellow"></i> Alertas de Stock Crítico
-                                </h3>
+                                <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-yellow"></i> Alertas de Stock Crítico</h3>
                                 <span id="alertsCountBadge" class="text-[10px] bg-red-500/10 text-red-400 font-bold px-2.5 py-1 rounded-full border border-red-500/20">0 Alertas</span>
                             </div>
-                            <div id="criticalStockContainer" class="space-y-2 max-h-[280px] overflow-y-auto pr-1">
-                                <div class="flex flex-col items-center justify-center h-full text-center py-8">
-                                    <i class="fa-solid fa-spinner animate-spin text-yellow text-lg mb-2"></i>
-                                    <p class="text-[10px] text-steel">Cargando estado del inventario...</p>
-                                </div>
-                            </div>
+                            <div id="criticalStockContainer" class="space-y-2 max-h-[280px] overflow-y-auto pr-1"></div>
                         </div>
 
-                        <!-- CUADRO 2: COMENTARIOS RECIENTES -->
                         <div class="bg-panel border border-line p-5 rounded-2xl">
                             <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                                    <i class="fa-regular fa-comments text-yellow"></i> Comentarios Recientes
-                                </h3>
+                                <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-regular fa-comments text-yellow"></i> Comentarios Recientes</h3>
                                 <button onclick="switchAdminTab('comments')" class="text-[10px] text-yellow font-bold hover:underline">Ver todos</button>
                             </div>
-                            <div id="recentReviewsContainer" class="space-y-2 max-h-[280px] overflow-y-auto pr-1">
-                                <div class="flex flex-col items-center justify-center h-full text-center py-8">
-                                    <i class="fa-solid fa-spinner animate-spin text-yellow text-lg mb-2"></i>
-                                    <p class="text-[10px] text-steel">Cargando comentarios...</p>
-                                </div>
-                            </div>
+                            <div id="recentReviewsContainer" class="space-y-2 max-h-[280px] overflow-y-auto pr-1"></div>
                         </div>
-
                     </div>
                 </div>
 
@@ -261,25 +190,21 @@
                         </div>
                         
                         <div class="flex flex-col sm:flex-row gap-3">
-                <!-- 🚨 BOTÓN DE IMPORTACIÓN MASIVA DESDE EXCEL / CSV -->
-                <label class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl transition-all text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg">
-                    <i class="fa-solid fa-file-excel"></i> Importar Masivo (CSV)
-                    <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="importCatalogFromCSV(event)">
-                </label>
+                            <label class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl transition-all text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg">
+                                <i class="fa-solid fa-file-excel"></i> Importar Masivo (CSV)
+                                <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="importCatalogFromCSV(event)">
+                            </label>
 
-                <div class="relative w-full sm:w-80">
-                    <input type="text" id="adminSearchInput" oninput="filterAdminList()" placeholder="Buscar por código, nombre o marca..." class="w-full bg-panel text-white text-sm px-4 py-2.5 pl-10 rounded-xl border border-line focus:border-yellow focus:outline-none transition-all">
-                    <span class="absolute left-3.5 top-3 text-zinc-500 text-sm">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </span>
-                </div>
-                <button onclick="openAddModal()" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-2.5 px-5 rounded-xl transition-all text-sm flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-plus text-base"></i> Agregar Producto
-                </button>
-            </div>
+                            <div class="relative w-full sm:w-80">
+                                <input type="text" id="adminSearchInput" oninput="filterAdminList()" placeholder="Buscar por código, nombre o marca..." class="w-full bg-panel text-white text-sm px-4 py-2.5 pl-10 rounded-xl border border-line focus:border-yellow focus:outline-none transition-all">
+                                <span class="absolute left-3.5 top-3 text-zinc-500 text-sm"><i class="fa-solid fa-magnifying-glass"></i></span>
+                            </div>
+                            <button onclick="openAddModal()" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-2.5 px-5 rounded-xl transition-all text-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-plus text-base"></i> Agregar Producto
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- TABLA DE PRODUCTOS -->
                     <div class="bg-panel border border-line rounded-2xl overflow-hidden shadow-xl">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
@@ -293,9 +218,7 @@
                                         <th class="p-4 text-center">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="adminTableBody" class="divide-y divide-line text-sm">
-                                    <!-- Se carga desde Firebase -->
-                                </tbody>
+                                <tbody id="adminTableBody" class="divide-y divide-line text-sm"></tbody>
                             </table>
                         </div>
                         <div id="noResults" class="hidden text-center py-12 text-steel text-sm">
@@ -303,86 +226,105 @@
                             <p>No se encontraron repuestos con tu búsqueda.</p>
                         </div>
 
-                        <!-- 🚨 BOTONERA DE PAGINACIÓN DE PRODUCTOS -->
                         <div class="flex items-center justify-center gap-2 pt-6 pb-2 border-t border-line bg-zinc-950/20">
-                            <button type="button" onclick="window.prevAdminProductPage()" id="btnPrevAdminPage" class="disabled:opacity-40 disabled:hover:border-line bg-zinc-900 hover:bg-zinc-800 border border-line hover:border-yellow text-white text-xs font-bold py-2 px-4 rounded-xl transition-all active:scale-95 flex items-center gap-1.5" disabled>
-                                <i class="fa-solid fa-chevron-left text-yellow text-[10px]"></i>
-                                <span>Anterior</span>
-                            </button>
-                            <span class="bg-zinc-950 border border-line text-xs text-white font-mono font-bold px-4 py-2 rounded-xl">
-                                PÁG. INVENTARIO: <span class="text-yellow" id="currentAdminPageText">1</span>
-                            </span>
-                            <button type="button" onclick="window.nextAdminProductPage()" id="btnNextAdminPage" class="disabled:opacity-40 disabled:hover:border-line bg-zinc-900 hover:bg-zinc-800 border border-line hover:border-yellow text-white text-xs font-bold py-2 px-4 rounded-xl transition-all active:scale-95 flex items-center gap-1.5">
-                                <span>Siguiente</span>
-                                <i class="fa-solid fa-chevron-right text-yellow text-[10px]"></i>
-                            </button>
+                            <button type="button" onclick="window.prevAdminProductPage()" id="btnPrevAdminPage" class="disabled:opacity-40 bg-zinc-900 hover:bg-zinc-800 border border-line text-white text-xs font-bold py-2 px-4 rounded-xl transition-all" disabled>Anterior</button>
+                            <span class="bg-zinc-950 border border-line text-xs text-white font-mono font-bold px-4 py-2 rounded-xl">PÁG. INVENTARIO: <span class="text-yellow" id="currentAdminPageText">1</span></span>
+                            <button type="button" onclick="window.nextAdminProductPage()" id="btnNextAdminPage" class="disabled:opacity-40 bg-zinc-900 hover:bg-zinc-800 border border-line text-white text-xs font-bold py-2 px-4 rounded-xl transition-all" disabled>Siguiente</button>
                         </div>
                     </div>
                 </div>
-               <!-- ⭐️ PESTAÑA RECOMENDADOS (Centro de Mando) -->
-    <div id="view-recommended" class="admin-view hidden space-y-8">
-    
-    <!-- APARTADO 1: VITRINA DE DESTACADOS (Arriba) -->
-    <div class="bg-panel border border-line rounded-2xl p-6">
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h2 class="text-lg font-bold text-white uppercase">Vitrina de Destacados</h2>
-                <p class="text-xs text-steel">Máximo 5 productos. Estos son los que ven tus clientes.</p>
-            </div>
-            <button onclick="clearAllHighlights()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-xs transition-all">
-                <i class="fa-solid fa-broom mr-2"></i> Limpiar todos
-            </button>
-        </div>
-        <table class="w-full text-left">
-            <tbody id="recommendedTableBody" class="divide-y divide-line text-xs text-white"></tbody>
-        </table>
-    </div>
 
-    <!-- APARTADO 2: INVENTARIO PARA ELEGIR (Abajo) -->
-    <div class="bg-panel border border-line rounded-2xl p-6">
-        <!-- CABECERA: Título a la izquierda, Buscador a la derecha -->
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h2 class="text-lg font-bold text-white uppercase">Seleccionar Productos</h2>
-                <p class="text-xs text-steel">Busca y añade productos a la vitrina superior.</p>
-            </div>
-            <input type="text" id="recSearchInput" oninput="currentPage=1; renderRecommendedInventory()" placeholder="Buscar producto..." class="bg-black border border-line rounded-lg px-4 py-2 text-xs text-white w-64">
-        </div>
+                <!-- ⭐️ PESTAÑA RECOMENDADOS -->
+                <div id="view-recommended" class="admin-view hidden space-y-8">
+                    <div class="bg-panel border border-line rounded-2xl p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-lg font-bold text-white uppercase">Vitrina de Destacados</h2>
+                                <p class="text-xs text-steel">Máximo 5 productos. Estos son los que ven tus clientes en la página principal.</p>
+                            </div>
+                            <button onclick="clearAllHighlights()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-xs transition-all">
+                                <i class="fa-solid fa-broom mr-2"></i> Limpiar todos
+                            </button>
+                        </div>
+                        <table class="w-full text-left">
+                            <tbody id="recommendedTableBody" class="divide-y divide-line text-xs text-white"></tbody>
+                        </table>
+                    </div>
 
-        <!-- TABLA -->
-        <table class="w-full text-left border-collapse mt-4">
-            <thead>
-                <tr class="border-b border-line bg-zinc-900/50 text-steel text-xs font-bold uppercase tracking-wider">
-                    <th class="p-4">Nombre del Repuesto</th>
-                    <th class="p-4">Código</th>
-                    <th class="p-4 text-right">Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="inventoryForHighlightBody" class="divide-y divide-line text-xs text-white">
-                <!-- Aquí se pintan los productos -->
-            </tbody>
-        </table>
+                    <div class="bg-panel border border-line rounded-2xl p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-lg font-bold text-white uppercase">Seleccionar Productos</h2>
+                                <p class="text-xs text-steel">Busca y añade productos a la vitrina superior.</p>
+                            </div>
+                            <input type="text" id="recSearchInput" oninput="currentPage=1; renderRecommendedInventory()" placeholder="Buscar producto..." class="bg-black border border-line rounded-lg px-4 py-2 text-xs text-white w-64">
+                        </div>
 
-        <!-- PAGINACIÓN -->
-        <div class="flex items-center justify-center gap-2 pt-6 border-t border-line mt-4">
-            <button onclick="changePage(-1)" class="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all">Anterior</button>
-            <span id="currentPageText" class="text-xs font-bold text-yellow px-2">1</span>
-            <button onclick="changePage(1)" class="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all">Siguiente</button>
-        </div>
-    </div>
-    </div>
-    <!-- ▲ cierre correcto de view-recommended (antes quedaba abierto) -->
+                        <table class="w-full text-left border-collapse mt-4">
+                            <thead>
+                                <tr class="border-b border-line bg-zinc-900/50 text-steel text-xs font-bold uppercase tracking-wider">
+                                    <th class="p-4">Nombre del Repuesto</th>
+                                    <th class="p-4">Código</th>
+                                    <th class="p-4 text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryForHighlightBody" class="divide-y divide-line text-xs text-white"></tbody>
+                        </table>
 
-    <!-- 🏷️ PESTAÑA OFERTAS (antes vivía mal anidada dentro de "recomendados") -->
-    <div id="view-ofertas" class="admin-view hidden space-y-8">
-        <div class="bg-panel border border-line rounded-2xl p-6">
-            <h2 class="text-lg font-bold text-white uppercase">Gestión de Ofertones</h2>
-            <p class="text-xs text-steel mb-6">Productos marcados como oferta.</p>
-            <table class="w-full text-left">
-                <tbody id="ofertasTableBody" class="divide-y divide-line text-xs text-white"></tbody>
-            </table>
-        </div>
-    </div>
+                        <div class="flex items-center justify-center gap-2 pt-6 border-t border-line mt-4">
+                            <button onclick="changePage(-1)" class="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all">Anterior</button>
+                            <span id="currentPageText" class="text-xs font-bold text-yellow px-2">1</span>
+                            <button onclick="changePage(1)" class="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all">Siguiente</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🏷️ PESTAÑA OFERTAS (ACTUALIZADA IDÉNTICA A RECOMENDADOS) -->
+                <div id="view-ofertas" class="admin-view hidden space-y-8">
+                    <!-- Vitrina de Ofertas Arriba -->
+                    <div class="bg-panel border border-line rounded-2xl p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-lg font-bold text-white uppercase">Vitrina de Ofertones</h2>
+                                <p class="text-xs text-steel">Máximo 5 productos en oferta. Estos son los que se muestran en la sección de ofertas.</p>
+                            </div>
+                            <button onclick="clearAllOfertas()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-xs transition-all">
+                                <i class="fa-solid fa-broom mr-2"></i> Limpiar todos
+                            </button>
+                        </div>
+                        <table class="w-full text-left">
+                            <tbody id="ofertasTableBody" class="divide-y divide-line text-xs text-white"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Seleccionar Productos para Ofertas Abajo -->
+                    <div class="bg-panel border border-line rounded-2xl p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-lg font-bold text-white uppercase">Seleccionar Productos para Oferta</h2>
+                                <p class="text-xs text-steel">Busca y añade productos a la vitrina de oferstones.</p>
+                            </div>
+                            <input type="text" id="ofertaSearchInput" oninput="currentOfertaPage=1; renderOfertaInventory()" placeholder="Buscar producto..." class="bg-black border border-line rounded-lg px-4 py-2 text-xs text-white w-64">
+                        </div>
+
+                        <table class="w-full text-left border-collapse mt-4">
+                            <thead>
+                                <tr class="border-b border-line bg-zinc-900/50 text-steel text-xs font-bold uppercase tracking-wider">
+                                    <th class="p-4">Nombre del Repuesto</th>
+                                    <th class="p-4">Código</th>
+                                    <th class="p-4 text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryForOfertaBody" class="divide-y divide-line text-xs text-white"></tbody>
+                        </table>
+
+                        <div class="flex items-center justify-center gap-2 pt-6 border-t border-line mt-4">
+                            <button onclick="changeOfertaPage(-1)" class="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all">Anterior</button>
+                            <span id="currentOfertaPageText" class="text-xs font-bold text-yellow px-2">1</span>
+                            <button onclick="changeOfertaPage(1)" class="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all">Siguiente</button>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- 💬 MODERACIÓN DE OPINIONES Y COMENTARIOS -->
                 <div id="view-comments" class="admin-view hidden space-y-6">
@@ -392,33 +334,20 @@
                             <p class="text-xs text-steel">Revisa lo que opinan tus clientes. Elimina cualquier comentario falso o dañino al instante.</p>
                         </div>
 
-                        <!-- BUSCADOR DE COMENTARIOS -->
                         <div class="relative w-full sm:w-80">
                             <input type="text" id="reviewsSearchInput" oninput="filterReviews()" placeholder="Buscar por cliente, código o máquina..." class="w-full bg-panel text-white text-sm px-4 py-2.5 pl-10 rounded-xl border border-line focus:border-yellow focus:outline-none transition-all">
-                            <span class="absolute left-3.5 top-3 text-zinc-500 text-sm">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </span>
+                            <span class="absolute left-3.5 top-3 text-zinc-500 text-sm"><i class="fa-solid fa-magnifying-glass"></i></span>
                         </div>
                     </div>
 
                     <div class="bg-panel border border-line rounded-2xl p-6 shadow-xl space-y-4 max-h-[500px] overflow-y-auto" id="reviewsContainer">
-                        <!-- Las reseñas cargadas desde Firebase se pintarán aquí -->
                         <p class="text-xs text-steel text-center py-8">Cargando comentarios...</p>
                     </div>
 
-                    <!-- 🚨 BOTONERA DE PAGINACIÓN DE COMENTARIOS (ADMIN) -->
                     <div class="flex items-center justify-center gap-2 pt-6 pb-2">
-                        <button type="button" onclick="window.prevCommentsPage()" id="btnPrevCommentsPage" class="disabled:opacity-40 disabled:hover:border-line bg-zinc-900 hover:bg-zinc-800 border border-line hover:border-yellow text-white text-xs font-bold py-2 px-4 rounded-xl transition-all active:scale-95 flex items-center gap-1.5" disabled>
-                            <i class="fa-solid fa-chevron-left text-yellow text-[10px]"></i>
-                            <span>Anterior</span>
-                        </button>
-                        <span class="bg-zinc-950 border border-line text-xs text-white font-mono font-bold px-4 py-2 rounded-xl">
-                            PÁG. COMENTARIOS: <span class="text-yellow" id="currentCommentsPageText">1</span>
-                        </span>
-                        <button type="button" onclick="window.nextCommentsPage()" id="btnNextCommentsPage" class="disabled:opacity-40 disabled:hover:border-line bg-zinc-900 hover:bg-zinc-800 border border-line hover:border-yellow text-white text-xs font-bold py-2 px-4 rounded-xl transition-all active:scale-95 flex items-center gap-1.5">
-                            <span>Siguiente</span>
-                            <i class="fa-solid fa-chevron-right text-yellow text-[10px]"></i>
-                        </button>
+                        <button type="button" onclick="window.prevCommentsPage()" id="btnPrevCommentsPage" class="disabled:opacity-40 bg-zinc-900 hover:bg-zinc-800 border border-line text-white text-xs font-bold py-2 px-4 rounded-xl transition-all" disabled>Anterior</button>
+                        <span class="bg-zinc-950 border border-line text-xs text-white font-mono font-bold px-4 py-2 rounded-xl">PÁG. COMENTARIOS: <span class="text-yellow" id="currentCommentsPageText">1</span></span>
+                        <button type="button" onclick="window.nextCommentsPage()" id="btnNextCommentsPage" class="disabled:opacity-40 bg-zinc-900 hover:bg-zinc-800 border border-line text-white text-xs font-bold py-2 px-4 rounded-xl transition-all" disabled>Siguiente</button>
                     </div>
                 </div>
 
@@ -426,14 +355,12 @@
         </div>
     </div>
 
-    <!-- MODAL DE FORMULARIO (AGREGAR / EDITAR PRODUCTO) -->
+    <!-- MODAL DE FORMULARIO -->
     <div id="productModal" class="hidden fixed inset-0 bg-black/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-panel border border-line rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden transition-all transform scale-100">
+        <div class="bg-panel border border-line rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden">
             <div class="px-6 py-4 border-b border-line flex items-center justify-between">
                 <h3 id="modalTitle" class="text-base font-bold text-white">Agregar Nuevo Repuesto</h3>
-                <button type="button" onclick="document.getElementById('productModal').classList.add('hidden')" class="text-steel hover:text-white transition-all text-lg">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <button type="button" onclick="document.getElementById('productModal').classList.add('hidden')" class="text-steel hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <form id="productForm" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
@@ -442,138 +369,108 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Nombre del Producto *</label>
-                        <input type="text" id="f_name" required placeholder="Ej: Punta Advance K170" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none transition-all">
+                        <input type="text" id="f_name" required placeholder="Ej: Punta Advance K170" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Código de Parte *</label>
-                        <input type="text" id="f_code" required placeholder="Ej: K170" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none transition-all">
+                        <input type="text" id="f_code" required placeholder="Ej: K170" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Marca</label>
-                        <input type="text" id="f_brand" placeholder="Ej: HTK" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none transition-all">
+                        <input type="text" id="f_brand" placeholder="Ej: HTK" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none">
                     </div>
                     <div>
-    <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Categoría</label>
-    <select id="f_category" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none transition-all">
-        <option value="desgaste">Línea Desgaste (HTK)</option>
-        <option value="filtracion">Filtración y Motor (CAT)</option>
-        <option value="rodaje">Tren de Rodaje (H-TRACK)</option>
-    </select>
-</div>
-<!-- AQUÍ PEGAS TU NUEVO CHECKBOX -->
-    <div class="flex items-center gap-2 py-2">
-        <input type="checkbox" id="f_oferta" class="w-4 h-4 rounded border-line text-yellow bg-black focus:ring-0 cursor-pointer">
-        <label for="f_oferta" class="text-xs font-semibold text-steel uppercase cursor-pointer select-none">Marcar como OFERTA</label>
-    </div>
-    
-    <!-- Y AQUÍ SEGURAMENTE TENDRÁS EL OTRO CHECKBOX DE "DESTACADO" -->
-    <div class="flex items-center gap-2 py-2">
-        <input type="checkbox" id="f_highlight" class="w-4 h-4 rounded border-line text-yellow bg-black focus:ring-0 cursor-pointer">
-        <label for="f_highlight" class="text-xs font-semibold text-steel uppercase cursor-pointer select-none">Marcar como destacado</label>
-    </div>
+                        <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Categoría</label>
+                        <select id="f_category" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none">
+                            <option value="desgaste">Línea Desgaste (HTK)</option>
+                            <option value="filtracion">Filtración y Motor (CAT)</option>
+                            <option value="rodaje">Tren de Rodaje (H-TRACK)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="flex items-center gap-2 py-2">
+                        <input type="checkbox" id="f_oferta" class="w-4 h-4 rounded border-line text-yellow bg-black cursor-pointer">
+                        <label for="f_oferta" class="text-xs font-semibold text-steel uppercase cursor-pointer">Marcar como OFERTA</label>
+                    </div>
+                    <div class="flex items-center gap-2 py-2">
+                        <input type="checkbox" id="f_highlight" class="w-4 h-4 rounded border-line text-yellow bg-black cursor-pointer">
+                        <label for="f_highlight" class="text-xs font-semibold text-steel uppercase cursor-pointer">Marcar como Destacado</label>
+                    </div>
                 </div>
 
                 <div>
-    <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Estado de Stock</label>
-    <select id="f_stock" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none transition-all">
-        <option value="Disponible">  Disponible</option>
-        <option value="Bajo Stock">  Bajo Stock</option>
-        <option value="Agotado">  Agotado</option>
-    </select>
-</div>
+                    <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Estado de Stock</label>
+                    <select id="f_stock" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none">
+                        <option value="Disponible">Disponible</option>
+                        <option value="Bajo Stock">Bajo Stock</option>
+                        <option value="Agotado">Agotado</option>
+                    </select>
+                </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Enlace de la Foto (URL)</label>
-                    <input type="text" id="f_imageUrl" placeholder="https://i.ibb.co/..." class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none transition-all">
+                    <input type="text" id="f_imageUrl" placeholder="https://i.ibb.co/..." class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Especificaciones Técnicas</label>
-                    <textarea id="f_specs" rows="3" placeholder="Describe el repuesto, material, compatibilidad, etc." class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none transition-all resize-none"></textarea>
+                    <textarea id="f_specs" rows="3" placeholder="Describe el repuesto, material, compatibilidad, etc." class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none resize-none"></textarea>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-4 border-t border-line">
-                    <button type="button" onclick="document.getElementById('productModal').classList.add('hidden')" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-2.5 px-5 rounded-xl transition-all text-sm">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-2.5 px-5 rounded-xl transition-all text-sm">
-                        Guardar Producto
-                    </button>
+                    <button type="button" onclick="document.getElementById('productModal').classList.add('hidden')" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-2.5 px-5 rounded-xl text-sm">Cancelar</button>
+                    <button type="submit" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-2.5 px-5 rounded-xl text-sm">Guardar Producto</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 🚨 MODAL: AGREGAR NUEVO ENVÍO EN CAMPO -->
+    <!-- MODAL DE ENVÍOS EN CAMPO -->
     <div id="deliveryModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-start justify-center p-4 backdrop-blur-sm overflow-y-auto py-8">
-        <div class="bg-panel border border-line w-full max-w-lg rounded-2xl overflow-hidden shadow-card relative mt-10">
-            <!-- Cabecera -->
+        <div class="bg-panel border border-line w-full max-w-lg rounded-2xl overflow-hidden relative mt-10">
             <div class="border-b border-line p-6 flex justify-between items-center">
                 <h3 class="text-sm font-black text-white uppercase tracking-wider">Agregar Registro de Campo</h3>
-                <button onclick="window.closeDeliveryModal()" class="text-steel hover:text-white bg-zinc-900 w-8 h-8 rounded-full flex items-center justify-center transition-all">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <button onclick="window.closeDeliveryModal()" class="text-steel hover:text-white bg-zinc-900 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
             </div>
-
-            <!-- Formulario -->
             <form id="deliveryForm" onsubmit="window.saveDelivery(event)" class="p-6 space-y-4 text-xs">
                 <div>
                     <label class="block text-steel font-bold uppercase tracking-wider mb-2">Cliente o Empresa *</label>
-                    <input type="text" id="deliveryClient" required placeholder="Ej: Consorcio Minero Huaraz" class="w-full bg-zinc-950 border border-line rounded-lg px-4 py-3 text-white focus:outline-none focus:border-yellow">
+                    <input type="text" id="deliveryClient" required placeholder="Ej: Consorcio Minero Huaraz" class="w-full bg-zinc-950 border border-line rounded-lg px-4 py-3 text-white focus:border-yellow">
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-steel font-bold uppercase tracking-wider mb-2">Repuesto Vendido *</label>
-                        <input type="text" id="deliveryProduct" required placeholder="Ej: Punta PC400" class="w-full bg-zinc-950 border border-line rounded-lg px-4 py-3 text-white focus:outline-none focus:border-yellow">
+                        <input type="text" id="deliveryProduct" required placeholder="Ej: Punta PC400" class="w-full bg-zinc-950 border border-line rounded-lg px-4 py-3 text-white focus:border-yellow">
                     </div>
                     <div>
                         <label class="block text-steel font-bold uppercase tracking-wider mb-2">Ubicación / Destino *</label>
-                        <input type="text" id="deliveryLocation" required placeholder="Ej: Cajamarca, Perú" class="w-full bg-zinc-950 border border-line rounded-lg px-4 py-3 text-white focus:outline-none focus:border-yellow">
+                        <input type="text" id="deliveryLocation" required placeholder="Ej: Cajamarca, Perú" class="w-full bg-zinc-950 border border-line rounded-lg px-4 py-3 text-white focus:border-yellow">
                     </div>
                 </div>
-
                 <div>
                     <label class="block text-steel font-bold uppercase tracking-wider mb-2">Enlace de la Foto (URL) *</label>
-                    <input type="url" id="deliveryImage" required placeholder="https://i.ibb.co/... o link de Google Drive" class="w-full bg-zinc-950 border border-line rounded-lg px-4 py-3 text-white focus:outline-none focus:border-yellow">
+                    <input type="url" id="deliveryImage" required placeholder="https://i.ibb.co/..." class="w-full bg-zinc-950 border border-line rounded-lg px-4 py-3 text-white focus:border-yellow">
                 </div>
-
                 <div class="border-t border-line pt-4 flex justify-end gap-3">
-                    <button type="button" onclick="window.closeDeliveryModal()" class="bg-zinc-900 hover:bg-zinc-800 text-white font-bold py-2.5 px-5 rounded-lg transition-all active:scale-95">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-2.5 px-5 rounded-lg transition-all active:scale-95">
-                        Guardar Envío
-                    </button>
+                    <button type="button" onclick="window.closeDeliveryModal()" class="bg-zinc-900 hover:bg-zinc-800 text-white font-bold py-2.5 px-5 rounded-lg">Cancelar</button>
+                    <button type="submit" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-2.5 px-5 rounded-lg">Guardar Envío</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- SDK de Firebase -->
+    <!-- SDK de Firebase y Lógica -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
-            getFirestore, 
-            collection, 
-            addDoc,
-            query,
-            where,
-            getDocs, 
-            orderBy,
-            limit,          
-            startAfter,     
-            serverTimestamp,
-            doc, 
-            setDoc, 
-            deleteDoc,
-            getCountFromServer // 🚨 Importamos getCountFromServer de Firebase
+            getFirestore, collection, addDoc, query, where, getDocs, orderBy, limit, startAfter, serverTimestamp, doc, setDoc, deleteDoc 
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIGURACIÓN DE TU FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyC_S-TfI_6RUPgzggr063FBOSJ0DdDtyu8",
             authDomain: "carrillo-import.firebaseapp.com",
@@ -588,26 +485,11 @@
         const db = getFirestore(app);
 
         window.firebaseDB = db;
-        window.firebaseFunctions = { 
-            collection, 
-            addDoc, 
-            query, 
-            where, 
-            getDocs, 
-            orderBy, 
-            limit,          
-            startAfter,     
-            serverTimestamp, 
-            doc, 
-            setDoc, 
-            deleteDoc,
-            getCountFromServer // 🚨 Exponemos getCountFromServer globalmente
-        };
+        window.firebaseFunctions = { collection, addDoc, query, where, getDocs, orderBy, limit, startAfter, serverTimestamp, doc, setDoc, deleteDoc };
    
         let stockChart = null;
-        let products = [];
+        let allProducts = [];
         let allReviews = [];
-        window.allProducts = [];
         const CLAVE_ADMIN = "carrillo2026"; 
 
         window.checkAdminPassword = function() {
@@ -629,9 +511,7 @@
 
         function updateStockChart(disponibles, bajoStock, agotados) {
             const ctx = document.getElementById('stockChart').getContext('2d');
-            if (stockChart) {
-                stockChart.destroy();
-            }
+            if (stockChart) stockChart.destroy();
 
             stockChart = new Chart(ctx, {
                 type: 'doughnut',
@@ -639,94 +519,41 @@
                     labels: ['Disponible', 'Bajo Stock', 'Agotado'],
                     datasets: [{
                         data: [disponibles, bajoStock, agotados],
-                        backgroundColor: [
-                            '#22c55e', 
-                            '#eab308', 
-                            '#ef4444'  
-                        ],
+                        backgroundColor: ['#22c55e', '#eab308', '#ef4444'],
                         borderWidth: 2,
-                        borderColor: '#18181b', 
+                        borderColor: '#18181b',
                         hoverOffset: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false 
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.label || '';
-                                    let value = context.raw || 0;
-                                    return ` ${label}: ${value} repuestos`;
-                                }
-                            }
-                        }
-                    },
-                    cutout: '75%' 
+                    plugins: { legend: { display: false } },
+                    cutout: '75%'
                 }
             });
         }
 
-    // ESTA FUNCIÓN VA FUERA, INDEPENDIENTE
-window.loadAllProductsForSelection = async function() {
-    const { collection, getDocs } = window.firebaseFunctions;
-    const q = collection(window.firebaseDB, "products");
-    const snapshot = await getDocs(q);
-    
-    allProducts = []; 
-    snapshot.forEach(doc => {
-        allProducts.push({ firebaseId: doc.id, ...doc.data() });
-    });
-    
-    renderRecommendedInventory(); 
-    renderOfertasList(); // 🔥 Llamada directa, sin demora
-};
-
-      async function loadDataFromFirebase() {
-            if (!window.firebaseFunctions) {
-                setTimeout(loadDataFromFirebase, 50);
-                return;
-            }
-            await loadAllProductsForSelection(); // 🔥 PRIMERO cargamos la lista maestra en memoria
-            await loadProductsFromFirebase();    // Luego cargamos la tabla paginada
+        async function loadDataFromFirebase() {
+            await loadProductsFromFirebase();
             await loadReviewsFromFirebase();
             await window.loadDeliveriesFromFirebase();
-            await loadOfertas(); 
+            switchAdminTab('dashboard');
         }
 
-        // =========================================================
-        // VARIABLES GLOBALES PARA LA PAGINACIÓN DEL ADMIN
-        // =========================================================
         let currentAdminPage = 1;
-        const adminProductsPerPage = 5; 
-        let adminPagesHistory = [];
-        let hasMoreAdminProducts = true;
-        let currentPage = 1; // Para la paginación de abajo
-        const perPage = 5;    // Para la paginación de abajo
-   
-        // =========================================================
-        // VARIABLES GLOBALES PARA LA PAGINACIÓN DE OPINIONES
-        // =========================================================
+        const perPage = 5; 
+        let currentPage = 1;
+        let currentOfertaPage = 1; // Paginación independiente para ofertas
         let currentCommentsPage = 1;
         const commentsPerPage = 7; 
         let currentReviewsFilteredList = null;
-
-        // =========================================================
-        // VARIABLES GLOBALES PARA LA PAGINACIÓN DE ENVÍOS EN CAMPO
-        // =========================================================
         let currentDeliveriesPage = 1;
         const deliveriesPerPage = 7; 
         let deliveriesPagesHistory = [];
         let hasMoreDeliveries = true;
 
-        // =========================================================
-        // CARGAR PRODUCTOS EN EL PANEL CON LÍMITE DE 
-        // =========================================================
-       async function loadProductsFromFirebase() {
+        async function loadProductsFromFirebase() {
             const { collection, getDocs } = window.firebaseFunctions;            
             const tbody = document.getElementById('adminTableBody');
             if (!tbody) return;
@@ -754,22 +581,20 @@ window.loadAllProductsForSelection = async function() {
                     });
                 });
                 
-                // 🚨 Orden alfabético estricto de la A a la Z
                 allProducts.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
                 
                 await updateDashboardStats();
                 renderAdminTableLocally();
                 renderRecommendedList();
                 renderRecommendedInventory();
-                loadOfertas();
+                renderOfertasList();
+                renderOfertaInventory();
             } catch (error) {
                 console.error("Error al conectar:", error);
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-400">Error al conectar.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-400">Error al conectar con la base de datos.</td></tr>`;
             }
         }
-// =========================================================
-        // 🚀 PAGINACIÓN Y BÚSQUEDA LOCAL DE 5 EN 5 (ORDEN ALFABÉTICO)
-        // =========================================================
+
         function renderAdminTableLocally() {
             const tbody = document.getElementById('adminTableBody');
             if (!tbody) return;
@@ -777,7 +602,6 @@ window.loadAllProductsForSelection = async function() {
 
             const queryText = (document.getElementById('adminSearchInput')?.value || "").toLowerCase().trim();
             
-            // 🔍 Buscador mejorado que filtra por nombre, código o marca de forma segura
             let filtered = allProducts.filter(p => {
                 const name = (p.name || "").toLowerCase();
                 const code = (p.code || "").toLowerCase();
@@ -800,17 +624,30 @@ window.loadAllProductsForSelection = async function() {
             const paginatedItems = filtered.slice(start, start + perPage);
 
             paginatedItems.forEach(prod => {
-              let categoryLabel = "Línea Desgaste (HTK)";
-                if (prod.category === "filtracion" || prod.brand === "CAT") categoryLabel = "Filtración y Motor (CAT)";
-                if (prod.category === "rodaje" || prod.brand === "HTRACK" || prod.brand === "HTTRACK") categoryLabel = "Tren de Rodaje (H-TRACK)";
+                let stockBadgeColor = "text-green-500 bg-green-500/10";
+                let currentStock = prod.stock || "Disponible";
+                let cleanStock = currentStock.trim().toLowerCase();
+
+                if (cleanStock === "bajo stock") stockBadgeColor = "text-yellow-500 bg-yellow-500/10";
+                else if (cleanStock === "agotado") stockBadgeColor = "text-red-500 bg-red-500/10";
+
+                let categoryLabel = "Línea Desgaste (HTK)";
+                if (prod.category === "filtracion") categoryLabel = "Filtración y Motor (CAT)";
+                if (prod.category === "rodaje") categoryLabel = "Tren de Rodaje (H-TRACK)";
 
                 tbody.innerHTML += `
                     <tr class="hover:bg-zinc-900/40 transition-all align-middle">
                         <td class="p-4"><img src="${prod.image}" class="w-12 h-12 object-contain bg-black border border-line rounded p-1" onerror="this.src='https://placehold.co/100'"></td>
                         <td class="p-4 font-mono"><div class="text-white font-bold text-xs">${prod.code}</div><div class="text-[10px] text-steel uppercase">${prod.brand}</div></td>
-                        <td class="p-4"><div class="font-bold text-white text-xs max-w-xs truncate">${prod.name}</div></td>
+                        <td class="p-4">
+                            <div class="font-bold text-white text-xs max-w-xs truncate">${prod.name}</div>
+                            <div class="flex gap-1 mt-1">
+                                ${prod.highlight ? `<span class="inline-block text-[9px] bg-yellow/20 text-yellow px-1.5 py-0.5 rounded font-bold uppercase tracking-wider"><i class="fa-solid fa-star text-[8px] mr-1"></i> Destacado</span>` : ''}
+                                ${prod.oferta ? `<span class="inline-block text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider"><i class="fa-solid fa-tag text-[8px] mr-1"></i> Oferta</span>` : ''}
+                            </div>
+                        </td>
                         <td class="p-4 text-xs text-steel">${categoryLabel}</td>
-                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold text-green-500 bg-green-500/10">${prod.stock || 'Disponible'}</span></td>
+                        <td class="p-4"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${stockBadgeColor}"><span class="w-1.5 h-1.5 rounded-full bg-current"></span>${currentStock}</span></td>
                         <td class="p-4 text-center">
                             <button onclick="editProduct(${prod.id})" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold py-1.5 px-3 rounded-lg mr-2">Editar</button>
                             <button onclick="deleteProduct(${prod.id})" class="bg-red-950/30 text-red-400 text-xs font-bold py-1.5 px-3 rounded-lg">Eliminar</button>
@@ -821,20 +658,9 @@ window.loadAllProductsForSelection = async function() {
             updateAdminPaginationButtons(filtered.length);
         }
 
-        window.nextAdminProductPage = function() {
-            currentAdminPage++;
-            renderAdminTableLocally();
-        };
-
-        window.prevAdminProductPage = function() {
-            currentAdminPage--;
-            renderAdminTableLocally();
-        };
-
-        window.filterAdminList = function() {
-            currentAdminPage = 1; 
-            renderAdminTableLocally();
-        };
+        window.nextAdminProductPage = function() { currentAdminPage++; renderAdminTableLocally(); };
+        window.prevAdminProductPage = function() { currentAdminPage--; renderAdminTableLocally(); };
+        window.filterAdminList = function() { currentAdminPage = 1; renderAdminTableLocally(); };
 
         function updateAdminPaginationButtons(totalItems) {
             const maxPages = Math.max(1, Math.ceil(totalItems / perPage));
@@ -843,40 +669,23 @@ window.loadAllProductsForSelection = async function() {
             document.getElementById("btnPrevAdminPage").disabled = (currentAdminPage <= 1);
             document.getElementById("btnNextAdminPage").disabled = (currentAdminPage >= maxPages);
         }
-           
-        // =========================================================
-        // CARGAR TODAS LAS OPINIONES DE FIREBASE
-        // =========================================================
+
         async function loadReviewsFromFirebase() {
             const { collection, getDocs } = window.firebaseFunctions;
             const container = document.getElementById('reviewsContainer');
             if (!container) return;
 
-            container.innerHTML = `<p class="text-xs text-steel text-center py-8">Cargando comentarios...</p>`;
-
             try {
                 const snapshot = await getDocs(collection(window.firebaseDB, "reviews"));
                 allReviews = [];
-
                 snapshot.forEach(doc => {
                     const r = doc.data();
-                    allReviews.push({
-                        reviewId: doc.id,
-                        nombre: r.nombre || "Anónimo",
-                        estrellas: r.estrellas || 5,
-                        comentario: r.comentario || "",
-                        productoId: r.productoId
-                    });
+                    allReviews.push({ reviewId: doc.id, nombre: r.nombre || "Anónimo", estrellas: r.estrellas || 5, comentario: r.comentario || "", productoId: r.productoId });
                 });
-
                 currentCommentsPage = 1;
                 currentReviewsFilteredList = null;
                 renderReviews();
-
-            } catch (error) {
-                console.error("❌ Error cargando opiniones:", error);
-                container.innerHTML = `<p class="text-xs text-red-400 text-center py-4">Error cargando opiniones.</p>`;
-            }
+            } catch (error) { console.error("Error cargando opiniones:", error); }
         }
 
         window.nextCommentsPage = function() {
@@ -904,32 +713,18 @@ window.loadAllProductsForSelection = async function() {
             if (btnNext) btnNext.disabled = (currentCommentsPage >= maxPage);
         }
 
-        // =========================================================
-        // CARGAR ENVÍOS DESDE FIRESTORE EN EL PANEL (LIMITADO A 10)
-        // =========================================================
         window.loadDeliveriesFromFirebase = async function() {
             const tableBody = document.getElementById("deliveriesTableBody");
             if (!tableBody) return;
-
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="5" class="text-center py-12 text-steel">
-                        <i class="fa-solid fa-spinner animate-spin text-yellow text-lg mb-2"></i>
-                        <p>Cargando registros de campo...</p>
-                    </td>
-                </tr>
-            `;
 
             try {
                 const { collection, getDocs, query, orderBy, limit, startAfter } = window.firebaseFunctions;
                 let qConstraints = [orderBy("fecha", "desc")];
 
-                if (currentDeliveriesPage === 1) {
-                    qConstraints.push(limit(deliveriesPerPage));
-                } else {
+                if (currentDeliveriesPage === 1) qConstraints.push(limit(deliveriesPerPage));
+                else {
                     const previousPageEndDoc = deliveriesPagesHistory[currentDeliveriesPage - 2];
-                    qConstraints.push(startAfter(previousPageEndDoc));
-                    qConstraints.push(limit(deliveriesPerPage));
+                    qConstraints.push(startAfter(previousPageEndDoc), limit(deliveriesPerPage));
                 }
 
                 const q = query(collection(window.firebaseDB, "deliveries"), ...qConstraints);
@@ -938,362 +733,116 @@ window.loadAllProductsForSelection = async function() {
 
                 snapshot.forEach(doc => {
                     const d = doc.data();
-                    const id = doc.id;
                     deliveriesHTML += `
-                        <tr class="hover:bg-zinc-900/40 transition-colors border-b border-zinc-900">
-                            <td class="px-6 py-4">
-                                <img src="${normalizeImageUrl(d.image)}" alt="Envío" class="w-12 h-12 rounded-lg object-cover border border-line">
-                            </td>
+                        <tr class="hover:bg-zinc-900/40 border-b border-zinc-900">
+                            <td class="px-6 py-4"><img src="${normalizeImageUrl(d.image)}" class="w-12 h-12 rounded-lg object-cover border border-line"></td>
                             <td class="px-6 py-4 font-bold text-white">${d.client || 'Sin nombre'}</td>
                             <td class="px-6 py-4 text-steel">${d.product || 'No especificado'}</td>
-                            <td class="px-6 py-4">
-                                <span class="bg-yellow/10 text-yellow text-[10px] font-bold px-2.5 py-1 rounded-full border border-yellow/20">
-                                    <i class="fa-solid fa-location-dot mr-1"></i>${d.location || 'Perú'}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <button onclick="window.deleteDelivery('${id}')" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 text-xs py-1.5 px-3 rounded-lg transition-all active:scale-95">
-                                    <i class="fa-solid fa-trash mr-1"></i>Eliminar
-                                </button>
-                            </td>
-                        </tr>
-                    `;
+                            <td class="px-6 py-4"><span class="bg-yellow/10 text-yellow text-[10px] font-bold px-2.5 py-1 rounded-full border border-yellow/20"><i class="fa-solid fa-location-dot mr-1"></i>${d.location || 'Perú'}</span></td>
+                            <td class="px-6 py-4 text-right"><button onclick="window.deleteDelivery('${doc.id}')" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 text-xs py-1.5 px-3 rounded-lg transition-all"><i class="fa-solid fa-trash mr-1"></i>Eliminar</button></td>
+                        </tr>`;
                 });
 
-                if (deliveriesHTML === "") {
-                    tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="5" class="text-center py-12 text-steel">
-                                <p>No se encontraron trabajos o envíos registrados.</p>
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
-
-                tableBody.innerHTML = deliveriesHTML;
-
-                if (snapshot.docs.length > 0) {
-                    deliveriesPagesHistory[currentDeliveriesPage - 1] = snapshot.docs[snapshot.docs.length - 1];
-                }
-
+                tableBody.innerHTML = deliveriesHTML || `<tr><td colspan="5" class="text-center py-12 text-steel">No se encontraron trabajos o envíos registrados.</td></tr>`;
+                if (snapshot.docs.length > 0) deliveriesPagesHistory[currentDeliveriesPage - 1] = snapshot.docs[snapshot.docs.length - 1];
                 hasMoreDeliveries = snapshot.docs.length === deliveriesPerPage;
                 window.updateDeliveriesPaginationButtons();
-
-            } catch (error) {
-                console.error("Error cargando envíos:", error);
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="text-center py-12 text-red-400">
-                            <i class="fa-solid fa-triangle-exclamation text-lg mb-2"></i>
-                            <p>Error al cargar registros de campo.</p>
-                        </td>
-                    </tr>
-                `;
-            }
+            } catch (error) { console.error("Error cargando envíos:", error); }
         };
 
-        window.nextDeliveriesPage = async function() {
-            if (!hasMoreDeliveries) return;
-            currentDeliveriesPage++;
-            await window.loadDeliveriesFromFirebase();
-        };
-
-        window.prevDeliveriesPage = async function() {
-            if (currentDeliveriesPage <= 1) return;
-            currentDeliveriesPage--;
-            await window.loadDeliveriesFromFirebase();
-        };
-
+        window.nextDeliveriesPage = async function() { if (!hasMoreDeliveries) return; currentDeliveriesPage++; await window.loadDeliveriesFromFirebase(); };
+        window.prevDeliveriesPage = async function() { if (currentDeliveriesPage <= 1) return; currentDeliveriesPage--; await window.loadDeliveriesFromFirebase(); };
         window.updateDeliveriesPaginationButtons = function() {
-            const pageText = document.getElementById("currentDeliveriesPageText");
-            const btnPrev = document.getElementById("btnPrevDeliveriesPage");
-            const btnNext = document.getElementById("btnNextDeliveriesPage");
-
-            if (pageText) pageText.innerText = currentDeliveriesPage;
-            if (btnPrev) btnPrev.disabled = (currentDeliveriesPage === 1);
-            if (btnNext) btnNext.disabled = !hasMoreDeliveries;
+            document.getElementById("currentDeliveriesPageText").innerText = currentDeliveriesPage;
+            document.getElementById("btnPrevDeliveriesPage").disabled = (currentDeliveriesPage === 1);
+            document.getElementById("btnNextDeliveriesPage").disabled = !hasMoreDeliveries;
         };
 
-        // =========================================================
-        // FILTRAR COMENTARIOS EN TIEMPO REAL
-        // =========================================================
         window.filterReviews = function() {
             const query = document.getElementById('reviewsSearchInput').value.toLowerCase().trim();
-
-            if (!query) {
-                currentReviewsFilteredList = null;
-                currentCommentsPage = 1;
-                renderReviews();
-                return;
-            }
-
-            const filtered = allReviews.filter(rev => {
-                const nombre = (rev.nombre || "").toLowerCase();
-                const comentario = (rev.comentario || "").toLowerCase();
-                
-                const associatedProduct = products.find(p => p.id === rev.productoId);
-                const prodName = associatedProduct ? associatedProduct.name.toLowerCase() : "";
-                const prodCode = associatedProduct ? associatedProduct.code.toLowerCase() : "";
-
-                return nombre.includes(query) || 
-                       comentario.includes(query) || 
-                       prodName.includes(query) || 
-                       prodCode.includes(query);
-            });
-
-            currentReviewsFilteredList = filtered;
+            if (!query) { currentReviewsFilteredList = null; currentCommentsPage = 1; renderReviews(); return; }
+            currentReviewsFilteredList = allReviews.filter(rev => rev.nombre.toLowerCase().includes(query) || rev.comentario.toLowerCase().includes(query));
             currentCommentsPage = 1;
             renderReviews();
         }
 
-        // =========================================================
-        // PINTAR COMENTARIOS (TAB COMENTARIOS + DASHBOARD DE COMENTARIOS RECIENTES)
-        // =========================================================
         function renderReviews() {
             const container = document.getElementById('reviewsContainer');
             if (!container) return;
             container.innerHTML = "";
 
             const fullList = currentReviewsFilteredList || allReviews;
-
             if (fullList.length === 0) {
-                container.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-12 text-center text-steel w-full">
-                        <i class="fa-solid fa-magnifying-glass text-2xl text-yellow mb-2"></i>
-                        <p class="text-xs font-semibold">No se encontraron comentarios.</p>
-                        <p class="text-[10px]">Prueba buscando con otro nombre, máquina o código.</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="text-center py-12 text-steel">No se encontraron comentarios.</div>`;
                 updateCommentsPaginationButtons(0);
                 return;
             }
 
-            const maxPage = Math.max(1, Math.ceil(fullList.length / commentsPerPage));
-            if (currentCommentsPage > maxPage) currentCommentsPage = maxPage;
             const startIdx = (currentCommentsPage - 1) * commentsPerPage;
             const list = fullList.slice(startIdx, startIdx + commentsPerPage);
 
-            // Renderizar los comentarios de la lista activa en la sección de Moderación
             list.forEach(rev => {
-                const associatedProduct = products.find(p => p.id === rev.productoId);
-                const productName = associatedProduct ? associatedProduct.name : "Producto Eliminado";
+                const associatedProduct = allProducts.find(p => p.id === rev.productoId);
+                const productName = associatedProduct ? associatedProduct.name : "PRODUCTO ELIMINADO";
                 const productCode = associatedProduct ? associatedProduct.code : "N/A";
 
                 const div = document.createElement('div');
-                div.className = "flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-zinc-900/50 border border-line rounded-xl gap-4 hover:border-zinc-700 transition-all w-full";
+                div.className = "flex justify-between items-center p-4 bg-zinc-900/50 border border-line rounded-xl gap-4 w-full";
                 div.innerHTML = `
                     <div class="space-y-1 text-left">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold text-white">${rev.nombre}</span>
-                            <span class="text-yellow-500 text-xs">${"★".repeat(rev.estrellas)}${"☆".repeat(5 - rev.estrellas)}</span>
-                        </div>
+                        <div class="flex items-center gap-2"><span class="text-xs font-bold text-white">${rev.nombre}</span><span class="text-yellow-500 text-xs">${"★".repeat(rev.estrellas)}</span></div>
                         <p class="text-xs text-zinc-300 italic">"${rev.comentario}"</p>
                         <p class="text-[10px] text-steel">En repuesto: <strong class="text-zinc-400 uppercase">${productName} (${productCode})</strong></p>
                     </div>
-                    <button onclick="deleteReview('${rev.reviewId}')" class="bg-red-950/20 hover:bg-red-900/40 text-red-400 text-xs font-bold py-2 px-4 rounded-xl transition-all self-end sm:self-center shrink-0">
-                        <i class="fa-solid fa-trash-can mr-1.5"></i> Borrar Opinión
-                    </button>
+                    <button onclick="deleteReview('${rev.reviewId}')" class="bg-red-950/20 hover:bg-red-900/40 text-red-400 text-xs font-bold py-2 px-4 rounded-xl shrink-0"><i class="fa-solid fa-trash-can mr-1.5"></i> Borrar</button>
                 `;
                 container.appendChild(div);
             });
-
             updateCommentsPaginationButtons(fullList.length);
 
-            // 🚨 RELLENAR CUADRO 2: COMENTARIOS RECIENTES EN EL DASHBOARD
             const recentContainer = document.getElementById('recentReviewsContainer');
             if (recentContainer) {
-                recentContainer.innerHTML = "";
-                if (allReviews.length === 0) {
-                    recentContainer.innerHTML = `
-                        <div class="flex flex-col items-center justify-center h-full text-center py-8">
-                            <i class="fa-regular fa-comments text-2xl text-steel mb-2"></i>
-                            <p class="text-[10px] text-steel">Aún no hay comentarios de tus clientes.</p>
-                        </div>
-                    `;
-                } else {
-                    const recentReviews = allReviews.slice(-3).reverse(); 
-                    recentReviews.forEach(rev => {
-                        const divRecent = document.createElement('div');
-                        divRecent.className = "p-3 bg-zinc-900/40 border border-line rounded-xl space-y-1";
-                        divRecent.innerHTML = `
-                            <div class="flex items-center justify-between">
-                                <span class="text-[10px] font-bold text-white">${rev.nombre}</span>
-                                <span class="text-yellow-500 text-[9px]">${"★".repeat(rev.estrellas)}${"☆".repeat(5 - rev.estrellas)}</span>
-                            </div>
-                            <p class="text-[11px] text-zinc-300 italic truncate">"${rev.comentario}"</p>
-                        `;
-                        recentContainer.appendChild(divRecent);
-                    });
-                }
+                recentContainer.innerHTML = allReviews.length === 0 ? `<p class="text-[10px] text-steel text-center py-4">Aún no hay comentarios.</p>` : allReviews.slice(-3).reverse().map(rev => `
+                    <div class="p-3 bg-zinc-900/40 border border-line rounded-xl space-y-1">
+                        <div class="flex items-center justify-between"><span class="text-[10px] font-bold text-white">${rev.nombre}</span><span class="text-yellow-500 text-[9px]">${"★".repeat(rev.estrellas)}</span></div>
+                        <p class="text-[11px] text-zinc-300 italic truncate">"${rev.comentario}"</p>
+                    </div>
+                `).join('');
             }
         }
 
-        // NUEVO: ELIMINAR OPINIÓN DE FIREBASE
         window.deleteReview = async function(reviewId) {
-            if (!confirm('¿Estás seguro de que deseas eliminar este comentario permanentemente? Esta acción no se puede deshacer.')) return;
-
-            try {
-                const { doc, deleteDoc } = window.firebaseFunctions;
-                const ref = doc(window.firebaseDB, "reviews", reviewId);
-                await deleteDoc(ref);
-
-                alert("Comentario eliminado correctamente.");
-                await loadReviewsFromFirebase(); 
-
-            } catch (error) {
-                console.error("❌ Error al eliminar comentario:", error);
-                alert("No se pudo eliminar el comentario.");
-            }
+            if (!confirm('¿Eliminar comentario permanentemente?')) return;
+            const { doc, deleteDoc } = window.firebaseFunctions;
+            await deleteDoc(doc(window.firebaseDB, "reviews", reviewId));
+            await loadReviewsFromFirebase();
         }
 
-        // =========================================================
-        // CALCULO DASHBOARD CON COORDENADA TOTAL DEL SERVIDOR (12)
-        // =========================================================
         async function updateDashboardStats() {
-    try {
-        let disponibles = 0;
-        let bajoStock = 0;
-        let agotados = 0;
-        let criticalItemsHTML = "";
+            let disponibles = 0, bajoStock = 0, agotados = 0, criticalItemsHTML = "";
+            const totalReal = allProducts.length;
 
-        // Usamos directamente los productos que ya tenemos en memoria (allProducts) sin gastar peticiones extra
-        const totalReal = allProducts.length;
-
-        allProducts.forEach(p => {
-            let s = (p.stock || "Disponible").trim().toLowerCase();
-            if (s === "disponible") disponibles++;
-            else if (s === "bajo stock") {
-                bajoStock++;
-                criticalItemsHTML += `
-                    <div class="flex items-center justify-between p-3 bg-zinc-900/40 border border-line rounded-xl">
-                        <div class="text-left">
-                            <h4 class="text-xs font-bold text-white uppercase">${p.name || 'Sin nombre'}</h4>
-                            <p class="text-[10px] text-steel">CÓD: ${p.code || 'S/N'} | MARCA: ${p.brand || 'GENÉRICO'}</p>
-                        </div>
-                        <span class="text-[10px] bg-yellow/10 text-yellow px-2 py-1 rounded-lg font-bold uppercase shrink-0">Bajo Stock</span>
-                    </div>
-                `;
-            }
-            else if (s === "agotado") {
-                agotados++;
-                criticalItemsHTML += `
-                    <div class="flex items-center justify-between p-3 bg-zinc-900/40 border border-line rounded-xl">
-                        <div class="text-left">
-                            <h4 class="text-xs font-bold text-white uppercase">${p.name || 'Sin nombre'}</h4>
-                            <p class="text-[10px] text-steel">CÓD: ${p.code || 'S/N'} | MARCA: ${p.brand || 'GENÉRICO'}</p>
-                        </div>
-                        <span class="text-[10px] bg-red-500/10 text-red-400 px-2 py-1 rounded-lg font-bold uppercase shrink-0">Agotado</span>
-                    </div>
-                `;
-            }
-        });
-
-        document.getElementById('statTotal').textContent = totalReal;
-        document.getElementById('statAvailable').textContent = disponibles;
-        document.getElementById('statLow').textContent = bajoStock;
-        document.getElementById('statOut').textContent = agotados;
-
-        const alertsCount = bajoStock + agotados;
-        const alertsBadge = document.getElementById('alertsCountBadge');
-        if (alertsBadge) alertsBadge.innerText = `${alertsCount} Alertas`;
-        
-        const alertContainer = document.getElementById('criticalStockContainer');
-        if (alertContainer) {
-            if (alertsCount === 0) {
-                alertContainer.innerHTML = `
-                    <div class="flex flex-col items-center justify-center h-full text-center py-8">
-                        <i class="fa-solid fa-circle-check text-2xl text-green-500 mb-2"></i>
-                        <p class="text-xs text-zinc-300 font-semibold">¡Todo en orden!</p>
-                        <p class="text-[10px] text-steel">Todos tus repuestos tienen stock suficiente.</p>
-                    </div>
-                `;
-            } else {
-                alertContainer.innerHTML = criticalItemsHTML;
-            }
-        }
-
-        updateStockChart(disponibles, bajoStock, agotados);
-
-    } catch (error) {
-        console.error("❌ Error actualizando métricas del dashboard:", error);
-    }
-}  
-        
-
-        function renderAdminTable(list) {
-    const tbody = document.getElementById('adminTableBody');
-    tbody.innerHTML = '';
-    
-    // 🔥 AÑADE ESTA LÍNEA AQUÍ PARA ORDENAR ALFABÉTICAMENTE
-    list.sort((a, b) => a.name.localeCompare(b.name));
-
-    if (list.length === 0) {
-        document.getElementById('noResults').classList.remove('hidden');
-        return;
-    } else {
-        document.getElementById('noResults').classList.add('hidden');
-    }
-
-    list.forEach(prod => {
-                let stockBadgeColor = "text-green-500 bg-green-500/10";
-                let currentStock = prod.stock || "Disponible";
-                let cleanStock = currentStock.trim().toLowerCase();
-
-                if (cleanStock === "bajo stock") {
-                    stockBadgeColor = "text-yellow-500 bg-yellow-500/10";
-                } else if (cleanStock === "agotado") {
-                    stockBadgeColor = "text-red-500 bg-red-500/10";
+            allProducts.forEach(p => {
+                let s = (p.stock || "Disponible").trim().toLowerCase();
+                if (s === "disponible") disponibles++;
+                else if (s === "bajo stock") {
+                    bajoStock++;
+                    criticalItemsHTML += `<div class="flex items-center justify-between p-3 bg-zinc-900/40 border border-line rounded-xl"><h4 class="text-xs font-bold text-white uppercase">${p.name}</h4><span class="text-[10px] bg-yellow/10 text-yellow px-2 py-1 rounded-lg font-bold">Bajo Stock</span></div>`;
+                } else if (s === "agotado") {
+                    agotados++;
+                    criticalItemsHTML += `<div class="flex items-center justify-between p-3 bg-zinc-900/40 border border-line rounded-xl"><h4 class="text-xs font-bold text-white uppercase">${p.name}</h4><span class="text-[10px] bg-red-500/10 text-red-400 px-2 py-1 rounded-lg font-bold">Agotado</span></div>`;
                 }
-
-                let categoryLabel = "Línea Desgaste (HTK)";
-                if (prod.category === "filtracion") categoryLabel = "Filtración y Motor (CAT)";
-                if (prod.category === "rodaje") categoryLabel = "Tren de Rodaje (H-TRACK)";
-
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-zinc-900/40 transition-all align-middle";
-                tr.innerHTML = `
-                    <td class="p-4">
-                        <img src="${prod.image}" class="w-12 h-12 object-contain bg-black border border-line rounded p-1" onerror="this.src='https://placehold.co/100'">
-                    </td>
-                    <td class="p-4 font-mono">
-                        <div class="text-white font-bold text-xs">${prod.code}</div>
-                        <div class="text-[10px] text-steel uppercase">${prod.brand}</div>
-                    </td>
-                   <td class="p-4">
-        <div class="font-bold text-white text-xs max-w-xs truncate">${prod.name}</div>
-       <div class="flex gap-1 mt-1">
-    ${prod.highlight === true ? `<span class="inline-block text-[9px] bg-yellow/20 text-yellow px-1.5 py-0.5 rounded font-bold uppercase tracking-wider"><i class="fa-solid fa-star text-[8px] mr-1"></i> Destacado</span>` : ''}
-    ${(prod.oferta === true || prod.oferta === "true") ? `<span class="inline-block text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider"><i class="fa-solid fa-tag text-[8px] mr-1"></i> Oferta</span>` : ''}
-</div>
-    </td>
-                    <td class="p-4 text-xs text-steel">
-                        ${categoryLabel}
-                    </td>
-                    <td class="p-4">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${stockBadgeColor}">
-                            <span class="w-1.5 h-1.5 rounded-full currentColor bg-current"></span>
-                            ${currentStock}
-                        </span>
-                    </td>
-                    <td class="p-4 text-center">
-                        <div class="flex justify-center gap-2">
-                            <button onclick="editProduct(${prod.id})" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold py-2 px-4 rounded-xl transition-all">
-                                <i class="fa-solid fa-pen-to-square mr-1"></i> Editar
-                            </button>
-                            <button onclick="deleteProduct(${prod.id})" class="bg-red-950/30 hover:bg-red-900/40 text-red-400 text-xs font-bold py-2 px-4 rounded-xl transition-all">
-                                <i class="fa-solid fa-trash-can mr-1"></i> Eliminar
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
             });
+
+            document.getElementById('statTotal').textContent = totalReal;
+            document.getElementById('statAvailable').textContent = disponibles;
+            document.getElementById('statLow').textContent = bajoStock;
+            document.getElementById('statOut').textContent = agotados;
+            document.getElementById('alertsCountBadge').innerText = `${bajoStock + agotados} Alertas`;
+            document.getElementById('criticalStockContainer').innerHTML = (bajoStock + agotados) === 0 ? `<div class="text-center py-8 text-green-500 font-semibold text-xs">¡Todo en orden! Stock suficiente.</div>` : criticalItemsHTML;
+            updateStockChart(disponibles, bajoStock, agotados);
         }
 
-       // =========================================================
-        // 🚀 IMPORTACIÓN MASIVA DESDE EXCEL / CSV (CORREGIDA Y ESTABLE)
-        // =========================================================
         window.importCatalogFromCSV = function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1303,69 +852,31 @@ window.loadAllProductsForSelection = async function() {
                 skipEmptyLines: true,
                 complete: async function(results) {
                     const rows = results.data;
-                    if (rows.length <= 1) {
-                        alert("⚠️ El archivo está vacío o solo contiene los títulos.");
-                        event.target.value = '';
-                        return;
-                    }
+                    if (rows.length <= 1) { alert("⚠️ Archivo vacío."); event.target.value = ''; return; }
 
-                    // Ignoramos estrictamente la fila 1 de títulos y filtramos filas que tengan al menos Código y Nombre
-                    const validRows = rows.slice(1).filter(r => {
-                        const code = (r[0] || "").trim();
-                        const name = (r[1] || "").trim();
-                        return code !== "" && name !== "" && code.toLowerCase() !== "código";
-                    });
+                    const validRows = rows.slice(1).filter(r => (r[0] || "").trim() !== "" && (r[1] || "").trim() !== "" && r[0].toLowerCase() !== "código");
 
-                    if (validRows.length === 0) {
-                        alert("⚠️ No se encontraron repuestos válidos debajo de los títulos. Revisa que tu archivo esté guardado como CSV UTF-8.");
-                        event.target.value = '';
-                        return;
-                    }
+                    if (validRows.length === 0) { alert("⚠️ No se encontraron filas válidas."); event.target.value = ''; return; }
+                    if (!confirm(`Se importarán ${validRows.length} repuestos. ¿Deseas continuar?`)) { event.target.value = ''; return; }
 
-                    if (!confirm(`Se han detectado ${validRows.length} repuestos en tu archivo. ¿Deseas importarlos a Firebase ahora?`)) {
-                        event.target.value = '';
-                        return;
-                    }
+                    let count = 0;
+                    for (let row of validRows) {
+                        const code = (row[0] || "").trim();
+                        const name = (row[1] || "").trim();
+                        const rawCat = (row[2] || "desgaste").trim().toLowerCase();
+                        const rawBrand = (row[3] || "HTK").trim().toUpperCase();
+                        const specs = (row[4] || "").trim() || "Repuesto de alta resistencia.";
 
-                    let importadosCount = 0;
-                    let duplicadosCount = 0;
-
-                    for (let i = 0; i < validRows.length; i++) {
-                        let row = validRows[i];
-                        const code = (row[0] || "").trim();          // Columna A: Código
-                        const name = (row[1] || "").trim();          // Columna B: Nombre del Repuesto
-                        const rawCategory = (row[2] || "").trim().toUpperCase(); // Columna C: Categoría (HTRACK, CAT, HTK)
-                        const specs = (row[3] || "").trim() || "Repuesto de alta resistencia."; // Columna D: Especificaciones Técnicas
-
-                        // Mapeo dinámico y exacto de marcas y categorías
-                        let categoryValue = "desgaste";
-                        let brandValue = "HTK";
-
-                        if (rawCategory.includes("HTRACK") || rawCategory.includes("RODAJE")) {
-                            categoryValue = "rodaje";
-                            brandValue = "HTRACK";
-                        } else if (rawCategory.includes("CAT") || rawCategory.includes("FILTRACION") || rawCategory.includes("MOTOR")) {
-                            categoryValue = "filtracion";
-                            brandValue = "CAT";
-                        } else {
-                            categoryValue = "desgaste";
-                            brandValue = "HTK";
-                        }
-
-                        // Validación de duplicados por código en memoria
                         const yaExiste = allProducts.some(p => p.code.toLowerCase() === code.toLowerCase());
-                        if (yaExiste) {
-                            duplicadosCount++;
-                            continue; 
-                        }
+                        if (yaExiste) continue;
 
                         const nuevoProd = {
                             id: Date.now() + Math.floor(Math.random() * 10000),
                             firebaseId: null,
                             name: name,
                             code: code,
-                            brand: brandValue,
-                            category: categoryValue,
+                            brand: rawBrand,
+                            category: rawCat.includes("rodaje") ? "rodaje" : rawCat.includes("filtracion") ? "filtracion" : "desgaste",
                             image: "https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN",
                             specs: specs,
                             highlight: false,
@@ -1373,69 +884,17 @@ window.loadAllProductsForSelection = async function() {
                             stock: "Disponible"
                         };
 
-                        // Guardado directo y limpio en Firebase
                         await saveProductFirebase(nuevoProd);
                         allProducts.unshift(nuevoProd);
-                        importadosCount++;
+                        count++;
                     }
 
-                    localStorage.setItem('carrillo_cache_time', '0');
-                    alert(`✅ ¡Importación finalizada!\n\n• Nuevos añadidos: ${importadosCount}\n• Duplicados omitidos: ${duplicadosCount}`);
+                    alert(`✅ ¡Importación masiva exitosa! Nuevos agregados: ${count}`);
                     event.target.value = '';
-                    await loadAllProductsForSelection();
                     await loadProductsFromFirebase();
-                },
-                error: function(err) {
-                    alert("❌ Error al leer el archivo CSV.");
-                    console.error(err);
                 }
             });
         };
-        
-
-// METODO PARA CAMBIAR EL filterAdminList
-   window.filterAdminList = function() {
-    const queryText = document.getElementById('adminSearchInput').value.toLowerCase().trim();
-    
-    // Si el buscador está vacío, volvemos a la paginación normal del inventario
-    if (!queryText) {
-        currentAdminPage = 1;
-        loadProductsFromFirebase();
-        return;
-    }
-
-    // Buscamos localmente en allProducts para CERO consumo extra de ticks en Firebase
-    const filtered = allProducts.filter(prod => {
-        return (prod.name?.toLowerCase().includes(queryText) || 
-                prod.code?.toLowerCase().includes(queryText) || 
-                prod.brand?.toLowerCase().includes(queryText));
-    });
-
-    // Ordenamos alfabéticamente de la A a la Z
-    filtered.sort((a, b) => a.name.localeCompare(b.name));
-
-    // Aplicamos paginación local estricta (Máximo 5 productos por página)
-    const startIdx = (currentAdminPage - 1) * adminProductsPerPage;
-    const pagedItems = filtered.slice(startIdx, startIdx + adminProductsPerPage);
-
-    // Pintamos la tabla con los resultados ordenados y limitados
-    renderAdminTable(pagedItems);
-
-    // Actualizamos los botones de paginación según los resultados de la búsqueda
-    updateSearchPaginationButtons(filtered.length);
-};
-
-// Función auxiliar para los botones del buscador
-function updateSearchPaginationButtons(totalFilteredItems) {
-    const pageText = document.getElementById("currentAdminPageText");
-    const btnPrev = document.getElementById("btnPrevAdminPage");
-    const btnNext = document.getElementById("btnNextAdminPage");
-    const maxPage = Math.max(1, Math.ceil(totalFilteredItems / adminProductsPerPage));
-
-    if (pageText) pageText.innerText = `${currentAdminPage} / ${maxPage}`;
-    if (btnPrev) btnPrev.disabled = (currentAdminPage === 1);
-    if (btnNext) btnNext.disabled = (currentAdminPage >= maxPage);
-}
 
         window.openAddModal = function() {
             document.getElementById('productForm').reset();
@@ -1444,486 +903,235 @@ function updateSearchPaginationButtons(totalFilteredItems) {
             document.getElementById('productModal').classList.remove('hidden');
         };
 
-        window.closeModal = function() {
-            document.getElementById('productModal').classList.add('hidden');
-        }
-
-    window.editProduct = function(id) {
-    const prod = allProducts.find(p => String(p.id) === String(id) || String(p.firebaseId) === String(id));
-    
-    if (!prod) {
-        alert("❌ Error: No se encontró el producto en la memoria del sistema.");
-        return;
-    }
-
-    document.getElementById('f_editingId').value = prod.id;
-    
-    // 🚀 CORRECCIÓN AQUÍ: Si no tiene nombre, toma el código para que el campo nunca quede vacío
-    document.getElementById('f_name').value = prod.name && prod.name.trim() !== "" ? prod.name : (prod.code || "");
-    
-    document.getElementById('f_code').value = prod.code || "";
-    document.getElementById('f_brand').value = (prod.brand === 'GENÉRICO' ? '' : prod.brand) || "";
-    document.getElementById('f_category').value = prod.category || "desgaste";
-    document.getElementById('f_stock').value = prod.stock || "Disponible";
-    document.getElementById('f_imageUrl').value = (prod.image && !prod.image.includes('placehold.co')) ? prod.image : "";
-    document.getElementById('f_specs').value = prod.specs || "";
-    document.getElementById('f_highlight').checked = !!prod.highlight;
-    document.getElementById('f_oferta').checked = !!prod.oferta;
-    
-    document.getElementById('modalTitle').textContent = "Editar Repuesto: " + (prod.name || prod.code);
-    document.getElementById('productModal').classList.remove('hidden');
-}
-
-    document.getElementById('productForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
-        
-        // 🚨 NUEVA VALIDACIÓN DE LÍMITES
-        const editingId = document.getElementById('f_editingId').value;
-        const isOferta = document.getElementById('f_oferta').checked;
-        const isHighlight = document.getElementById('f_highlight').checked;
-        
-        // Validar Oferta (Límite 5)
-        if (isOferta) {
-            const totalOfertas = allProducts.filter(p => p.oferta === true && p.id !== Number(editingId)).length;
-            if (totalOfertas >= 5) {
-                alert("⚠️ ¡Límite alcanzado! Ya tienes 5 productos en OFERTA. Debes eliminar uno primero.");
-                return;
-            }
-        }
-        
-        // Validar Destacado (Límite 5)
-        if (isHighlight) {
-            const totalHighlights = allProducts.filter(p => p.highlight === true && p.id !== Number(editingId)).length;
-            if (totalHighlights >= 5) {
-                alert("⚠️ ¡Límite alcanzado! Ya tienes 5 productos DESTACADOS. Debes eliminar uno primero.");
-                return;
-            }
-        }
-
-        const name = document.getElementById('f_name').value.trim();
-        const code = document.getElementById('f_code').value.trim();
-// --- NUEVA VALIDACIÓN DE DUPLICADOS ---
-const esDuplicado = allProducts.some(p => p.code.toLowerCase() === code.toLowerCase() && p.id !== Number(editingId));
-if (esDuplicado) {
-    alert("⚠️ ¡Error! Ya existe un producto registrado con el código: " + code);
-    return; // Detiene la ejecución aquí si encuentra un duplicado
-}
-// --------------------------------------
-        if (!name || !code) {
-            alert('Por favor, completa al menos el nombre y el código.');
-            return;
-        }
-
-     const urlVal = document.getElementById('f_imageUrl').value.trim();
-        
-        // 🚀 BÚSQUEDA SEGURA: Si hay un ID de edición, lo buscamos en allProducts
-        let existingProd = null;
-        if (editingId) {
-            existingProd = allProducts.find(p => String(p.id) === String(editingId));
-        }
-
-        const prod = {
-            // Si ya existía, conservamos su ID original y su firebaseId exacto
-            id: existingProd ? existingProd.id : Date.now(),
-            firebaseId: existingProd ? existingProd.firebaseId : null,
-            name: name, // 👈 ¡Faltaba esta línea crucial para que guarde el nuevo nombre!
-            code: code,
-            brand: document.getElementById('f_brand').value.trim() || 'GENÉRICO',
-            category: document.getElementById('f_category').value,
-            image: urlVal || 'https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN',
-            specs: document.getElementById('f_specs').value.trim(),
-            highlight: isHighlight,
-            oferta: isOferta,
-            stock: document.getElementById('f_stock').value
-        };
-
-   await saveProductFirebase(prod);
-closeModal();
-
-// 🚀 ACTUALIZACIÓN LOCAL EN MEMORIA (Cero consumo de ticks)
-const index = allProducts.findIndex(p => String(p.id) === String(prod.id));
-if (index !== -1) {
-    allProducts[index] = prod; 
-} else {
-    allProducts.unshift(prod); 
-}
-
-renderAdminTable(products);
-renderRecommendedInventory();
-renderRecommendedList();
-renderOfertasList();
-await updateDashboardStats();
-});
-
-    async function saveProductFirebase(producto) {
-    try {
-        const { collection, addDoc, doc, setDoc } = window.firebaseFunctions;
-        const datosAEnviar = { 
-            ...producto,
-            oferta: !!producto.oferta 
-        };
-        const idDeFirebase = datosAEnviar.firebaseId;
-        delete datosAEnviar.firebaseId; 
-
-        if (idDeFirebase) {
-            const ref = doc(window.firebaseDB, "products", idDeFirebase);
-            await setDoc(ref, datosAEnviar);
-        } else {
-            await addDoc(collection(window.firebaseDB, "products"), datosAEnviar);
-        }
-
-        // 🚀 Forzamos la actualización automática del catálogo público
-        localStorage.setItem('carrillo_cache_time', '0');
-
-        // 🚨 Alerta visual de éxito
-        alert("¡Producto guardado y actualizado correctamente! ✅");
-
-    } catch (error) {
-        console.error("❌ Error guardando:", error);
-        alert("❌ Error al guardar el producto.");
-    }
-}
-    window.deleteProduct = async function(id) {
-            if (!confirm('¿Deseas eliminar este producto permanentemente?')) return;
-            
+        window.editProduct = function(id) {
             const prod = allProducts.find(p => p.id === id || p.firebaseId === id);
+            if (!prod) return;
 
-            if (prod && prod.firebaseId) {
-                try {
-                    const { doc, deleteDoc } = window.firebaseFunctions;
-                    const ref = doc(window.firebaseDB, "products", prod.firebaseId);
-                    await deleteDoc(ref);
-                    
-                    // 🚀 Eliminación limpia en la memoria local
-                    allProducts = allProducts.filter(p => p.id !== id && p.firebaseId !== id);
+            document.getElementById('f_editingId').value = prod.id;
+            document.getElementById('f_name').value = prod.name;
+            document.getElementById('f_code').value = prod.code;
+            document.getElementById('f_brand').value = prod.brand;
+            document.getElementById('f_category').value = prod.category;
+            document.getElementById('f_stock').value = prod.stock || "Disponible";
+            document.getElementById('f_imageUrl').value = prod.image.includes('placehold') ? '' : prod.image;
+            document.getElementById('f_specs').value = prod.specs;
+            document.getElementById('f_highlight').checked = !!prod.highlight;
+            document.getElementById('f_oferta').checked = !!prod.oferta;
 
-                    // 🚨 LLAMADA CLAVE: Refrescamos la tabla local correcta y el dashboard al instante
-                    renderAdminTableLocally();
-                    renderRecommendedInventory();
-                    renderRecommendedList();
-                    renderOfertasList();
-                    await updateDashboardStats();
-
-                    alert("Producto eliminado correctamente.");
-                } catch (error) {
-                    console.error("❌ Error al eliminar:", error);
-                    alert("Error al eliminar el producto.");
-                }
-            } else {
-                alert("No se pudo encontrar el identificador único del producto.");
-            }
-        };
-
-        // =========================================================
-        // FUNCIÓN NAVEGACIÓN DE PESTAÑAS (SCROLL TO TOP DEFINITIVO)
-        // =========================================================
-        window.switchAdminTab = function(tabName) {
-            try {
-                document.querySelectorAll('.admin-view').forEach(view => {
-                    view.classList.add('hidden');
-                });
-
-                const targetView = document.getElementById(`view-${tabName}`);
-                if (targetView) {
-                    targetView.classList.remove('hidden');
-                }
-
-                    // 🔥 AÑADE ESTO AQUÍ MISMO:
-                if (tabName === 'ofertas') {
-                    renderOfertasList();
-                }
-
-                document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-                    btn.classList.remove('bg-yellow', 'text-black');
-                    btn.classList.add('text-steel', 'hover:text-white', 'hover:bg-panel');
-                });
-
-                const activeBtn = document.getElementById(`btn-tab-${tabName}`);
-                if (activeBtn) {
-                    activeBtn.classList.remove('text-steel', 'hover:text-white', 'hover:bg-panel');
-                    activeBtn.classList.add('bg-yellow', 'text-black');
-                }
-
-                window.scrollTo({ top: 0, behavior: 'instant' });
-                document.documentElement.scrollTop = 0;
-                document.body.scrollTop = 0;
-
-                const mainArea = document.querySelector('main');
-                if (mainArea) mainArea.scrollTop = 0;
-
-            } catch (error) {
-                console.error("Error al cambiar de pestaña:", error);
-            }
+            document.getElementById('modalTitle').textContent = "Editar Repuesto: " + prod.name;
+            document.getElementById('productModal').classList.remove('hidden');
         }
 
-        // =========================================================
-        // REGISTRO DE FUNCIONES EN WINDOW PARA EL MODAL DE ENVÍOS
-        // =========================================================
-        window.openDeliveryModal = function() {
-            const form = document.getElementById("deliveryForm");
-            if (form) form.reset();
-            
-            const modal = document.getElementById("deliveryModal");
-            if (modal) modal.classList.remove("hidden");
-            
-            document.body.style.overflow = "hidden";
-        };
+        document.getElementById('productForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const editingId = document.getElementById('f_editingId').value;
+            const name = document.getElementById('f_name').value.trim();
+            const code = document.getElementById('f_code').value.trim();
+            const isOferta = document.getElementById('f_oferta').checked;
+            const isHighlight = document.getElementById('f_highlight').checked;
 
-        window.closeDeliveryModal = function() {
-            const modal = document.getElementById("deliveryModal");
-            if (modal) modal.classList.add("hidden");
-            
-            document.body.style.overflow = "auto";
-        };
+            if (isOferta && allProducts.filter(p => p.oferta && String(p.id) !== editingId).length >= 5) { alert("⚠️ Límite de 5 ofertas alcanzado."); return; }
+            if (isHighlight && allProducts.filter(p => p.highlight && String(p.id) !== editingId).length >= 5) { alert("⚠️ Límite de 5 destacados alcanzado."); return; }
 
-        window.saveDelivery = async function(event) {
-            event.preventDefault();
-            
-            const client = document.getElementById("deliveryClient").value.trim();
-            const product = document.getElementById("deliveryProduct").value.trim();
-            const location = document.getElementById("deliveryLocation").value.trim();
-            const image = document.getElementById("deliveryImage").value.trim();
+            let existing = editingId ? allProducts.find(p => String(p.id) === editingId) : null;
 
-            if (!client || !product || !location || !image) {
-                alert("Por favor, completa todos los campos.");
-                return;
+            const prod = {
+                id: existing ? existing.id : Date.now(),
+                firebaseId: existing ? existing.firebaseId : null,
+                name: name,
+                code: code,
+                brand: document.getElementById('f_brand').value.trim().toUpperCase() || 'GENÉRICO',
+                category: document.getElementById('f_category').value,
+                image: document.getElementById('f_imageUrl').value.trim() || 'https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN',
+                specs: document.getElementById('f_specs').value.trim(),
+                highlight: isHighlight,
+                oferta: isOferta,
+                stock: document.getElementById('f_stock').value
+            };
+
+            await saveProductFirebase(prod);
+            document.getElementById('productModal').classList.add('hidden');
+            await loadProductsFromFirebase();
+        });
+
+        async function saveProductFirebase(producto) {
+            const { collection, addDoc, doc, setDoc } = window.firebaseFunctions;
+            let fbId = producto.firebaseId;
+            let datos = { ...producto };
+            delete datos.firebaseId;
+
+            if (fbId) await setDoc(doc(window.firebaseDB, "products", fbId), datos);
+            else await addDoc(collection(window.firebaseDB, "products"), datos);
+            localStorage.setItem('carrillo_cache_time', '0');
+        }
+
+        window.deleteProduct = async function(id) {
+            if (!confirm('¿Eliminar repuesto permanentemente?')) return;
+            const prod = allProducts.find(p => p.id === id || p.firebaseId === id);
+            if (prod && prod.firebaseId) {
+                const { doc, deleteDoc } = window.firebaseFunctions;
+                await deleteDoc(doc(window.firebaseDB, "products", prod.firebaseId));
+                await loadProductsFromFirebase();
             }
-
-            try {
-                const { collection, addDoc, serverTimestamp } = window.firebaseFunctions;
-                
-                await addDoc(collection(window.firebaseDB, "deliveries"), {
-                    client: client,
-                    product: product,
-                    location: location,
-                    image: image,
-                    fecha: serverTimestamp()
-                });
-
-                alert("¡Registro de campo guardado correctamente! 🎉");
-                window.closeDeliveryModal();
-                await window.loadDeliveriesFromFirebase(); 
-            } catch (error) {
-                console.error("Error al guardar envío:", error);
-                alert("Ocurrió un error al guardar en la base de datos.");
-            }
         };
 
+        window.switchAdminTab = function(tabName) {
+            document.querySelectorAll('.admin-view').forEach(v => v.classList.add('hidden'));
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+            document.querySelectorAll('.admin-tab-btn').forEach(b => {
+                b.classList.remove('bg-yellow', 'text-black');
+                b.classList.add('text-steel');
+            });
+            const btn = document.getElementById(`btn-tab-${tabName}`);
+            if (btn) { btn.classList.remove('text-steel'); btn.classList.add('bg-yellow', 'text-black'); }
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+
+        window.openDeliveryModal = function() { document.getElementById("deliveryForm").reset(); document.getElementById("deliveryModal").classList.remove("hidden"); };
+        window.closeDeliveryModal = function() { document.getElementById("deliveryModal").classList.add("hidden"); };
+        window.saveDelivery = async function(e) {
+            e.preventDefault();
+            const { collection, addDoc, serverTimestamp } = window.firebaseFunctions;
+            await addDoc(collection(window.firebaseDB, "deliveries"), {
+                client: document.getElementById("deliveryClient").value.trim(),
+                product: document.getElementById("deliveryProduct").value.trim(),
+                location: document.getElementById("deliveryLocation").value.trim(),
+                image: document.getElementById("deliveryImage").value.trim(),
+                fecha: serverTimestamp()
+            });
+            window.closeDeliveryModal();
+            await window.loadDeliveriesFromFirebase();
+        };
+        window.deleteDelivery = async function(id) {
+            if (!confirm("¿Eliminar registro?")) return;
+            const { doc, deleteDoc } = window.firebaseFunctions;
+            await deleteDoc(doc(window.firebaseDB, "deliveries", id));
+            await window.loadDeliveriesFromFirebase();
+        };
         function normalizeImageUrl(url) {
             if (!url) return 'https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN';
             if (url.includes('drive.google.com')) {
                 const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) {
-                    return `https://lh3.googleusercontent.com/d/${match[1]}`;
-                }
+                if (match && match[1]) return `https://lh3.googleusercontent.com/d/${match[1]}`;
             }
             return url;
         }
 
-        window.deleteDelivery = async function(id) {
-            if (!confirm("¿Estás seguro de eliminar esta foto de referencia del sistema?")) return;
-
-            try {
-                const { doc, deleteDoc } = window.firebaseFunctions;
-                await deleteDoc(doc(window.firebaseDB, "deliveries", id));
-                alert("Referencia eliminada correctamente.");
-                await window.loadDeliveriesFromFirebase(); 
-            } catch (error) {
-                console.error("Error al eliminar envío:", error);
-                alert("Error al eliminar de la base de datos.");
-            }
+        // =========================================================
+        // LÓGICA DE RECOMENDADOS (DESTACADOS)
+        // =========================================================
+        window.renderRecommendedList = function() {
+            const tbody = document.getElementById('recommendedTableBody');
+            if (!tbody) return;
+            const destacados = allProducts.filter(p => p.highlight === true);
+            tbody.innerHTML = destacados.length > 0 ? destacados.map(p => `
+                <tr class="hover:bg-zinc-900/40">
+                    <td class="p-4 font-bold text-white">${p.name} <br> <span class="text-steel font-normal">Cód: ${p.code}</span></td>
+                    <td class="p-4"><span class="text-green-500 font-bold text-[10px] bg-green-500/10 px-2 py-1 rounded-full">Destacado</span></td>
+                    <td class="p-4 text-right"><button onclick="toggleHighlight(${p.id}, false)" class="text-red-400 hover:text-white text-xs font-bold"><i class="fa-solid fa-trash mr-1"></i> Eliminar</button></td>
+                </tr>
+            `).join('') : `<tr><td colspan="3" class="p-4 text-steel text-center text-xs">No hay productos destacados en la vitrina.</td></tr>`;
         };
 
+        window.renderRecommendedInventory = function() {
+            const tbody = document.getElementById('inventoryForHighlightBody');
+            if(!tbody) return;
+            const query = document.getElementById('recSearchInput').value.toLowerCase();
+            let disponibles = allProducts.filter(p => p.highlight === false && ((p.name || "").toLowerCase().includes(query) || (p.code || "").toLowerCase().includes(query)));
+            disponibles.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+            
+            const start = (currentPage - 1) * perPage;
+            const paginated = disponibles.slice(start, start + perPage);
 
-                // En tu función renderRecommendedList
-   window.renderRecommendedList = function() {
-    const tbody = document.getElementById('recommendedTableBody');
-    if (!tbody) {
-        console.error("❌ ¡No encuentro el ID recommendedTableBody en tu HTML!");
-        return;
-    }
-    
-    tbody.innerHTML = ''; 
-    const destacados = allProducts.filter(p => p.highlight === true);
-    
-    tbody.innerHTML = destacados.map(p => `
-        <tr class="hover:bg-zinc-900/40">
-            <td class="p-4 font-bold text-white">${p.name} <br> <span class="text-steel font-normal">Cód: ${p.code}</span></td>
-            <td class="p-4"><span class="text-green-500 font-bold text-[10px] bg-green-500/10 px-2 py-1 rounded-full">Destacado</span></td>
-            <td class="p-4 text-right">
-                <button onclick="toggleHighlight(${p.id}, false)" class="text-red-400 hover:text-white text-xs font-bold transition-all">
-                    <i class="fa-solid fa-trash mr-1"></i> Eliminar
-                </button>
-            </td>
-        </tr>
-    `).join('');
-};
+            tbody.innerHTML = paginated.length > 0 ? paginated.map(p => `
+                <tr class="hover:bg-zinc-900/40">
+                    <td class="p-4 font-bold text-white">${p.name || 'Sin nombre'}</td>
+                    <td class="p-4 text-steel">Cód: ${p.code || 'S/N'}</td>
+                    <td class="p-4 text-right"><button onclick="toggleHighlight(${p.id}, true)" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-1.5 px-3 rounded-lg text-xs">+ Añadir</button></td>
+                </tr>
+            `).join('') : `<tr><td colspan="3" class="p-4 text-center text-steel">No hay más productos disponibles.</td></tr>`;
+            document.getElementById('currentPageText').innerText = currentPage;
+        };
 
-    // Asegúrate de que esta función esté así en tu archivo
-  window.renderRecommendedInventory = function() {
-    const tbody = document.getElementById('inventoryForHighlightBody');
-    if(!tbody) return;
-    
-    tbody.innerHTML = ''; 
-    const query = document.getElementById('recSearchInput').value.toLowerCase();
-    
-    let disponibles = allProducts.filter(p => p.highlight === false && 
-        ((p.name || "").toLowerCase().includes(query) || (p.code || "").toLowerCase().includes(query)));
-    
-    disponibles.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-    
-    const start = (currentPage - 1) * perPage;
-    const paginated = disponibles.slice(start, start + perPage);
+        window.changePage = function(dir) { currentPage += dir; if(currentPage < 1) currentPage = 1; renderRecommendedInventory(); };
 
-    if (disponibles.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-steel">No hay más productos disponibles.</td></tr>`;
-    } else {
-        tbody.innerHTML = paginated.map(p => `
-            <tr class="hover:bg-zinc-900/40">
-                <td class="p-4 font-bold text-white">${p.name || 'Sin nombre'}</td>
-                <td class="p-4 text-steel">Cód: ${p.code || 'S/N'}</td>
-                <td class="p-4 text-right">
-                    <button onclick="toggleHighlight(${p.id}, true)" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-1.5 px-3 rounded-lg text-xs transition-all active:scale-95">+ Añadir</button>
-                </td>
-            </tr>
-        `).join('');
-    }
-    document.getElementById('currentPageText').innerText = currentPage;
-    updateRecommendedPaginationButtons(disponibles.length);
-};
-window.changePage = function(dir) {
-            currentPage += dir;
-            if(currentPage < 1) currentPage = 1;
+        window.toggleHighlight = async function(id, status) {
+            const prod = allProducts.find(p => p.id === id);
+            if (!prod) return;
+            if (status && allProducts.filter(p => p.highlight).length >= 5) { alert("⚠️ Límite de 5 destacados alcanzado."); return; }
+            prod.highlight = status;
+            await saveProductFirebase(prod);
+            renderRecommendedList();
             renderRecommendedInventory();
+            renderAdminTableLocally();
         };
 
-window.toggleHighlight = async function(id, status) {
-    const prod = allProducts.find(p => p.id === id);
-    if (!prod) return;
+        window.clearAllHighlights = async function() {
+            if (!confirm("¿Quitar destacado a TODOS los productos?")) return;
+            for (let p of allProducts.filter(p => p.highlight)) { p.highlight = false; await saveProductFirebase(p); }
+            renderRecommendedList();
+            renderRecommendedInventory();
+            renderAdminTableLocally();
+            alert("Vitrina limpiada correctamente.");
+        };
 
-    if (status === true) {
-        const totalHighlights = allProducts.filter(p => p.highlight === true).length;
-        if (totalHighlights >= 5) {
-            alert("⚠️ ¡Límite alcanzado! Ya tienes 5 productos DESTACADOS.");
-            return;
-        }
-    }
+        // =========================================================
+        // LÓGICA DE OFERTAS (IDÉNTICA A RECOMENDADOS)
+        // =========================================================
+        window.renderOfertasList = function() {
+            const tbody = document.getElementById('ofertasTableBody');
+            if (!tbody) return;
+            const ofertas = allProducts.filter(p => p.oferta === true);
+            tbody.innerHTML = ofertas.length > 0 ? ofertas.map(p => `
+                <tr class="hover:bg-zinc-900/40">
+                    <td class="p-4 font-bold text-white">${p.name} <br> <span class="text-steel font-normal">Cód: ${p.code}</span></td>
+                    <td class="p-4"><span class="text-red-400 font-bold text-[10px] bg-red-500/10 px-2 py-1 rounded-full">Oferta</span></td>
+                    <td class="p-4 text-right"><button onclick="toggleOferta(${p.id}, false)" class="text-red-400 hover:text-white text-xs font-bold"><i class="fa-solid fa-trash mr-1"></i> Eliminar</button></td>
+                </tr>
+            `).join('') : `<tr><td colspan="3" class="p-4 text-steel text-center text-xs">No hay productos en oferta en la vitrina.</td></tr>`;
+        };
 
-    prod.highlight = status;
-    await saveProductFirebase(prod); // Solo 1 escritura, cero lecturas extras
-    
-    // Refresco 100% en memoria local
-    renderRecommendedList();
-    renderRecommendedInventory();
-    renderAdminTable(products);
-};
+        window.renderOfertaInventory = function() {
+            const tbody = document.getElementById('inventoryForOfertaBody');
+            if(!tbody) return;
+            const query = document.getElementById('ofertaSearchInput').value.toLowerCase();
+            let disponibles = allProducts.filter(p => p.oferta === false && ((p.name || "").toLowerCase().includes(query) || (p.code || "").toLowerCase().includes(query)));
+            disponibles.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+            
+            const start = (currentOfertaPage - 1) * perPage;
+            const paginated = disponibles.slice(start, start + perPage);
 
-  // ✅ CÓDIGO OPTIMIZADO (0 Lecturas):
-window.clearAllHighlights = async function() {
-    if (!confirm("¿Seguro que quieres quitar el destacado a TODOS los productos?")) return;
-    
-    const destacados = allProducts.filter(p => p.highlight === true);
-    
-    // Desmarcamos localmente y guardamos
-    for (let p of destacados) {
-        p.highlight = false;
-        await saveProductFirebase(p); // Solo escrituras
-    }
-    
-    // Refrescamos pantallas en memoria local sin llamar a Firebase
-    renderRecommendedList();
-    renderRecommendedInventory();
-    renderAdminTable(products);
-    
-    alert("Todos los productos han sido retirados de destacados.");
-};
+            tbody.innerHTML = paginated.length > 0 ? paginated.map(p => `
+                <tr class="hover:bg-zinc-900/40">
+                    <td class="p-4 font-bold text-white">${p.name || 'Sin nombre'}</td>
+                    <td class="p-4 text-steel">Cód: ${p.code || 'S/N'}</td>
+                    <td class="p-4 text-right"><button onclick="toggleOferta(${p.id}, true)" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-1.5 px-3 rounded-lg text-xs">+ Añadir</button></td>
+                </tr>
+            `).join('') : `<tr><td colspan="3" class="p-4 text-center text-steel">No hay más productos disponibles.</td></tr>`;
+            document.getElementById('currentOfertaPageText').innerText = currentOfertaPage;
+        };
 
+        window.changeOfertaPage = function(dir) { currentOfertaPage += dir; if(currentOfertaPage < 1) currentOfertaPage = 1; renderOfertaInventory(); };
 
-window.updateRecommendedPaginationButtons = function(totalDisponibles) {
-    const btnAnterior = document.querySelector('[onclick="changePage(-1)"]');
-    const btnSiguiente = document.querySelector('[onclick="changePage(1)"]');
-    
-    // Cálculo de páginas totales
-    const maxPages = Math.max(1, Math.ceil(totalDisponibles / perPage));
-    
-    // Deshabilitar "Anterior" si estamos en la página 1
-    if (btnAnterior) btnAnterior.disabled = (currentPage === 1);
-    
-    // Deshabilitar "Siguiente" si estamos en la última página
-    if (btnSiguiente) btnSiguiente.disabled = (currentPage >= maxPages);
-    
-    // Estilo visual para cuando están deshabilitados
-    [btnAnterior, btnSiguiente].forEach(btn => {
-        if (btn.disabled) btn.classList.add('opacity-30', 'cursor-not-allowed');
-        else btn.classList.remove('opacity-30', 'cursor-not-allowed');
-    });
-};
-    
-    
+        window.toggleOferta = async function(id, status) {
+            const prod = allProducts.find(p => p.id === id);
+            if (!prod) return;
+            if (status && allProducts.filter(p => p.oferta).length >= 5) { alert("⚠️ Límite de 5 ofertas alcanzado."); return; }
+            prod.oferta = status;
+            await saveProductFirebase(prod);
+            renderOfertasList();
+            renderOfertaInventory();
+            renderAdminTableLocally();
+        };
 
- window.renderOfertasList = function() {
-    const tbody = document.getElementById('ofertasTableBody');
-    if(!tbody) return;
-    
-    const ofertas = allProducts.filter(p => p.oferta === true);
-    
-    tbody.innerHTML = ofertas.length > 0 ? ofertas.map(p => `
-        <tr class="hover:bg-zinc-900/45">
-            <td class="p-4 font-bold text-white">${p.name} <br> <span class="text-steel font-normal">Cód: ${p.code}</span></td>
-            <td class="p-4 text-right">
-                <button onclick="toggleOferta(${p.id}, false)" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all">
-                    <i class="fa-solid fa-trash mr-1"></i> Quitar Oferta
-                </button>
-            </td>
-        </tr>
-    `).join('') : '<tr><td colspan="2" class="p-6 text-steel text-center text-xs">No hay productos en oferta actualmente.</td></tr>';
-};
-
-window.toggleOferta = async function(id, status) {
-    const prod = allProducts.find(p => p.id === id);
-    if (!prod) return;
-    
-    if (status === true) {
-        const totalOfertas = allProducts.filter(p => p.oferta === true).length;
-        if (totalOfertas >= 5) {
-            alert("⚠️ ¡Límite alcanzado! Ya tienes 5 productos en OFERTA.");
-            return;
-        }
-    }
-    
-    prod.oferta = status;
-    await saveProductFirebase(prod); // Solo 1 escritura
-    
-    // Refresco sincronizado localmente
-    renderOfertasList(); 
-    renderAdminTable(products);
-    
-    alert(status ? "✅ Producto añadido a ofertas." : "🗑️ Producto quitado de ofertas.");
-};
-
-
-
-// Borra las líneas duplicadas y deja solo esto:
-window.loadOfertas = function() {
-    const tbody = document.getElementById('ofertasTableBody');
-    if (!tbody) return;
-
-    // Usamos allProducts porque es la lista maestra actualizada
-    const ofertas = allProducts.filter(p => p.oferta === true);
-
-    tbody.innerHTML = ofertas.length > 0 ? ofertas.map(p => `
-        <tr class="hover:bg-zinc-900/40">
-            <td class="p-4 font-bold text-white">${p.name} <br> <span class="text-steel font-normal">Cód: ${p.code}</span></td>
-            <td class="p-4 text-right">
-                <button onclick="toggleOferta(${p.id}, false)" class="text-red-400 hover:text-white text-xs font-bold transition-all">
-                    <i class="fa-solid fa-trash mr-1"></i> Quitar Oferta
-                </button>
-            </td>
-        </tr>
-    `).join('') : '<tr><td class="p-4 text-steel text-center">No hay productos en oferta actualmente.</td></tr>';
-};
-
-
+        window.clearAllOfertas = async function() {
+            if (!confirm("¿Quitar oferta a TODOS los productos?")) return;
+            for (let p of allProducts.filter(p => p.oferta)) { p.oferta = false; await saveProductFirebase(p); }
+            renderOfertasList();
+            renderOfertaInventory();
+            renderAdminTableLocally();
+            alert("Vitrina de ofertas limpiada correctamente.");
+        };
     </script>
 </body>
 </html>
