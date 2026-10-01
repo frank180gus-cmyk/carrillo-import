@@ -72,9 +72,18 @@
     height: 7px;
     background-image: repeating-linear-gradient(135deg, #FFC72C 0 16px, #101012 16px 32px);
   }
-  .custom-scrollbar::-webkit-scrollbar { height: 5px; width: 5px; }
-  .custom-scrollbar::-webkit-scrollbar-thumb { background: #FFC72C; border-radius: 10px; }
+  .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: #FFC72C; border-radius: 10px; cursor: pointer; }
   .custom-scrollbar::-webkit-scrollbar-track { background: #28282c; border-radius: 10px; }
+  
+  .draggable-scroll {
+    cursor: grab;
+    user-select: none;
+  }
+  .draggable-scroll:active {
+    cursor: grabbing;
+  }
+
   .product-card { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
   .product-card:hover { transform: translateY(-4px); border-color: rgba(255,199,44,0.4); box-shadow: 0 16px 34px -14px rgba(0,0,0,0.7); }
   
@@ -110,37 +119,59 @@
         </button>
     </div>
 
-    <!-- SIDEBAR IZQUIERDA -->
-    <aside id="sidebar" class="hidden md:flex flex-col w-full md:w-72 bg-panel border-r border-line p-5 shrink-0 fixed md:sticky top-0 h-screen z-40 overflow-y-auto custom-scrollbar transition-all">
-        <div class="flex items-center justify-between mb-6 pb-4 border-b border-line">
-            <img src="https://i.ibb.co/4nVF36HB/LOGO.png" alt="Logo Carrillo Import" class="h-10 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.6)] bg-white/20 p-1 rounded-lg">
-            <button onclick="toggleMobileSidebar()" class="md:hidden text-steel hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
+    <!-- FONDO OSCURO PARA MÓVIL CUANDO EL MENÚ ESTÁ ABIERTO -->
+    <div id="sidebarOverlay" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/70 z-30 hidden md:hidden transition-opacity"></div>
 
-        <p class="text-[10px] text-steel uppercase font-bold tracking-widest px-3 mb-2">Menú Principal</p>
-        
-        <nav class="space-y-1.5 flex-1">
-            <button onclick="switchMainTab('inicio')" id="nav-inicio" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all bg-yellow text-black shadow-lg">
-                <i class="fa-solid fa-globe text-base"></i> 🌐 Inicio / Todo el Catálogo
-            </button>
-
-            <button onclick="switchMainTab('sistema')" id="nav-sistema" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all text-steel hover:text-white hover:bg-zinc-900 border border-line">
-                <i class="fa-solid fa-industry text-base text-yellow"></i> ⚙ Sistema de Trabajo
-            </button>
-
-            <div class="pt-3 space-y-1.5">
-                <button onclick="switchMainTab('resenas')" id="nav-resenas" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all text-steel hover:text-white hover:bg-zinc-900 border border-line">
-                    <i class="fa-solid fa-truck-fast text-base text-yellow"></i> 📦 Reseñas y Envíos
-                </button>
-                <button onclick="switchMainTab('ubicacion')" id="nav-ubicacion" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all text-steel hover:text-white hover:bg-zinc-900 border border-line">
-                    <i class="fa-solid fa-map-location-dot text-base text-yellow"></i> 📍 Ubicación y Locales
+    <!-- SIDEBAR IZQUIERDA CON EL PREMIO Y EL TROFEO EN MOVIMIENTO -->
+    <aside id="sidebar" class="fixed md:sticky top-0 h-screen w-72 bg-panel border-r border-line p-5 shrink-0 z-40 overflow-y-auto custom-scrollbar transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col justify-between">
+        <div>
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-line">
+                <img src="https://i.ibb.co/4nVF36HB/LOGO.png" alt="Logo Carrillo Import" class="h-10 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.6)] bg-white/20 p-1 rounded-lg">
+                <button onclick="toggleMobileSidebar()" class="md:hidden text-steel hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-        </nav>
 
-        <div class="mt-auto pt-4 border-t border-line">
+            <p class="text-[10px] text-steel uppercase font-bold tracking-widest px-3 mb-2">Menú Principal</p>
+            
+            <nav class="space-y-2 mb-6">
+                <button onclick="switchMainTab('inicio')" id="nav-inicio" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all bg-yellow text-black shadow-lg border border-yellow">
+                    <i class="fa-solid fa-globe text-base"></i> <span>Inicio / Todo el Catálogo</span>
+                </button>
+
+                <button onclick="switchMainTab('sistema')" id="nav-sistema" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all text-steel hover:text-white hover:bg-zinc-900 border border-line">
+                    <i class="fa-solid fa-industry text-base text-yellow"></i> <span>Sistema de Trabajo</span>
+                </button>
+
+                <button onclick="switchMainTab('resenas')" id="nav-resenas" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all text-steel hover:text-white hover:bg-zinc-900 border border-line">
+                    <i class="fa-solid fa-truck-fast text-base text-yellow"></i> <span>Reseñas y Envíos</span>
+                </button>
+                <button onclick="switchMainTab('ubicacion')" id="nav-ubicacion" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all text-steel hover:text-white hover:bg-zinc-900 border border-line">
+                    <i class="fa-solid fa-map-location-dot text-base text-yellow"></i> <span>Ubicación y Locales</span>
+                </button>
+            </nav>
+
+            <!-- 🏆 TARJETA DEL PREMIO CON EL TROFEO EN MOVIMIENTO -->
+            <div class="bg-panel border border-yellow/40 p-4 rounded-xl text-center space-y-2.5 mb-4 shadow-xl relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10 blueprint"></div>
+                <div class="relative z-10 flex flex-col items-center">
+                    <div class="w-10 h-10 rounded-full bg-yellow/10 text-yellow flex items-center justify-center text-lg mb-1 border border-yellow/30">
+                        <i class="fa-solid fa-trophy animate-bounce"></i>
+                    </div>
+                    <span class="bg-yellow/20 text-yellow text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-widest border border-yellow/30 mb-1">
+                        Excelencia 2024
+                    </span>
+                    <h4 class="font-display text-xs text-white uppercase tracking-tight font-bold leading-tight">
+                        Premio Empresa Peruana del Año
+                    </h4>
+                    <p class="text-[9px] text-steel leading-relaxed mt-1">
+                        Líderes en importación y representantes exclusivos HTK & H-TRACK.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-4 border-t border-line mt-auto">
             <a id="sidebarWaLink" href="https://wa.link/opxc7b" target="_blank" class="flex items-center gap-2 bg-zinc-900 border border-line p-2.5 rounded-xl hover:border-yellow/50 transition-all">
                 <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white shrink-0">
                     <i class="fa-brands fa-whatsapp"></i>
@@ -175,7 +206,7 @@
 
         <div class="p-6 md:p-8 flex-1 space-y-8">
 
-            <!-- VISTA 1: INICIO (CON TRACTOR MÁS CLARO Y NÍTIDO) -->
+            <!-- VISTA 1: INICIO -->
             <div id="view-inicio" class="space-y-8">
                 <div class="relative py-16 px-6 rounded-2xl border border-yellow/30 overflow-hidden text-center text-white shadow-2xl" style="background: linear-gradient(to bottom, rgba(10,10,11,0.35) 0%, rgba(10,10,11,0.65) 70%, #0a0a0b 100%), url('excavadoras.png'); background-size: cover; background-position: center;">
                     <div class="absolute inset-0 opacity-20 blueprint"></div>
@@ -212,7 +243,7 @@
                     </div>
                 </div>
 
-                <!-- Alta Rotación (SOLO EN INICIO) -->
+                <!-- Alta Rotación -->
                 <div class="bg-panel border border-line p-5 rounded-2xl text-white">
                     <div class="flex items-center justify-between mb-4 border-b border-line pb-3">
                         <h3 class="font-display text-sm tracking-wide uppercase text-yellow flex items-center gap-2">
@@ -223,7 +254,7 @@
                     <div id="anchorGrid" class="flex gap-6 overflow-x-auto custom-scrollbar pb-3 snap-x snap-mandatory"></div>
                 </div>
 
-                <!-- Ofertones (SOLO EN INICIO) -->
+                <!-- Ofertones -->
                 <div id="contenedor-ofertones" class="bg-panel border border-line p-5 rounded-2xl text-white">
                     <div class="flex items-center justify-between mb-4 border-b border-line pb-3">
                         <h3 class="font-display text-sm tracking-wide uppercase text-yellow flex items-center gap-2">
@@ -278,11 +309,105 @@
                     <p class="text-xs text-steel mt-1">Conoce las marcas con las que trabajamos y nuestras especialidades de repuestos oficiales.</p>
                 </div>
 
+                <!-- CARRUSEL DESLIZABLE DE 20 FOTOS -->
+                <div class="bg-panel border border-line p-6 rounded-2xl text-center space-y-4 shadow-xl">
+                    <h3 class="font-display text-base tracking-wide uppercase text-yellow">Galería de Componentes Importados</h3>
+                    <p class="text-xs text-steel">Haz clic y arrastra con el mouse (o desliza con el dedo) para explorar los componentes.</p>
+                    
+                    <div class="flex gap-4 overflow-x-auto custom-scrollbar pb-4 pt-2 snap-x snap-mandatory draggable-scroll">
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Cantonera Cucharón</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto1.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Cantoneras 6Y3840</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto2.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Cortador Lateral PC60</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto3.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Cuchilla 15 Huecos</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto4.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Cuchilla Filo Curvo</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto5.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">End Bit Motoniveladora</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto6.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">End Bit Reforzado</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto7.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Elementos de Corte</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto8.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Espárrago de Rueda</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto9.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Par de Sprocket</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto10.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Pernos con Tuercas</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto11.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Puntas Excavadoras</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto12.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Cadena de Oruga</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto13.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Cadena Caterpillar</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto14.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Cadena Alta Resistencia</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto15.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Repuestos Variados CAT</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto16.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Rodillo Inferior Hyundai</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto17.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Rueda Guía Tractor</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto18.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Side Cutters Komatsu</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto19.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Sprocket Rodamientos</span>
+                        </div>
+                        <div class="plate p-3 min-w-[150px] max-w-[150px] flex flex-col items-center justify-between gap-2 shrink-0 snap-center">
+                            <img src="producto20.jpg" alt="Producto" class="h-20 w-full object-contain bg-black rounded p-1 pointer-events-none">
+                            <span class="text-[10px] text-zinc-300 font-bold truncate w-full">Zapatas para Oruga</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carrusel de Marcas -->
                 <div class="bg-panel border border-line p-6 rounded-2xl text-center space-y-4 shadow-xl">
                     <h3 class="font-display text-base tracking-wide uppercase text-yellow">Con estas marcas trabajamos</h3>
                     <p class="text-xs text-steel">Desliza o arrastra para conocer las marcas de maquinaria pesada compatibles con nuestros repuestos.</p>
                     
-                    <div class="flex gap-6 overflow-x-auto custom-scrollbar pb-3 pt-2 snap-x snap-mandatory">
+                    <div class="flex gap-6 overflow-x-auto custom-scrollbar pb-3 pt-2 snap-x snap-mandatory draggable-scroll">
                         <div class="plate p-4 px-6 min-w-[160px] flex flex-col items-center justify-center gap-2 shrink-0 snap-center">
                             <span class="text-xs font-bold text-white uppercase">KOMATSU</span>
                             <span class="text-[9px] text-steel font-mono">PC / WA Series</span>
@@ -469,31 +594,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- 🏆 RECONOCIMIENTO PREMIO EMPRESA PERUANA DEL AÑO 2024 -->
-                <div class="bg-panel border border-yellow/40 p-8 rounded-2xl relative overflow-hidden shadow-2xl">
-                    <div class="absolute inset-0 opacity-10 blueprint"></div>
-                    <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                        <div class="md:col-span-2 space-y-4">
-                            <span class="bg-yellow/20 text-yellow text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest border border-yellow/30">
-                                <i class="fa-solid fa-award mr-1.5"></i> Excelencia y Compromiso
-                            </span>
-                            <h3 class="font-display text-2xl md:text-3xl text-white uppercase tracking-tight">
-                                Reconocidos con el <span class="text-yellow">Premio Empresa Peruana del Año 2024</span> (Edición PYME)
-                            </h3>
-                            <p class="text-xs md:text-sm text-steel leading-relaxed">
-                                Este galardón representa el fruto de nuestros años de esfuerzo, compromiso y dedicación exclusiva ofreciendo repuestos de máxima calidad y un servicio excepcional a toda la industria peruana de maquinaria pesada. ¡Gracias por confiar en nuestra trayectoria como importadores directos!
-                            </p>
-                        </div>
-                        <div class="flex justify-center">
-                            <div class="plate p-6 text-center space-y-2 border-yellow/40">
-                                <i class="fa-solid fa-trophy text-4xl text-yellow animate-bounce"></i>
-                                <p class="font-display text-lg text-white uppercase tracking-wide">Líderes en Importación</p>
-                                <p class="text-[10px] text-steel uppercase tracking-widest">Representantes Exclusivos HTK & H-TRACK</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
         </div>
@@ -644,8 +744,8 @@ window.switchMainTab = function(tab) {
     currentProductPage = 1;
 
     document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.remove('bg-yellow', 'text-black', 'shadow-lg');
-        b.classList.add('text-steel');
+        b.classList.remove('bg-yellow', 'text-black', 'shadow-lg', 'border-yellow');
+        b.classList.add('text-steel', 'border-line');
     });
 
     document.getElementById('view-inicio').classList.add('hidden');
@@ -655,33 +755,29 @@ window.switchMainTab = function(tab) {
     document.getElementById('view-sistema').classList.add('hidden');
 
     const searchContainer = document.getElementById('searchContainer');
+    const activeBtn = document.getElementById(`nav-${tab}`);
+    if(activeBtn) {
+        activeBtn.classList.remove('text-steel', 'border-line');
+        activeBtn.classList.add('bg-yellow', 'text-black', 'shadow-lg', 'border-yellow');
+    }
 
     if(tab === 'inicio') {
-        document.getElementById('nav-inicio').classList.add('bg-yellow', 'text-black', 'shadow-lg');
-        document.getElementById('nav-inicio').classList.remove('text-steel');
         document.getElementById('view-inicio').classList.remove('hidden');
         if(searchContainer) searchContainer.style.display = 'block';
         renderInicioView();
     } else if(tab === 'sistema') {
-        document.getElementById('nav-sistema').classList.add('bg-yellow', 'text-black', 'shadow-lg');
-        document.getElementById('nav-sistema').classList.remove('text-steel');
         document.getElementById('view-sistema').classList.remove('hidden');
         if(searchContainer) searchContainer.style.display = 'block';
     } else if(tab === 'resenas') {
-        document.getElementById('nav-resenas').classList.add('bg-yellow', 'text-black', 'shadow-lg');
-        document.getElementById('nav-resenas').classList.remove('text-steel');
         document.getElementById('view-resenas').classList.remove('hidden');
         if(searchContainer) searchContainer.style.display = 'none';
         loadClientGalleryInPublicSite();
     } else if(tab === 'ubicacion') {
-        document.getElementById('nav-ubicacion').classList.add('bg-yellow', 'text-black', 'shadow-lg');
-        document.getElementById('nav-ubicacion').classList.remove('text-steel');
         document.getElementById('view-ubicacion').classList.remove('hidden');
         if(searchContainer) searchContainer.style.display = 'none';
     }
 
     if(window.innerWidth < 768) toggleMobileSidebar();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 window.filterProducts = function() {
@@ -870,11 +966,9 @@ window.closeModal = function() {
 
 window.toggleMobileSidebar = function() {
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('hidden');
-    sidebar.classList.toggle('flex');
-    sidebar.classList.toggle('fixed');
-    sidebar.classList.toggle('inset-0');
-    sidebar.classList.toggle('z-50');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('-translate-x-full');
+    overlay.classList.toggle('hidden');
 };
 
 async function loadClientGalleryInPublicSite() {
@@ -902,6 +996,37 @@ function normalizeImageUrl(url) {
     }
     return url;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sliders = document.querySelectorAll('.draggable-scroll');
+    sliders.forEach(slider => {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            slider.classList.add('active');
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+            slider.classList.remove('active');
+        });
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+            slider.classList.remove('active');
+        });
+        slider.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2;
+            slider.scrollLeft = scrollLeft - walk;
+        });
+    });
+});
 
 window.onload = function() {
     inicializarCatalogo();
