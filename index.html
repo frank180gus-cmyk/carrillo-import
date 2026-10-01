@@ -41,20 +41,28 @@
 
 <style>
   :root { color-scheme: dark; }
-  body { background:#0a0a0b; }
+  /* 🚀 FONDO FIJO PROFESIONAL (ESTILO PARALLAX CON TU IMAGEN) */
+  body { 
+    background-color: #0c0c0e;
+    background-image: linear-gradient(rgba(10, 10, 11, 0.92), rgba(10, 10, 11, 0.92)), url('fondo-carrillo.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    color: #ffffff !important;
+  }
   ::selection { background:#FFC72C; color:#0a0a0b; }
 
   .plate {
     position: relative;
     border-radius: 10px;
-    border: 1px solid rgba(255,199,44,0.18);
-    background-image: linear-gradient(155deg, #2a2a2e 0%, #121214 55%, #1a1a1d 100%);
+    border: 1px solid rgba(255,199,44,0.25);
+    background-image: linear-gradient(155deg, #1c1c1f 0%, #0f0f11 55%, #151517 100%);
   }
   .plate-sm {
     position: relative;
     border-radius: 8px;
-    border: 1px solid rgba(255,199,44,0.16);
-    background-image: linear-gradient(155deg, #232326 0%, #0f0f11 60%);
+    border: 1px solid rgba(255,199,44,0.2);
+    background-image: linear-gradient(155deg, #18181b 0%, #0a0a0b 60%);
   }
   .blueprint {
     background-color:#0e1013;
@@ -76,7 +84,7 @@
   }
 </style>
 </head>
-<body class="bg-base font-body text-white antialiased min-h-screen flex flex-col">
+<body class="font-body text-white antialiased min-h-screen flex flex-col">
 
 <!-- FRANJA DE PELIGRO -->
 <div class="hazard"></div>
@@ -119,36 +127,9 @@
                 <i class="fa-solid fa-globe text-base"></i> 🌐 Inicio / Todo el Catálogo
             </button>
 
-            <div class="pt-3">
-                <p class="text-[10px] text-steel uppercase font-bold tracking-widest px-3 mb-2">🏷️ Marcas y Modelos</p>
-                
-                <button onclick="filterByBrand('KOMATSU')" id="brand-komatsu" class="brand-btn w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all">
-                    <span>🔴 KOMATSU</span> <span class="text-[9px] text-zinc-500 font-mono">PC / WA</span>
-                </button>
-                <button onclick="filterByBrand('CATERPILLAR')" id="brand-caterpillar" class="brand-btn w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all">
-                    <span>🚜 CATERPILLAR</span> <span class="text-[9px] text-zinc-500 font-mono">CAT</span>
-                </button>
-                <button onclick="filterByBrand('HYUNDAI')" id="brand-hyundai" class="brand-btn w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all">
-                    <span>🟢 HYUNDAI</span> <span class="text-[9px] text-zinc-500 font-mono">HX / HL</span>
-                </button>
-                <button onclick="filterByBrand('VOLVO')" id="brand-volvo" class="brand-btn w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all">
-                    <span>🔵 VOLVO</span> <span class="text-[9px] text-zinc-500 font-mono">EC / L</span>
-                </button>
-                <button onclick="filterByBrand('SANY')" id="brand-sany" class="brand-btn w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all">
-                    <span>🟡 SANY</span> <span class="text-[9px] text-zinc-500 font-mono">SY / SW</span>
-                </button>
-
-                <div class="mt-2 pt-2 border-t border-line space-y-1">
-                    <p class="text-[9px] text-zinc-500 uppercase font-bold px-3 py-1">⚙️ Otras Marcas</p>
-                    <button onclick="filterByBrand('HITACHI')" id="brand-hitachi" class="brand-btn w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all"><span>HITACHI</span> <span class="text-[9px] text-zinc-600">ZX / ZW</span></button>
-                    <button onclick="filterByBrand('DEVELON')" id="brand-develon" class="brand-btn w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all"><span>DEVELON / DOOSAN</span> <span class="text-[9px] text-zinc-600">DX / DL</span></button>
-                    <button onclick="filterByBrand('KOBELCO')" id="brand-kobelco" class="brand-btn w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all"><span>KOBELCO</span> <span class="text-[9px] text-zinc-600">SK</span></button>
-                    <button onclick="filterByBrand('LIEBHERR')" id="brand-liebherr" class="brand-btn w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all"><span>LIEBHERR</span> <span class="text-[9px] text-zinc-600">R / L</span></button>
-                    <button onclick="filterByBrand('CASE')" id="brand-case" class="brand-btn w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all"><span>CASE</span> <span class="text-[9px] text-zinc-600">CX / W</span></button>
-                    <button onclick="filterByBrand('JCB')" id="brand-jcb" class="brand-btn w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all"><span>JCB</span> <span class="text-[9px] text-zinc-600">JS / 3CX</span></button>
-                    <button onclick="filterByBrand('LIUGONG')" id="brand-liugong" class="brand-btn w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs font-semibold text-steel hover:text-white hover:bg-zinc-900 transition-all"><span>LIUGONG</span> <span class="text-[9px] text-zinc-600">CLG / R</span></button>
-                </div>
-            </div>
+            <button onclick="switchMainTab('sistema')" id="nav-sistema" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all text-steel hover:text-white hover:bg-zinc-900 border border-line">
+                <i class="fa-solid fa-industry text-base text-yellow"></i> ⚙ Sistema de Trabajo
+            </button>
 
             <div class="pt-3 space-y-1.5">
                 <button onclick="switchMainTab('resenas')" id="nav-resenas" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all text-steel hover:text-white hover:bg-zinc-900 border border-line">
@@ -176,7 +157,8 @@
     <!-- ZONA PRINCIPAL A LA DERECHA -->
     <main class="flex-1 flex flex-col min-w-0">
         <header class="border-b border-line bg-base/95 sticky top-0 z-30 backdrop-blur-md px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="w-full sm:max-w-xl relative">
+            <!-- BUSCADOR GENERAL CONDICIONAL -->
+            <div id="searchContainer" class="w-full sm:max-w-xl relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5">
                     <i class="fa-solid fa-magnifying-glass text-yellow text-sm"></i>
                 </span>
@@ -195,44 +177,46 @@
 
         <div class="p-6 md:p-8 flex-1 space-y-8">
 
-            <!-- VISTA 1: INICIO -->
-            <div id="view-inicio" class="space-y-8">
-                <div class="relative bg-gradient-to-b from-panel/60 via-base to-base py-12 px-6 rounded-2xl border border-line overflow-hidden text-center">
-                    <div class="absolute inset-0 opacity-40 blueprint"></div>
-                    <div class="relative z-10 max-w-3xl mx-auto">
-                        <span class="border border-yellow/30 text-yellow bg-yellow/5 text-[10px] uppercase tracking-[0.25em] font-bold px-3 py-1 rounded-full">Catálogo Técnico 2026</span>
-                        <h2 class="font-display text-3xl md:text-5xl mt-4 mb-3 text-white uppercase tracking-tight">Máxima tracción y <span class="text-yellow">potencia</span></h2>
-                        <p class="text-xs md:text-sm text-steel leading-relaxed max-w-xl mx-auto mb-8">Evita paradas innecesarias en tus obras. Componentes certificados de alto impacto para tren de rodaje, sistemas de desgaste y filtración de motores críticos.</p>
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 max-w-3xl mx-auto">
-                            <div class="plate p-4 text-center">
-                                <p class="text-yellow font-bold text-sm md:text font-display tracking-wide">CALIDAD CERTIFICADA</p>
-                                <p class="text-[9px] text-steel uppercase tracking-widest mt-0.5">ALTA RESISTENCIA</p>
-                            </div>
-                            <div class="plate p-4 text-center">
-                                <p class="text-yellow font-bold text-sm md:text font-display tracking-wide">STOCK REAL</p>
-                                <p class="text-[9px] text-steel uppercase tracking-widest mt-0.5">DESPACHO INMEDIATO</p>
-                            </div>
-                            <div class="plate p-4 text-center">
-                                <p class="text-yellow font-bold text-sm md:text font-display tracking-wide">ENVÍO NACIONAL</p>
-                                <p class="text-[9px] text-steel uppercase tracking-widest mt-0.5">A TODO EL PERÚ</p>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                            <div class="plate p-5 flex flex-col items-center justify-center gap-2">
-                                <p class="text-[9px] text-yellow font-bold uppercase tracking-widest">Distribuidor Autorizado</p>
-                                <img src="https://i.ibb.co/gFT5nY2c/marca2.png" alt="H-TRACK" class="h-8 md:h-10 object-contain">
-                            </div>
-                            <div class="plate p-5 flex flex-col items-center justify-center gap-2">
-                                <p class="text-[9px] text-yellow font-bold uppercase tracking-widest">Distribuidor Autorizado</p>
-                                <img src="https://i.ibb.co/kgFb3mgk/marca.png" alt="HTK" class="h-8 md:h-10 object-contain">
-                            </div>
-                        </div>
-                    </div>
+          <!-- VISTA 1: INICIO -->
+<div id="view-inicio" class="space-y-8">
+    <div class="relative py-16 px-6 rounded-2xl border border-yellow/30 overflow-hidden text-center text-white shadow-2xl" style="background: linear-gradient(to bottom, rgba(10,10,11,0.85) 0%, rgba(10,10,11,0.95) 70%, #0a0a0b 100%), url('excavadoras.png'); background-size: cover; background-position: center;">
+        <div class="absolute inset-0 opacity-20 blueprint"></div>
+        <div class="relative z-10 max-w-3xl mx-auto">
+            <span class="border border-yellow/40 text-yellow bg-yellow/10 text-[10px] uppercase tracking-[0.25em] font-bold px-3.5 py-1.5 rounded-full backdrop-blur-sm">Catálogo Técnico 2026</span>
+            <h2 class="font-display text-3xl md:text-5xl mt-4 mb-3 text-white uppercase tracking-tight drop-shadow-md">Máxima tracción y <span class="text-yellow">potencia</span></h2>
+            <p class="text-xs md:text-sm text-zinc-300 leading-relaxed max-w-xl mx-auto mb-8 drop-shadow">Evita paradas innecesarias en tus obras. Componentes certificados de alto impacto para tren de rodaje, sistemas de desgaste y filtración de motores críticos.</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 max-w-3xl mx-auto">
+                <div class="plate p-4 text-center backdrop-blur-md bg-black/40">
+                    <p class="text-yellow font-bold text-sm font-display tracking-wide">CALIDAD CERTIFICADA</p>
+                    <p class="text-[9px] text-steel uppercase tracking-widest mt-0.5">ALTA RESISTENCIA</p>
                 </div>
+                <div class="plate p-4 text-center backdrop-blur-md bg-black/40">
+                    <p class="text-yellow font-bold text-sm font-display tracking-wide">STOCK REAL</p>
+                    <p class="text-[9px] text-steel uppercase tracking-widest mt-0.5">DESPACHO INMEDIATO</p>
+                </div>
+                <div class="plate p-4 text-center backdrop-blur-md bg-black/40">
+                    <p class="text-yellow font-bold text-sm font-display tracking-wide">ENVÍO NACIONAL</p>
+                    <p class="text-[9px] text-steel uppercase tracking-widest mt-0.5">A TODO EL PERÚ</p>
+                </div>
+            </div>
 
-                <div class="bg-panel border border-line p-5 rounded-2xl">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                <div class="plate p-5 flex flex-col items-center justify-center gap-2 backdrop-blur-md bg-black/50">
+                    <p class="text-[9px] text-yellow font-bold uppercase tracking-widest">Distribuidor Autorizado</p>
+                    <img src="https://i.ibb.co/gFT5nY2c/marca2.png" alt="H-TRACK" class="h-8 md:h-10 object-contain">
+                </div>
+                <div class="plate p-5 flex flex-col items-center justify-center gap-2 backdrop-blur-md bg-black/50">
+                    <p class="text-[9px] text-yellow font-bold uppercase tracking-widest">Distribuidor Autorizado</p>
+                    <img src="https://i.ibb.co/kgFb3mgk/marca.png" alt="HTK" class="h-8 md:h-10 object-contain">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+                <!-- Alta Rotación -->
+                <div class="bg-panel border border-line p-5 rounded-2xl text-white">
                     <div class="flex items-center justify-between mb-4 border-b border-line pb-3">
                         <h3 class="font-display text-sm tracking-wide uppercase text-yellow flex items-center gap-2">
                             <i class="fa-solid fa-star animate-pulse"></i> Componentes de Alta Rotación / Más Solicitados
@@ -242,7 +226,8 @@
                     <div id="anchorGrid" class="flex gap-6 overflow-x-auto custom-scrollbar pb-3 snap-x snap-mandatory"></div>
                 </div>
 
-                <div id="contenedor-ofertones" class="bg-panel border border-line p-5 rounded-2xl">
+                <!-- Ofertones -->
+                <div id="contenedor-ofertones" class="bg-panel border border-line p-5 rounded-2xl text-white">
                     <div class="flex items-center justify-between mb-4 border-b border-line pb-3">
                         <h3 class="font-display text-sm tracking-wide uppercase text-yellow flex items-center gap-2">
                             <i class="fa-solid fa-fire animate-pulse text-red"></i> ¡OFERTONES DEL MES!
@@ -254,7 +239,7 @@
             </div>
 
             <!-- VISTA 2: CATÁLOGO -->
-            <div id="view-catalogo" class="hidden space-y-6">
+            <div id="view-catalogo" class="hidden space-y-6 text-white">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-line pb-4 gap-4">
                     <div>
                         <h2 id="catalogoTitle" class="font-display text-xl text-white uppercase tracking-wider">Catálogo General</h2>
@@ -288,8 +273,150 @@
                 </div>
             </div>
 
-            <!-- VISTA 3: RESEÑAS -->
-            <div id="view-resenas" class="hidden space-y-6">
+            <!-- VISTA 3: SISTEMA DE TRABAJO (ACTUALIZADO CON LAS 5 LÍNEAS EXACTAS) -->
+            <div id="view-sistema" class="hidden space-y-8 text-white">
+                <div class="border-b border-line pb-4">
+                    <span class="text-[10px] bg-yellow/10 text-yellow font-extrabold px-3 py-1 rounded-full uppercase tracking-widest border border-yellow/20">Especialidades Carrillo Import</span>
+                    <h2 class="text-2xl font-black text-white mt-3 uppercase tracking-tight">Sistema de Trabajo y Marcas ⚙️</h2>
+                    <p class="text-xs text-steel mt-1">Conoce las marcas con las que trabajamos y nuestras especialidades de repuestos oficiales.</p>
+                </div>
+
+                <!-- Carrusel de Marcas -->
+                <div class="bg-panel border border-line p-6 rounded-2xl text-center space-y-4 shadow-xl">
+                    <h3 class="font-display text-base tracking-wide uppercase text-yellow">Con estas marcas trabajamos</h3>
+                    <p class="text-xs text-steel">Desliza o arrastra para conocer las marcas de maquinaria pesada compatibles con nuestros repuestos.</p>
+                    
+                    <div class="flex gap-6 overflow-x-auto custom-scrollbar pb-3 pt-2 snap-x snap-mandatory">
+                        <div class="plate p-4 px-6 min-w-[160px] flex flex-col items-center justify-center gap-2 shrink-0 snap-center">
+                            <span class="text-xs font-bold text-white uppercase">KOMATSU</span>
+                            <span class="text-[9px] text-steel font-mono">PC / WA Series</span>
+                        </div>
+                        <div class="plate p-4 px-6 min-w-[160px] flex flex-col items-center justify-center gap-2 shrink-0 snap-center">
+                            <span class="text-xs font-bold text-white uppercase">CATERPILLAR</span>
+                            <span class="text-[9px] text-steel font-mono">CAT Series</span>
+                        </div>
+                        <div class="plate p-4 px-6 min-w-[160px] flex flex-col items-center justify-center gap-2 shrink-0 snap-center">
+                            <span class="text-xs font-bold text-white uppercase">HYUNDAI</span>
+                            <span class="text-[9px] text-steel font-mono">HX / HL Series</span>
+                        </div>
+                        <div class="plate p-4 px-6 min-w-[160px] flex flex-col items-center justify-center gap-2 shrink-0 snap-center">
+                            <span class="text-xs font-bold text-white uppercase">VOLVO</span>
+                            <span class="text-[9px] text-steel font-mono">EC / L Series</span>
+                        </div>
+                        <div class="plate p-4 px-6 min-w-[160px] flex flex-col items-center justify-center gap-2 shrink-0 snap-center">
+                            <span class="text-xs font-bold text-white uppercase">SANY</span>
+                            <span class="text-[9px] text-steel font-mono">SY / SW Series</span>
+                        </div>
+                        <div class="plate p-4 px-6 min-w-[160px] flex flex-col items-center justify-center gap-2 shrink-0 snap-center">
+                            <span class="text-xs font-bold text-white uppercase">HITACHI</span>
+                            <span class="text-[9px] text-steel font-mono">ZX / ZW Series</span>
+                        </div>
+                        <div class="plate p-4 px-6 min-w-[160px] flex flex-col items-center justify-center gap-2 shrink-0 snap-center">
+                            <span class="text-xs font-bold text-white uppercase">DEVELON</span>
+                            <span class="text-[9px] text-steel font-mono">DX / DL Series</span>
+                        </div>
+                        <div class="plate p-4 px-6 min-w-[160px] flex flex-col items-center justify-center gap-2 shrink-0 snap-center">
+                            <span class="text-xs font-bold text-white uppercase">KOBELCO</span>
+                            <span class="text-[9px] text-steel font-mono">SK Series</span>
+                        </div>
+                        <div class="plate p-4 px-6 min-w-[160px] flex flex-col items-center justify-center gap-2 shrink-0 snap-center">
+                            <span class="text-xs font-bold text-white uppercase">JCB</span>
+                            <span class="text-[9px] text-steel font-mono">JS / 3CX Series</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5 Líneas de Especialidad Solicitadas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+                    <!-- 1. Sistema de Desgaste -->
+                    <div class="bg-panel border border-line rounded-2xl overflow-hidden flex flex-col justify-between shadow-xl">
+                        <div class="h-44 blueprint flex items-center justify-center p-4">
+                            <img src="https://i.ibb.co/kgFb3mgk/marca.png" alt="Desgaste" class="max-h-28 object-contain">
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <span class="text-[9px] text-yellow font-bold uppercase tracking-widest bg-yellow/10 px-2 py-0.5 rounded border border-yellow/20">Línea HTK</span>
+                            <h3 class="font-display text-base text-white uppercase tracking-wide">SISTEMA DE DESGASTE</h3>
+                            <p class="text-xs text-steel leading-relaxed">Componentes de alta dureza y resistencia al impacto constante para proteger los equipos en faena.</p>
+                        </div>
+                        <div class="p-5 pt-0">
+                            <a id="btnWaSys1" href="" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-xs">
+                                <i class="fa-brands fa-whatsapp text-base"></i> Cotizar Desgaste
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 2. Sistema de Rodamiento -->
+                    <div class="bg-panel border border-line rounded-2xl overflow-hidden flex flex-col justify-between shadow-xl">
+                        <div class="h-44 blueprint flex items-center justify-center p-4">
+                            <img src="https://i.ibb.co/gFT5nY2c/marca2.png" alt="Rodamiento" class="max-h-28 object-contain">
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <span class="text-[9px] text-yellow font-bold uppercase tracking-widest bg-yellow/10 px-2 py-0.5 rounded border border-yellow/20">Línea H-TRACK</span>
+                            <h3 class="font-display text-base text-white uppercase tracking-wide">SISTEMA DE RODAMIENTO</h3>
+                            <p class="text-xs text-steel leading-relaxed">Rodillos, cadenas, ruedas guía y sprockets certificados para garantizar tracción y durabilidad.</p>
+                        </div>
+                        <div class="p-5 pt-0">
+                            <a id="btnWaSys2" href="" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-xs">
+                                <i class="fa-brands fa-whatsapp text-base"></i> Cotizar Rodamiento
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 3. Elemento de Corte -->
+                    <div class="bg-panel border border-line rounded-2xl overflow-hidden flex flex-col justify-between shadow-xl">
+                        <div class="h-44 blueprint flex items-center justify-center p-4">
+                            <span class="font-display text-2xl font-bold text-yellow tracking-wider">ELEMENTOS DE CORTE</span>
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <span class="text-[9px] text-yellow font-bold uppercase tracking-widest bg-yellow/10 px-2 py-0.5 rounded border border-yellow/20">Cuchillas & Cantoneras</span>
+                            <h3 class="font-display text-base text-white uppercase tracking-wide">ELEMENTO DE CORTE</h3>
+                            <p class="text-xs text-steel leading-relaxed">Cuchillas base, cantoneras y sobrecantoneras diseñadas para motoniveladoras y cargadores frontales.</p>
+                        </div>
+                        <div class="p-5 pt-0">
+                            <a id="btnWaSys3" href="" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-xs">
+                                <i class="fa-brands fa-whatsapp text-base"></i> Cotizar Cortes
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 4. Puntas y Adaptadores -->
+                    <div class="bg-panel border border-line rounded-2xl overflow-hidden flex flex-col justify-between shadow-xl">
+                        <div class="h-44 blueprint flex items-center justify-center p-4">
+                            <span class="font-display text-2xl font-bold text-yellow tracking-wider">PUNTAS Y ADAPTADORES</span>
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <span class="text-[9px] text-yellow font-bold uppercase tracking-widest bg-yellow/10 px-2 py-0.5 rounded border border-yellow/20">Alta Precisión</span>
+                            <h3 class="font-display text-base text-white uppercase tracking-wide">PUNTAS Y ADAPTADORES</h3>
+                            <p class="text-xs text-steel leading-relaxed">Puntas de penetración y adaptadores reforzados para excavación en roca y terrenos difíciles.</p>
+                        </div>
+                        <div class="p-5 pt-0">
+                            <a id="btnWaSys4" href="" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-xs">
+                                <i class="fa-brands fa-whatsapp text-base"></i> Cotizar Puntas
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 5. Filtros / Repuestos en General -->
+                    <div class="bg-panel border border-line rounded-2xl overflow-hidden flex flex-col justify-between shadow-xl md:col-span-2 lg:col-span-2">
+                        <div class="h-44 blueprint flex items-center justify-center p-4">
+                            <span class="font-display text-2xl font-bold text-yellow tracking-wider">FILTROS Y REPUESTOS EN GENERAL</span>
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <span class="text-[9px] text-yellow font-bold uppercase tracking-widest bg-yellow/10 px-2 py-0.5 rounded border border-yellow/20">Línea Completa</span>
+                            <h3 class="font-display text-base text-white uppercase tracking-wide">FILTROS Y REPUESTOS EN GENERAL</h3>
+                            <p class="text-xs text-steel leading-relaxed">Filtros de aire, aceite, combustible y elementos hidráulicos y de transmisión para mantener operativa tu maquinaria.</p>
+                        </div>
+                        <div class="p-5 pt-0">
+                            <a id="btnWaSys5" href="" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-xs">
+                                <i class="fa-brands fa-whatsapp text-base"></i> Cotizar Filtros y General
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA 4: RESEÑAS -->
+            <div id="view-resenas" class="hidden space-y-6 text-white">
                 <div class="border-b border-line pb-4">
                     <span class="text-[10px] bg-yellow/10 text-yellow font-extrabold px-3 py-1 rounded-full uppercase tracking-widest border border-yellow/20">Garantía Carrillo Import</span>
                     <h2 class="text-2xl font-black text-white mt-3 uppercase tracking-tight">Envíos y Trabajos en Campo 🇵🇪</h2>
@@ -310,8 +437,8 @@
                 </div>
             </div>
 
-            <!-- VISTA 4: UBICACIÓN Y LOCALES -->
-            <div id="view-ubicacion" class="hidden space-y-8">
+            <!-- VISTA 5: UBICACIÓN Y LOCALES -->
+            <div id="view-ubicacion" class="hidden space-y-8 text-white">
                 <div class="border-b border-line pb-4">
                     <span class="text-[10px] bg-yellow/10 text-yellow font-extrabold px-3 py-1 rounded-full uppercase tracking-widest border border-yellow/20">Oficina y Almacén Central</span>
                     <h2 class="text-2xl font-black text-white mt-3 uppercase tracking-tight">Nuestra Sede Principal 📍</h2>
@@ -337,7 +464,7 @@
                             </ul>
                         </div>
                         <div class="pt-2">
-                            <a href="https://wa.link/opxc7b" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-xs">
+                            <a id="btnWaUbicacion" href="" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-xs">
                                 <i class="fa-brands fa-whatsapp text-lg"></i> Contactar con Asesora Maria Stefany
                             </a>
                         </div>
@@ -362,6 +489,31 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- 🏆 RECONOCIMIENTO PREMIO EMPRESA PERUANA DEL AÑO 2024 -->
+                <div class="bg-panel border border-yellow/40 p-8 rounded-2xl relative overflow-hidden shadow-2xl">
+                    <div class="absolute inset-0 opacity-10 blueprint"></div>
+                    <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                        <div class="md:col-span-2 space-y-4">
+                            <span class="bg-yellow/20 text-yellow text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest border border-yellow/30">
+                                <i class="fa-solid fa-award mr-1.5"></i> Excelencia y Compromiso
+                            </span>
+                            <h3 class="font-display text-2xl md:text-3xl text-white uppercase tracking-tight">
+                                Reconocidos con el <span class="text-yellow">Premio Empresa Peruana del Año 2024</span> (Edición PYME)
+                            </h3>
+                            <p class="text-xs md:text-sm text-steel leading-relaxed">
+                                Este galardón representa el fruto de nuestros años de esfuerzo, compromiso y dedicación exclusiva ofreciendo repuestos de máxima calidad y un servicio excepcional a toda la industria peruana de maquinaria pesada. ¡Gracias por confiar en nuestra trayectoria como importadores directos!
+                            </p>
+                        </div>
+                        <div class="flex justify-center">
+                            <div class="plate p-6 text-center space-y-2 border-yellow/40">
+                                <i class="fa-solid fa-trophy text-4xl text-yellow animate-bounce"></i>
+                                <p class="font-display text-lg text-white uppercase tracking-wide">Líderes en Importación</p>
+                                <p class="text-[10px] text-steel uppercase tracking-widest">Representantes Exclusivos HTK & H-TRACK</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -373,7 +525,7 @@
     </main>
 </div>
 
-<!-- MODAL DETALLE DE PRODUCTO (CON ESPECIFICACIONES TÉCNICAS Y MÁXIMO 3 OPINIONES) -->
+<!-- MODAL DETALLE DE PRODUCTO -->
 <div id="productModal" class="fixed inset-0 bg-black/85 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
     <div class="bg-panel border border-line w-full max-w-2xl rounded-2xl overflow-hidden shadow-card relative">
         <button onclick="closeModal()" class="absolute top-4 right-4 text-steel hover:text-white bg-panel2 w-8 h-8 rounded-full flex items-center justify-center transition-all z-10">
@@ -394,13 +546,11 @@
                         </p>
                     </div>
                     
-                    <!-- Pequeña descripción / especificaciones técnicas -->
                     <div class="border-t border-line pt-3 mb-4">
                         <h4 class="text-[10px] font-bold text-steel uppercase tracking-wider mb-1">Especificaciones Técnicas</h4>
                         <p id="modalSpecs" class="text-xs text-zinc-300 leading-relaxed">Detalles específicos del componente...</p>
                     </div>
 
-                    <!-- Opiniones de clientes (Límite estricto de máximo 3) -->
                     <div class="border-t border-line pt-3">
                         <div class="flex items-center justify-between mb-2">
                             <h4 class="text-[10px] font-bold text-steel uppercase tracking-wider">Opiniones de clientes</h4>
@@ -448,9 +598,28 @@ let currentFilter = 'inicio';
 let currentBrandFilter = '';
 let currentProductPage = 1;
 const productsPerPage = 5; 
+
 const NOMBRE_VENDEDOR = "Maria Stefany";
+const NUMERO_WHATSAPP = "51971345125";
+
+function configurarEnlacesWhatsApp() {
+    const textSys1 = encodeURIComponent(`Hola ${NOMBRE_VENDEDOR}, deseo cotizar repuestos de la línea Sistema de Desgaste.`);
+    const textSys2 = encodeURIComponent(`Hola ${NOMBRE_VENDEDOR}, deseo cotizar repuestos de la línea Sistema de Rodamiento.`);
+    const textSys3 = encodeURIComponent(`Hola ${NOMBRE_VENDEDOR}, deseo cotizar repuestos de la línea Elemento de Corte.`);
+    const textSys4 = encodeURIComponent(`Hola ${NOMBRE_VENDEDOR}, deseo cotizar Puntas y Adaptadores.`);
+    const textSys5 = encodeURIComponent(`Hola ${NOMBRE_VENDEDOR}, deseo cotizar Filtros y Repuestos en General.`);
+    const textGeneral = encodeURIComponent(`Hola ${NOMBRE_VENDEDOR}, deseo información general sobre los repuestos.`);
+
+    if(document.getElementById('btnWaSys1')) document.getElementById('btnWaSys1').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${textSys1}`;
+    if(document.getElementById('btnWaSys2')) document.getElementById('btnWaSys2').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${textSys2}`;
+    if(document.getElementById('btnWaSys3')) document.getElementById('btnWaSys3').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${textSys3}`;
+    if(document.getElementById('btnWaSys4')) document.getElementById('btnWaSys4').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${textSys4}`;
+    if(document.getElementById('btnWaSys5')) document.getElementById('btnWaSys5').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${textSys5}`;
+    if(document.getElementById('btnWaUbicacion')) document.getElementById('btnWaUbicacion').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${textGeneral}`;
+}
 
 async function inicializarCatalogo() {
+    configurarEnlacesWhatsApp();
     try {
         const snapshot = await getDocs(collection(db, "products"));
         todosLosProductos = [];
@@ -482,7 +651,7 @@ window.switchMainTab = function(tab) {
     currentBrandFilter = '';
     currentProductPage = 1;
 
-    document.querySelectorAll('.nav-btn, .brand-btn').forEach(b => {
+    document.querySelectorAll('.nav-btn').forEach(b => {
         b.classList.remove('bg-yellow', 'text-black', 'shadow-lg');
         b.classList.add('text-steel');
     });
@@ -491,50 +660,33 @@ window.switchMainTab = function(tab) {
     document.getElementById('view-catalogo').classList.add('hidden');
     document.getElementById('view-resenas').classList.add('hidden');
     document.getElementById('view-ubicacion').classList.add('hidden');
+    document.getElementById('view-sistema').classList.add('hidden');
+
+    const searchContainer = document.getElementById('searchContainer');
 
     if(tab === 'inicio') {
         document.getElementById('nav-inicio').classList.add('bg-yellow', 'text-black', 'shadow-lg');
         document.getElementById('nav-inicio').classList.remove('text-steel');
         document.getElementById('view-inicio').classList.remove('hidden');
+        if(searchContainer) searchContainer.style.display = 'block';
         renderInicioView();
+    } else if(tab === 'sistema') {
+        document.getElementById('nav-sistema').classList.add('bg-yellow', 'text-black', 'shadow-lg');
+        document.getElementById('nav-sistema').classList.remove('text-steel');
+        document.getElementById('view-sistema').classList.remove('hidden');
+        if(searchContainer) searchContainer.style.display = 'block';
     } else if(tab === 'resenas') {
         document.getElementById('nav-resenas').classList.add('bg-yellow', 'text-black', 'shadow-lg');
         document.getElementById('nav-resenas').classList.remove('text-steel');
         document.getElementById('view-resenas').classList.remove('hidden');
+        if(searchContainer) searchContainer.style.display = 'none';
         loadClientGalleryInPublicSite();
     } else if(tab === 'ubicacion') {
         document.getElementById('nav-ubicacion').classList.add('bg-yellow', 'text-black', 'shadow-lg');
         document.getElementById('nav-ubicacion').classList.remove('text-steel');
         document.getElementById('view-ubicacion').classList.remove('hidden');
+        if(searchContainer) searchContainer.style.display = 'none';
     }
-
-    if(window.innerWidth < 768) toggleMobileSidebar();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-window.filterByBrand = function(brandName) {
-    currentFilter = 'marca';
-    currentBrandFilter = brandName.toUpperCase();
-    currentProductPage = 1;
-
-    document.querySelectorAll('.nav-btn, .brand-btn').forEach(b => {
-        b.classList.remove('bg-yellow', 'text-black', 'shadow-lg');
-        b.classList.add('text-steel');
-    });
-
-    const activeBrandBtn = document.getElementById(`brand-${brandName.toLowerCase()}`);
-    if(activeBrandBtn) {
-        activeBrandBtn.classList.add('bg-yellow', 'text-black', 'shadow-lg');
-        activeBrandBtn.classList.remove('text-steel');
-    }
-
-    document.getElementById('view-inicio').classList.add('hidden');
-    document.getElementById('view-catalogo').classList.remove('hidden');
-    document.getElementById('view-resenas').classList.add('hidden');
-    document.getElementById('view-ubicacion').classList.add('hidden');
-
-    document.getElementById('catalogoTitle').innerText = `Repuestos para: ${brandName}`;
-    aplicarFiltrosLocales();
 
     if(window.innerWidth < 768) toggleMobileSidebar();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -542,12 +694,16 @@ window.filterByBrand = function(brandName) {
 
 window.filterProducts = function() {
     const query = document.getElementById('searchBar').value.toLowerCase().trim();
+    const searchContainer = document.getElementById('searchContainer');
+
     if(query.length > 0) {
         currentFilter = 'busqueda';
         document.getElementById('view-inicio').classList.add('hidden');
         document.getElementById('view-catalogo').classList.remove('hidden');
         document.getElementById('view-resenas').classList.add('hidden');
         document.getElementById('view-ubicacion').classList.add('hidden');
+        document.getElementById('view-sistema').classList.add('hidden');
+        if(searchContainer) searchContainer.style.display = 'block';
         document.getElementById('catalogoTitle').innerText = `Búsqueda: "${query}"`;
     } else if(currentFilter === 'busqueda') {
         switchMainTab('inicio');
@@ -562,7 +718,6 @@ window.aplicarFiltrosLocales = function() {
     const stockFilter = document.getElementById('stockFilterSelect').value;
 
     const filtrados = todosLosProductos.filter(p => {
-        const matchMarca = (currentFilter !== 'marca') || (p.brand.includes(currentBrandFilter) || p.name.includes(currentBrandFilter));
         const matchBusqueda = !query || 
             p.name.toLowerCase().includes(query) || 
             p.code.toLowerCase().includes(query) || 
@@ -573,7 +728,7 @@ window.aplicarFiltrosLocales = function() {
             matchStock = (p.stock || "").toLowerCase() === 'disponible';
         }
 
-        return matchMarca && matchBusqueda && matchStock;
+        return matchBusqueda && matchStock;
     });
 
     document.getElementById('counterResults').innerText = `Mostrando ${filtrados.length} repuesto${filtrados.length === 1 ? '' : 's'}`;
@@ -631,7 +786,7 @@ function renderInicioView() {
 
 function appendCardToGrid(targetGrid, prod, idx, isSlider) {
     const waText = encodeURIComponent(`Hola ${NOMBRE_VENDEDOR}, deseo cotizar el repuesto ${prod.name} (Código: ${prod.code}, Marca: ${prod.brand}).`);
-    const waLink = `https://wa.me/51971345125?text=${waText}`;
+    const waLink = `https://wa.me/${NUMERO_WHATSAPP}?text=${waText}`;
 
     let stockColor = '#16a34a';
     if(prod.stock === 'Bajo stock') stockColor = '#d97706';
@@ -712,10 +867,10 @@ window.openModal = async function(id) {
     document.getElementById('modalSpecs').innerText = prod.specs || "Sin especificaciones técnicas registradas.";
 
     const waText = encodeURIComponent(`Hola ${NOMBRE_VENDEDOR}, deseo cotizar el repuesto: ${prod.name} (Código: ${prod.code}, Marca: ${prod.brand}).`);
-    document.getElementById('modalWaBtn').href = `https://wa.me/51971345125?text=${waText}`;
+    document.getElementById('modalWaBtn').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${waText}`;
 
     const { collection, getDocs, query, where, limit } = window.firebaseFunctions;
-    const qReviews = query(collection(window.firebaseDB, "reviews"), where("productoId", "==", Number(id) || id), limit(3)); // 🚨 Límite estricto de máximo 3 comentarios
+    const qReviews = query(collection(window.firebaseDB, "reviews"), where("productoId", "==", Number(id) || id), limit(3));
     const snap = await getDocs(qReviews);
 
     let box = document.getElementById('reviewsBox');
@@ -773,11 +928,20 @@ async function loadClientGalleryInPublicSite() {
         let d = doc.data();
         grid.innerHTML += `
             <div class="bg-panel border border-line rounded-2xl overflow-hidden">
-                <div class="h-48 blueprint"><img src="${d.image}" class="w-full h-full object-cover"></div>
+                <div class="h-48 blueprint"><img src="${normalizeImageUrl(d.image)}" class="w-full h-full object-cover"></div>
                 <div class="p-4"><h4 class="font-bold text-white text-sm">${d.client}</h4><p class="text-xs text-steel mt-1"><i class="fa-solid fa-location-dot text-yellow mr-1"></i>${d.location}</p></div>
             </div>
         `;
     });
+}
+
+function normalizeImageUrl(url) {
+    if (!url) return 'https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN';
+    if (url.includes('drive.google.com')) {
+        const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) return `https://lh3.googleusercontent.com/d/${match[1]}`;
+    }
+    return url;
 }
 
 window.onload = function() {

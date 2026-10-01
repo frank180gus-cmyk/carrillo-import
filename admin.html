@@ -27,7 +27,6 @@
         tr { background: #151517; transition: all 0.3s; }
         tr:hover { background: #27272A; }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="text-white antialiased min-h-screen flex flex-col">
@@ -60,7 +59,7 @@
 
         <div class="flex flex-col md:flex-row min-h-screen w-full bg-base text-white">
 
-            <!-- SIDEBAR LATERAL (ORDENADO CON RECOMENDADOS Y OFERTAS JUNTOS) -->
+            <!-- SIDEBAR LATERAL -->
             <aside class="w-full md:w-64 bg-zinc-950 border-r border-line p-5 flex flex-col gap-6 shrink-0">
                 <div class="flex items-center gap-3 px-2">
                     <div>
@@ -82,11 +81,11 @@
                     <button onclick="switchAdminTab('inventory')" id="btn-tab-inventory" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
                         <i class="fa-solid fa-boxes-stacked text-base"></i> <span>Inventario</span>
                     </button>
-                    <button onclick="switchAdminTab('comments')" id="btn-tab-comments" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
-                        <i class="fa-solid fa-comments text-base"></i> <span>Comentarios</span>
-                    </button>
                     <button onclick="switchAdminTab('deliveries')" id="btn-tab-deliveries" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
                         <i class="fa-solid fa-truck-fast text-base"></i> <span>Envíos en Campo</span>
+                    </button>
+                    <button onclick="verificarPasswordVendedor()" id="btn-tab-vendedores" class="admin-tab-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all text-steel hover:text-white hover:bg-panel border border-transparent w-full">
+                        <i class="fa-solid fa-user-tie text-base"></i> <span>Vendedores</span>
                     </button>
                 </nav>
 
@@ -104,7 +103,7 @@
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
                             <h2 class="text-xl font-black text-white uppercase tracking-tight">Envíos y Trabajos Realizados</h2>
-                            <p class="text-xs text-steel mt-1">Sube las fotos reales de tus clientes.</p>
+                            <p class="text-xs text-steel mt-1">Sube y edita las fotos reales de tus clientes.</p>
                         </div>
                         <button onclick="openDeliveryModal()" class="bg-yellow text-black text-xs font-bold py-2 px-4 rounded-lg">
                             <i class="fa-solid fa-plus"></i> Agregar Envío
@@ -162,22 +161,12 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-panel border border-line p-5 rounded-2xl">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-yellow"></i> Alertas de Stock Crítico</h3>
-                                <span id="alertsCountBadge" class="text-[10px] bg-red-500/10 text-red-400 font-bold px-2.5 py-1 rounded-full border border-red-500/20">0 Alertas</span>
-                            </div>
-                            <div id="criticalStockContainer" class="space-y-2 max-h-[280px] overflow-y-auto pr-1"></div>
+                    <div class="bg-panel border border-line p-5 rounded-2xl">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-yellow"></i> Alertas de Stock Crítico</h3>
+                            <span id="alertsCountBadge" class="text-[10px] bg-red-500/10 text-red-400 font-bold px-2.5 py-1 rounded-full border border-red-500/20">0 Alertas</span>
                         </div>
-
-                        <div class="bg-panel border border-line p-5 rounded-2xl">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-regular fa-comments text-yellow"></i> Comentarios Recientes</h3>
-                                <button onclick="switchAdminTab('comments')" class="text-[10px] text-yellow font-bold hover:underline">Ver todos</button>
-                            </div>
-                            <div id="recentReviewsContainer" class="space-y-2 max-h-[280px] overflow-y-auto pr-1"></div>
-                        </div>
+                        <div id="criticalStockContainer" class="space-y-2 max-h-[280px] overflow-y-auto pr-1"></div>
                     </div>
                 </div>
 
@@ -190,11 +179,6 @@
                         </div>
                         
                         <div class="flex flex-col sm:flex-row gap-3">
-                            <label class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl transition-all text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg">
-                                <i class="fa-solid fa-file-excel"></i> Importar Masivo (CSV)
-                                <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="importCatalogFromCSV(event)">
-                            </label>
-
                             <div class="relative w-full sm:w-80">
                                 <input type="text" id="adminSearchInput" oninput="filterAdminList()" placeholder="Buscar por código, nombre o marca..." class="w-full bg-panel text-white text-sm px-4 py-2.5 pl-10 rounded-xl border border-line focus:border-yellow focus:outline-none transition-all">
                                 <span class="absolute left-3.5 top-3 text-zinc-500 text-sm"><i class="fa-solid fa-magnifying-glass"></i></span>
@@ -279,14 +263,13 @@
                     </div>
                 </div>
 
-                <!-- 🏷️ PESTAÑA OFERTAS (ACTUALIZADA IDÉNTICA A RECOMENDADOS) -->
+                <!-- 🏷️ PESTAÑA OFERTAS -->
                 <div id="view-ofertas" class="admin-view hidden space-y-8">
-                    <!-- Vitrina de Ofertas Arriba -->
                     <div class="bg-panel border border-line rounded-2xl p-6">
                         <div class="flex justify-between items-center mb-6">
                             <div>
                                 <h2 class="text-lg font-bold text-white uppercase">Vitrina de Ofertones</h2>
-                                <p class="text-xs text-steel">Máximo 5 productos en oferta. Estos son los que se muestran en la sección de ofertas.</p>
+                                <p class="text-xs text-steel">Máximo 5 productos en oferta.</p>
                             </div>
                             <button onclick="clearAllOfertas()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-xs transition-all">
                                 <i class="fa-solid fa-broom mr-2"></i> Limpiar todos
@@ -297,12 +280,11 @@
                         </table>
                     </div>
 
-                    <!-- Seleccionar Productos para Ofertas Abajo -->
                     <div class="bg-panel border border-line rounded-2xl p-6">
                         <div class="flex justify-between items-center mb-6">
                             <div>
                                 <h2 class="text-lg font-bold text-white uppercase">Seleccionar Productos para Oferta</h2>
-                                <p class="text-xs text-steel">Busca y añade productos a la vitrina de oferstones.</p>
+                                <p class="text-xs text-steel">Busca y añade productos a la vitrina de ofertones.</p>
                             </div>
                             <input type="text" id="ofertaSearchInput" oninput="currentOfertaPage=1; renderOfertaInventory()" placeholder="Buscar producto..." class="bg-black border border-line rounded-lg px-4 py-2 text-xs text-white w-64">
                         </div>
@@ -326,28 +308,30 @@
                     </div>
                 </div>
 
-                <!-- 💬 MODERACIÓN DE OPINIONES Y COMENTARIOS -->
-                <div id="view-comments" class="admin-view hidden space-y-6">
+                <!-- 👤 PESTAÑA VENDEDORES -->
+                <div id="view-vendedores" class="admin-view hidden space-y-6">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <h2 class="text-lg font-bold text-white mb-1"><i class="fa-regular fa-comments text-yellow mr-2"></i>Moderación de Comentarios</h2>
-                            <p class="text-xs text-steel">Revisa lo que opinan tus clientes. Elimina cualquier comentario falso o dañino al instante.</p>
+                            <h2 class="text-lg font-bold text-white mb-1"><i class="fa-solid fa-user-tie text-yellow mr-2"></i>Gestión de Vendedores</h2>
+                            <p class="text-xs text-steel">Administra el asesor comercial asociado al catálogo (primer nombre y primer apellido).</p>
                         </div>
-
-                        <div class="relative w-full sm:w-80">
-                            <input type="text" id="reviewsSearchInput" oninput="filterReviews()" placeholder="Buscar por cliente, código o máquina..." class="w-full bg-panel text-white text-sm px-4 py-2.5 pl-10 rounded-xl border border-line focus:border-yellow focus:outline-none transition-all">
-                            <span class="absolute left-3.5 top-3 text-zinc-500 text-sm"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        </div>
+                        <button onclick="openVendedorModal()" class="bg-yellow text-black text-xs font-bold py-2 px-4 rounded-lg">
+                            <i class="fa-solid fa-plus mr-1"></i> Añadir Vendedor
+                        </button>
                     </div>
 
-                    <div class="bg-panel border border-line rounded-2xl p-6 shadow-xl space-y-4 max-h-[500px] overflow-y-auto" id="reviewsContainer">
-                        <p class="text-xs text-steel text-center py-8">Cargando comentarios...</p>
-                    </div>
-
-                    <div class="flex items-center justify-center gap-2 pt-6 pb-2">
-                        <button type="button" onclick="window.prevCommentsPage()" id="btnPrevCommentsPage" class="disabled:opacity-40 bg-zinc-900 hover:bg-zinc-800 border border-line text-white text-xs font-bold py-2 px-4 rounded-xl transition-all" disabled>Anterior</button>
-                        <span class="bg-zinc-950 border border-line text-xs text-white font-mono font-bold px-4 py-2 rounded-xl">PÁG. COMENTARIOS: <span class="text-yellow" id="currentCommentsPageText">1</span></span>
-                        <button type="button" onclick="window.nextCommentsPage()" id="btnNextCommentsPage" class="disabled:opacity-40 bg-zinc-900 hover:bg-zinc-800 border border-line text-white text-xs font-bold py-2 px-4 rounded-xl transition-all" disabled>Siguiente</button>
+                    <div class="bg-panel border border-line rounded-2xl overflow-hidden shadow-xl">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-line bg-zinc-900/50 text-steel text-xs font-bold uppercase tracking-wider">
+                                    <th class="p-4">Nombre y Apellido</th>
+                                    <th class="p-4">WhatsApp de Contacto</th>
+                                    <th class="p-4 text-center">Estado Asignado</th>
+                                    <th class="p-4 text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vendedoresTableBody" class="divide-y divide-line text-sm"></tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -355,7 +339,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE FORMULARIO -->
+    <!-- MODAL PRODUCTO -->
     <div id="productModal" class="hidden fixed inset-0 bg-black/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-panel border border-line rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden">
             <div class="px-6 py-4 border-b border-line flex items-center justify-between">
@@ -365,7 +349,6 @@
             
             <form id="productForm" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
                 <input type="hidden" id="f_editingId">
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Nombre del Producto *</label>
@@ -383,11 +366,13 @@
                         <input type="text" id="f_brand" placeholder="Ej: HTK" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Categoría</label>
+                        <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Categoría de Especialidad</label>
                         <select id="f_category" class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none">
-                            <option value="desgaste">Línea Desgaste (HTK)</option>
-                            <option value="filtracion">Filtración y Motor (CAT)</option>
-                            <option value="rodaje">Tren de Rodaje (H-TRACK)</option>
+                            <option value="desgaste">Sistema de Desgaste</option>
+                            <option value="rodaje">Sistema de Rodamiento</option>
+                            <option value="corte">Elemento de Corte</option>
+                            <option value="puntas">Puntas y Adaptadores</option>
+                            <option value="filtros">Filtros y General</option>
                         </select>
                     </div>
                 </div>
@@ -419,7 +404,7 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-steel uppercase mb-1.5">Especificaciones Técnicas</label>
-                    <textarea id="f_specs" rows="3" placeholder="Describe el repuesto, material, compatibilidad, etc." class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none resize-none"></textarea>
+                    <textarea id="f_specs" rows="3" placeholder="Describe el repuesto..." class="w-full bg-black border border-line text-sm px-3.5 py-2.5 rounded-xl text-white focus:border-yellow focus:outline-none resize-none"></textarea>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-4 border-t border-line">
@@ -430,14 +415,15 @@
         </div>
     </div>
 
-    <!-- MODAL DE ENVÍOS EN CAMPO -->
+    <!-- MODAL DE ENVÍOS -->
     <div id="deliveryModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-start justify-center p-4 backdrop-blur-sm overflow-y-auto py-8">
         <div class="bg-panel border border-line w-full max-w-lg rounded-2xl overflow-hidden relative mt-10">
             <div class="border-b border-line p-6 flex justify-between items-center">
-                <h3 class="text-sm font-black text-white uppercase tracking-wider">Agregar Registro de Campo</h3>
+                <h3 id="deliveryModalTitle" class="text-sm font-black text-white uppercase tracking-wider">Agregar Registro de Campo</h3>
                 <button onclick="window.closeDeliveryModal()" class="text-steel hover:text-white bg-zinc-900 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="deliveryForm" onsubmit="window.saveDelivery(event)" class="p-6 space-y-4 text-xs">
+                <input type="hidden" id="deliveryEditingId">
                 <div>
                     <label class="block text-steel font-bold uppercase tracking-wider mb-2">Cliente o Empresa *</label>
                     <input type="text" id="deliveryClient" required placeholder="Ej: Consorcio Minero Huaraz" class="w-full bg-zinc-950 border border-line rounded-lg px-4 py-3 text-white focus:border-yellow">
@@ -464,11 +450,36 @@
         </div>
     </div>
 
-    <!-- SDK de Firebase y Lógica -->
+    <!-- MODAL VENDEDOR -->
+    <div id="vendedorModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-panel border border-line w-full max-w-md rounded-2xl overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+                <h3 id="vendedorModalTitle" class="text-base font-bold text-white">Gestionar Vendedor</h3>
+                <button type="button" onclick="closeVendedorModal()" class="text-steel hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="vendedorForm" onsubmit="saveVendedor(event)" class="p-6 space-y-4 text-xs">
+                <input type="hidden" id="vendedorEditingId">
+                <div>
+                    <label class="block text-steel font-bold uppercase tracking-wider mb-1.5">Primer Nombre y Apellido *</label>
+                    <input type="text" id="vendedorNombre" required placeholder="Ej: Maria Stefany" class="w-full bg-zinc-950 border border-line rounded-lg px-4 py-3 text-white focus:border-yellow">
+                </div>
+                <div>
+                    <label class="block text-steel font-bold uppercase tracking-wider mb-1.5">Número de WhatsApp *</label>
+                    <input type="text" id="vendedorTelefono" required placeholder="Ej: 51971345125" class="w-full bg-zinc-950 border border-line rounded-lg px-4 py-3 text-white focus:border-yellow">
+                </div>
+                <div class="border-t border-line pt-4 flex justify-end gap-3">
+                    <button type="button" onclick="closeVendedorModal()" class="bg-zinc-900 hover:bg-zinc-800 text-white font-bold py-2.5 px-5 rounded-lg">Cancelar</button>
+                    <button type="submit" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-2.5 px-5 rounded-lg">Guardar Vendedor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SDK de Firebase y Lógica Admin -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
-            getFirestore, collection, addDoc, query, where, getDocs, orderBy, limit, startAfter, serverTimestamp, doc, setDoc, deleteDoc 
+            getFirestore, collection, addDoc, query, getDocs, orderBy, limit, startAfter, serverTimestamp, doc, setDoc, deleteDoc 
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -485,12 +496,12 @@
         const db = getFirestore(app);
 
         window.firebaseDB = db;
-        window.firebaseFunctions = { collection, addDoc, query, where, getDocs, orderBy, limit, startAfter, serverTimestamp, doc, setDoc, deleteDoc };
+        window.firebaseFunctions = { collection, addDoc, query, getDocs, orderBy, limit, startAfter, serverTimestamp, doc, setDoc, deleteDoc };
    
         let stockChart = null;
         let allProducts = [];
-        let allReviews = [];
         const CLAVE_ADMIN = "carrillo2026"; 
+        const PASS_VENDEDORES = "20242026";
 
         window.checkAdminPassword = function() {
             const passInput = document.getElementById('adminPassword').value;
@@ -508,6 +519,16 @@
             document.getElementById('loginOverlay').classList.remove('hidden');
             document.getElementById('adminPanelContent').classList.add('hidden');
         }
+
+        window.verificarPasswordVendedor = function() {
+            const ingreso = prompt("🔒 Introduce la contraseña de gestión de vendedores (20242026):");
+            if (ingreso === PASS_VENDEDORES) {
+                switchAdminTab('vendedores');
+                loadVendedoresFromFirebase();
+            } else if (ingreso !== null) {
+                alert("❌ Contraseña incorrecta.");
+            }
+        };
 
         function updateStockChart(disponibles, bajoStock, agotados) {
             const ctx = document.getElementById('stockChart').getContext('2d');
@@ -536,7 +557,6 @@
 
         async function loadDataFromFirebase() {
             await loadProductsFromFirebase();
-            await loadReviewsFromFirebase();
             await window.loadDeliveriesFromFirebase();
             switchAdminTab('dashboard');
         }
@@ -544,10 +564,7 @@
         let currentAdminPage = 1;
         const perPage = 5; 
         let currentPage = 1;
-        let currentOfertaPage = 1; // Paginación independiente para ofertas
-        let currentCommentsPage = 1;
-        const commentsPerPage = 7; 
-        let currentReviewsFilteredList = null;
+        let currentOfertaPage = 1;
         let currentDeliveriesPage = 1;
         const deliveriesPerPage = 7; 
         let deliveriesPagesHistory = [];
@@ -589,10 +606,7 @@
                 renderRecommendedInventory();
                 renderOfertasList();
                 renderOfertaInventory();
-            } catch (error) {
-                console.error("Error al conectar:", error);
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-400">Error al conectar con la base de datos.</td></tr>`;
-            }
+            } catch (error) { console.error("Error al conectar:", error); }
         }
 
         function renderAdminTableLocally() {
@@ -601,312 +615,183 @@
             tbody.innerHTML = '';
 
             const queryText = (document.getElementById('adminSearchInput')?.value || "").toLowerCase().trim();
-            
-            let filtered = allProducts.filter(p => {
-                const name = (p.name || "").toLowerCase();
-                const code = (p.code || "").toLowerCase();
-                const brand = (p.brand || "").toLowerCase();
-                return name.includes(queryText) || code.includes(queryText) || brand.includes(queryText);
-            });
+            let filtered = allProducts.filter(p => p.name.toLowerCase().includes(queryText) || p.code.toLowerCase().includes(queryText));
 
             if (filtered.length === 0) {
                 document.getElementById('noResults')?.classList.remove('hidden');
-                updateAdminPaginationButtons(0);
                 return;
             }
             document.getElementById('noResults')?.classList.add('hidden');
-
-            const maxPages = Math.max(1, Math.ceil(filtered.length / perPage));
-            if (currentAdminPage > maxPages) currentAdminPage = maxPages;
-            if (currentAdminPage < 1) currentAdminPage = 1;
 
             const start = (currentAdminPage - 1) * perPage;
             const paginatedItems = filtered.slice(start, start + perPage);
 
             paginatedItems.forEach(prod => {
-                let stockBadgeColor = "text-green-500 bg-green-500/10";
-                let currentStock = prod.stock || "Disponible";
-                let cleanStock = currentStock.trim().toLowerCase();
-
-                if (cleanStock === "bajo stock") stockBadgeColor = "text-yellow-500 bg-yellow-500/10";
-                else if (cleanStock === "agotado") stockBadgeColor = "text-red-500 bg-red-500/10";
-
-                let categoryLabel = "Línea Desgaste (HTK)";
-                if (prod.category === "filtracion") categoryLabel = "Filtración y Motor (CAT)";
-                if (prod.category === "rodaje") categoryLabel = "Tren de Rodaje (H-TRACK)";
-
                 tbody.innerHTML += `
                     <tr class="hover:bg-zinc-900/40 transition-all align-middle">
-                        <td class="p-4"><img src="${prod.image}" class="w-12 h-12 object-contain bg-black border border-line rounded p-1" onerror="this.src='https://placehold.co/100'"></td>
+                        <td class="p-4"><img src="${prod.image}" class="w-12 h-12 object-contain bg-black border border-line rounded p-1"></td>
                         <td class="p-4 font-mono"><div class="text-white font-bold text-xs">${prod.code}</div><div class="text-[10px] text-steel uppercase">${prod.brand}</div></td>
-                        <td class="p-4">
-                            <div class="font-bold text-white text-xs max-w-xs truncate">${prod.name}</div>
-                            <div class="flex gap-1 mt-1">
-                                ${prod.highlight ? `<span class="inline-block text-[9px] bg-yellow/20 text-yellow px-1.5 py-0.5 rounded font-bold uppercase tracking-wider"><i class="fa-solid fa-star text-[8px] mr-1"></i> Destacado</span>` : ''}
-                                ${prod.oferta ? `<span class="inline-block text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider"><i class="fa-solid fa-tag text-[8px] mr-1"></i> Oferta</span>` : ''}
-                            </div>
-                        </td>
-                        <td class="p-4 text-xs text-steel">${categoryLabel}</td>
-                        <td class="p-4"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${stockBadgeColor}"><span class="w-1.5 h-1.5 rounded-full bg-current"></span>${currentStock}</span></td>
+                        <td class="p-4"><div class="font-bold text-white text-xs max-w-xs truncate">${prod.name}</div></td>
+                        <td class="p-4 text-xs text-steel">${prod.category}</td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold text-green-500 bg-green-500/10">${prod.stock || 'Disponible'}</span></td>
                         <td class="p-4 text-center">
                             <button onclick="editProduct(${prod.id})" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold py-1.5 px-3 rounded-lg mr-2">Editar</button>
                             <button onclick="deleteProduct(${prod.id})" class="bg-red-950/30 text-red-400 text-xs font-bold py-1.5 px-3 rounded-lg">Eliminar</button>
                         </td>
                     </tr>`;
             });
-
-            updateAdminPaginationButtons(filtered.length);
         }
 
-        window.nextAdminProductPage = function() { currentAdminPage++; renderAdminTableLocally(); };
-        window.prevAdminProductPage = function() { currentAdminPage--; renderAdminTableLocally(); };
-        window.filterAdminList = function() { currentAdminPage = 1; renderAdminTableLocally(); };
-
-        function updateAdminPaginationButtons(totalItems) {
-            const maxPages = Math.max(1, Math.ceil(totalItems / perPage));
-            const pageText = document.getElementById("currentAdminPageText");
-            if (pageText) pageText.innerText = `${currentAdminPage} / ${maxPages}`;
-            document.getElementById("btnPrevAdminPage").disabled = (currentAdminPage <= 1);
-            document.getElementById("btnNextAdminPage").disabled = (currentAdminPage >= maxPages);
-        }
-
-        async function loadReviewsFromFirebase() {
-            const { collection, getDocs } = window.firebaseFunctions;
-            const container = document.getElementById('reviewsContainer');
-            if (!container) return;
-
+        window.loadVendedoresFromFirebase = async function() {
+            const tbody = document.getElementById("vendedoresTableBody");
+            if (!tbody) return;
             try {
-                const snapshot = await getDocs(collection(window.firebaseDB, "reviews"));
-                allReviews = [];
-                snapshot.forEach(doc => {
-                    const r = doc.data();
-                    allReviews.push({ reviewId: doc.id, nombre: r.nombre || "Anónimo", estrellas: r.estrellas || 5, comentario: r.comentario || "", productoId: r.productoId });
+                const { collection, getDocs } = window.firebaseFunctions;
+                const snapshot = await getDocs(collection(window.firebaseDB, "vendedores"));
+                let html = "";
+                snapshot.forEach(docSnap => {
+                    const v = docSnap.data();
+                    html += `
+                        <tr class="hover:bg-zinc-900/40 border-b border-zinc-900">
+                            <td class="p-4 font-bold text-white">${v.nombre}</td>
+                            <td class="p-4 text-steel font-mono">+${v.telefono}</td>
+                            <td class="p-4 text-center"><span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-full">Activo</span></td>
+                            <td class="p-4 text-right">
+                                <button onclick="editVendedor('${docSnap.id}', '${v.nombre}', '${v.telefono}')" class="bg-zinc-800 hover:bg-zinc-700 text-white text-xs py-1.5 px-3 rounded-lg mr-2">Editar</button>
+                                <button onclick="deleteVendedor('${docSnap.id}')" class="bg-red-950/30 text-red-400 text-xs py-1.5 px-3 rounded-lg">Borrar</button>
+                            </td>
+                        </tr>`;
                 });
-                currentCommentsPage = 1;
-                currentReviewsFilteredList = null;
-                renderReviews();
-            } catch (error) { console.error("Error cargando opiniones:", error); }
-        }
-
-        window.nextCommentsPage = function() {
-            const list = currentReviewsFilteredList || allReviews;
-            const maxPage = Math.max(1, Math.ceil(list.length / commentsPerPage));
-            if (currentCommentsPage >= maxPage) return;
-            currentCommentsPage++;
-            renderReviews();
+                tbody.innerHTML = html || `<tr><td colspan="4" class="text-center py-8 text-steel">No hay vendedores registrados.</td></tr>`;
+            } catch (err) { console.error(err); }
         };
 
-        window.prevCommentsPage = function() {
-            if (currentCommentsPage <= 1) return;
-            currentCommentsPage--;
-            renderReviews();
+        window.openVendedorModal = function() {
+            document.getElementById("vendedorForm").reset();
+            document.getElementById("vendedorEditingId").value = "";
+            document.getElementById("vendedorModal").classList.remove("hidden");
+        };
+        window.editVendedor = function(id, nombre, telefono) {
+            document.getElementById("vendedorEditingId").value = id;
+            document.getElementById("vendedorNombre").value = nombre;
+            document.getElementById("vendedorTelefono").value = telefono;
+            document.getElementById("vendedorModal").classList.remove("hidden");
+        };
+        window.closeVendedorModal = function() { document.getElementById("vendedorModal").classList.add("hidden"); };
+
+        window.saveVendedor = async function(e) {
+            e.preventDefault();
+            const id = document.getElementById("vendedorEditingId").value;
+            const nombre = document.getElementById("vendedorNombre").value.trim();
+            const telefono = document.getElementById("vendedorTelefono").value.trim();
+            const { collection, addDoc, doc, setDoc } = window.firebaseFunctions;
+
+            if (id) await setDoc(doc(window.firebaseDB, "vendedores", id), { nombre, telefono });
+            else await addDoc(collection(window.firebaseDB, "vendedores"), { nombre, telefono });
+
+            closeVendedorModal();
+            loadVendedoresFromFirebase();
         };
 
-        function updateCommentsPaginationButtons(totalItems) {
-            const pageText = document.getElementById("currentCommentsPageText");
-            const btnPrev = document.getElementById("btnPrevCommentsPage");
-            const btnNext = document.getElementById("btnNextCommentsPage");
-            const maxPage = Math.max(1, Math.ceil(totalItems / commentsPerPage));
-
-            if (pageText) pageText.innerText = `${currentCommentsPage} / ${maxPage}`;
-            if (btnPrev) btnPrev.disabled = (currentCommentsPage === 1);
-            if (btnNext) btnNext.disabled = (currentCommentsPage >= maxPage);
-        }
+        window.deleteVendedor = async function(id) {
+            if (!confirm("¿Eliminar vendedor?")) return;
+            await deleteDoc(doc(window.firebaseDB, "vendedores", id));
+            loadVendedoresFromFirebase();
+        };
 
         window.loadDeliveriesFromFirebase = async function() {
             const tableBody = document.getElementById("deliveriesTableBody");
             if (!tableBody) return;
-
-            try {
-                const { collection, getDocs, query, orderBy, limit, startAfter } = window.firebaseFunctions;
-                let qConstraints = [orderBy("fecha", "desc")];
-
-                if (currentDeliveriesPage === 1) qConstraints.push(limit(deliveriesPerPage));
-                else {
-                    const previousPageEndDoc = deliveriesPagesHistory[currentDeliveriesPage - 2];
-                    qConstraints.push(startAfter(previousPageEndDoc), limit(deliveriesPerPage));
-                }
-
-                const q = query(collection(window.firebaseDB, "deliveries"), ...qConstraints);
-                const snapshot = await getDocs(q);
-                let deliveriesHTML = "";
-
-                snapshot.forEach(doc => {
-                    const d = doc.data();
-                    deliveriesHTML += `
-                        <tr class="hover:bg-zinc-900/40 border-b border-zinc-900">
-                            <td class="px-6 py-4"><img src="${normalizeImageUrl(d.image)}" class="w-12 h-12 rounded-lg object-cover border border-line"></td>
-                            <td class="px-6 py-4 font-bold text-white">${d.client || 'Sin nombre'}</td>
-                            <td class="px-6 py-4 text-steel">${d.product || 'No especificado'}</td>
-                            <td class="px-6 py-4"><span class="bg-yellow/10 text-yellow text-[10px] font-bold px-2.5 py-1 rounded-full border border-yellow/20"><i class="fa-solid fa-location-dot mr-1"></i>${d.location || 'Perú'}</span></td>
-                            <td class="px-6 py-4 text-right"><button onclick="window.deleteDelivery('${doc.id}')" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 text-xs py-1.5 px-3 rounded-lg transition-all"><i class="fa-solid fa-trash mr-1"></i>Eliminar</button></td>
-                        </tr>`;
-                });
-
-                tableBody.innerHTML = deliveriesHTML || `<tr><td colspan="5" class="text-center py-12 text-steel">No se encontraron trabajos o envíos registrados.</td></tr>`;
-                if (snapshot.docs.length > 0) deliveriesPagesHistory[currentDeliveriesPage - 1] = snapshot.docs[snapshot.docs.length - 1];
-                hasMoreDeliveries = snapshot.docs.length === deliveriesPerPage;
-                window.updateDeliveriesPaginationButtons();
-            } catch (error) { console.error("Error cargando envíos:", error); }
-        };
-
-        window.nextDeliveriesPage = async function() { if (!hasMoreDeliveries) return; currentDeliveriesPage++; await window.loadDeliveriesFromFirebase(); };
-        window.prevDeliveriesPage = async function() { if (currentDeliveriesPage <= 1) return; currentDeliveriesPage--; await window.loadDeliveriesFromFirebase(); };
-        window.updateDeliveriesPaginationButtons = function() {
-            document.getElementById("currentDeliveriesPageText").innerText = currentDeliveriesPage;
-            document.getElementById("btnPrevDeliveriesPage").disabled = (currentDeliveriesPage === 1);
-            document.getElementById("btnNextDeliveriesPage").disabled = !hasMoreDeliveries;
-        };
-
-        window.filterReviews = function() {
-            const query = document.getElementById('reviewsSearchInput').value.toLowerCase().trim();
-            if (!query) { currentReviewsFilteredList = null; currentCommentsPage = 1; renderReviews(); return; }
-            currentReviewsFilteredList = allReviews.filter(rev => rev.nombre.toLowerCase().includes(query) || rev.comentario.toLowerCase().includes(query));
-            currentCommentsPage = 1;
-            renderReviews();
-        }
-
-        function renderReviews() {
-            const container = document.getElementById('reviewsContainer');
-            if (!container) return;
-            container.innerHTML = "";
-
-            const fullList = currentReviewsFilteredList || allReviews;
-            if (fullList.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 text-steel">No se encontraron comentarios.</div>`;
-                updateCommentsPaginationButtons(0);
-                return;
-            }
-
-            const startIdx = (currentCommentsPage - 1) * commentsPerPage;
-            const list = fullList.slice(startIdx, startIdx + commentsPerPage);
-
-            list.forEach(rev => {
-                const associatedProduct = allProducts.find(p => p.id === rev.productoId);
-                const productName = associatedProduct ? associatedProduct.name : "PRODUCTO ELIMINADO";
-                const productCode = associatedProduct ? associatedProduct.code : "N/A";
-
-                const div = document.createElement('div');
-                div.className = "flex justify-between items-center p-4 bg-zinc-900/50 border border-line rounded-xl gap-4 w-full";
-                div.innerHTML = `
-                    <div class="space-y-1 text-left">
-                        <div class="flex items-center gap-2"><span class="text-xs font-bold text-white">${rev.nombre}</span><span class="text-yellow-500 text-xs">${"★".repeat(rev.estrellas)}</span></div>
-                        <p class="text-xs text-zinc-300 italic">"${rev.comentario}"</p>
-                        <p class="text-[10px] text-steel">En repuesto: <strong class="text-zinc-400 uppercase">${productName} (${productCode})</strong></p>
-                    </div>
-                    <button onclick="deleteReview('${rev.reviewId}')" class="bg-red-950/20 hover:bg-red-900/40 text-red-400 text-xs font-bold py-2 px-4 rounded-xl shrink-0"><i class="fa-solid fa-trash-can mr-1.5"></i> Borrar</button>
-                `;
-                container.appendChild(div);
+            const { collection, getDocs } = window.firebaseFunctions;
+            const snap = await getDocs(collection(window.firebaseDB, "deliveries"));
+            let html = "";
+            snap.forEach(docSnap => {
+                const d = docSnap.data();
+                html += `
+                    <tr class="hover:bg-zinc-900/40 border-b border-zinc-900">
+                        <td class="px-6 py-4"><img src="${normalizeImageUrl(d.image)}" class="w-12 h-12 rounded-lg object-cover"></td>
+                        <td class="px-6 py-4 font-bold text-white">${d.client}</td>
+                        <td class="px-6 py-4 text-steel">${d.product}</td>
+                        <td class="px-6 py-4"><span class="bg-yellow/10 text-yellow text-[10px] font-bold px-2.5 py-1 rounded-full">${d.location}</span></td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="editDelivery('${docSnap.id}', '${d.client}', '${d.product}', '${d.location}', '${d.image}')" class="bg-zinc-800 text-white text-xs py-1.5 px-3 rounded-lg mr-2">Editar</button>
+                            <button onclick="deleteDelivery('${docSnap.id}')" class="bg-red-500/10 text-red-400 text-xs py-1.5 px-3 rounded-lg">Eliminar</button>
+                        </td>
+                    </tr>`;
             });
-            updateCommentsPaginationButtons(fullList.length);
+            tableBody.innerHTML = html || `<tr><td colspan="5" class="text-center py-8 text-steel">Sin registros.</td></tr>`;
+        };
 
-            const recentContainer = document.getElementById('recentReviewsContainer');
-            if (recentContainer) {
-                recentContainer.innerHTML = allReviews.length === 0 ? `<p class="text-[10px] text-steel text-center py-4">Aún no hay comentarios.</p>` : allReviews.slice(-3).reverse().map(rev => `
-                    <div class="p-3 bg-zinc-900/40 border border-line rounded-xl space-y-1">
-                        <div class="flex items-center justify-between"><span class="text-[10px] font-bold text-white">${rev.nombre}</span><span class="text-yellow-500 text-[9px]">${"★".repeat(rev.estrellas)}</span></div>
-                        <p class="text-[11px] text-zinc-300 italic truncate">"${rev.comentario}"</p>
-                    </div>
-                `).join('');
+        window.openDeliveryModal = function() {
+            document.getElementById("deliveryForm").reset();
+            document.getElementById("deliveryEditingId").value = "";
+            document.getElementById("deliveryModal").classList.remove("hidden");
+        };
+        window.editDelivery = function(id, client, product, location, image) {
+            document.getElementById("deliveryEditingId").value = id;
+            document.getElementById("deliveryClient").value = client;
+            document.getElementById("deliveryProduct").value = product;
+            document.getElementById("deliveryLocation").value = location;
+            document.getElementById("deliveryImage").value = image;
+            document.getElementById("deliveryModal").classList.remove("hidden");
+        };
+        window.closeDeliveryModal = function() { document.getElementById("deliveryModal").classList.add("hidden"); };
+
+        window.saveDelivery = async function(e) {
+            e.preventDefault();
+            const id = document.getElementById("deliveryEditingId").value;
+            const client = document.getElementById("deliveryClient").value.trim();
+            const product = document.getElementById("deliveryProduct").value.trim();
+            const location = document.getElementById("deliveryLocation").value.trim();
+            const image = document.getElementById("deliveryImage").value.trim();
+            const { collection, addDoc, doc, setDoc, serverTimestamp } = window.firebaseFunctions;
+
+            if (id) await setDoc(doc(window.firebaseDB, "deliveries", id), { client, product, location, image, fecha: serverTimestamp() });
+            else await addDoc(collection(window.firebaseDB, "deliveries"), { client, product, location, image, fecha: serverTimestamp() });
+
+            closeDeliveryModal();
+            loadDeliveriesFromFirebase();
+        };
+
+        window.deleteDelivery = async function(id) {
+            if (!confirm("¿Eliminar?")) return;
+            await deleteDoc(doc(window.firebaseDB, "deliveries", id));
+            loadDeliveriesFromFirebase();
+        };
+
+        function normalizeImageUrl(url) {
+            if (!url) return 'https://placehold.co/400';
+            if (url.includes('drive.google.com')) {
+                const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) return `https://lh3.googleusercontent.com/d/${match[1]}`;
             }
-        }
-
-        window.deleteReview = async function(reviewId) {
-            if (!confirm('¿Eliminar comentario permanentemente?')) return;
-            const { doc, deleteDoc } = window.firebaseFunctions;
-            await deleteDoc(doc(window.firebaseDB, "reviews", reviewId));
-            await loadReviewsFromFirebase();
+            return url;
         }
 
         async function updateDashboardStats() {
-            let disponibles = 0, bajoStock = 0, agotados = 0, criticalItemsHTML = "";
-            const totalReal = allProducts.length;
-
+            let disponibles = 0, bajoStock = 0, agotados = 0;
             allProducts.forEach(p => {
                 let s = (p.stock || "Disponible").trim().toLowerCase();
                 if (s === "disponible") disponibles++;
-                else if (s === "bajo stock") {
-                    bajoStock++;
-                    criticalItemsHTML += `<div class="flex items-center justify-between p-3 bg-zinc-900/40 border border-line rounded-xl"><h4 class="text-xs font-bold text-white uppercase">${p.name}</h4><span class="text-[10px] bg-yellow/10 text-yellow px-2 py-1 rounded-lg font-bold">Bajo Stock</span></div>`;
-                } else if (s === "agotado") {
-                    agotados++;
-                    criticalItemsHTML += `<div class="flex items-center justify-between p-3 bg-zinc-900/40 border border-line rounded-xl"><h4 class="text-xs font-bold text-white uppercase">${p.name}</h4><span class="text-[10px] bg-red-500/10 text-red-400 px-2 py-1 rounded-lg font-bold">Agotado</span></div>`;
-                }
+                else if (s === "bajo stock") bajoStock++;
+                else if (s === "agotado") agotados++;
             });
-
-            document.getElementById('statTotal').textContent = totalReal;
+            document.getElementById('statTotal').textContent = allProducts.length;
             document.getElementById('statAvailable').textContent = disponibles;
             document.getElementById('statLow').textContent = bajoStock;
             document.getElementById('statOut').textContent = agotados;
-            document.getElementById('alertsCountBadge').innerText = `${bajoStock + agotados} Alertas`;
-            document.getElementById('criticalStockContainer').innerHTML = (bajoStock + agotados) === 0 ? `<div class="text-center py-8 text-green-500 font-semibold text-xs">¡Todo en orden! Stock suficiente.</div>` : criticalItemsHTML;
             updateStockChart(disponibles, bajoStock, agotados);
         }
-
-        window.importCatalogFromCSV = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            Papa.parse(file, {
-                header: false,
-                skipEmptyLines: true,
-                complete: async function(results) {
-                    const rows = results.data;
-                    if (rows.length <= 1) { alert("⚠️ Archivo vacío."); event.target.value = ''; return; }
-
-                    const validRows = rows.slice(1).filter(r => (r[0] || "").trim() !== "" && (r[1] || "").trim() !== "" && r[0].toLowerCase() !== "código");
-
-                    if (validRows.length === 0) { alert("⚠️ No se encontraron filas válidas."); event.target.value = ''; return; }
-                    if (!confirm(`Se importarán ${validRows.length} repuestos. ¿Deseas continuar?`)) { event.target.value = ''; return; }
-
-                    let count = 0;
-                    for (let row of validRows) {
-                        const code = (row[0] || "").trim();
-                        const name = (row[1] || "").trim();
-                        const rawCat = (row[2] || "desgaste").trim().toLowerCase();
-                        const rawBrand = (row[3] || "HTK").trim().toUpperCase();
-                        const specs = (row[4] || "").trim() || "Repuesto de alta resistencia.";
-
-                        const yaExiste = allProducts.some(p => p.code.toLowerCase() === code.toLowerCase());
-                        if (yaExiste) continue;
-
-                        const nuevoProd = {
-                            id: Date.now() + Math.floor(Math.random() * 10000),
-                            firebaseId: null,
-                            name: name,
-                            code: code,
-                            brand: rawBrand,
-                            category: rawCat.includes("rodaje") ? "rodaje" : rawCat.includes("filtracion") ? "filtracion" : "desgaste",
-                            image: "https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN",
-                            specs: specs,
-                            highlight: false,
-                            oferta: false,
-                            stock: "Disponible"
-                        };
-
-                        await saveProductFirebase(nuevoProd);
-                        allProducts.unshift(nuevoProd);
-                        count++;
-                    }
-
-                    alert(`✅ ¡Importación masiva exitosa! Nuevos agregados: ${count}`);
-                    event.target.value = '';
-                    await loadProductsFromFirebase();
-                }
-            });
-        };
 
         window.openAddModal = function() {
             document.getElementById('productForm').reset();
             document.getElementById('f_editingId').value = '';
-            document.getElementById('modalTitle').textContent = "Agregar Nuevo Repuesto";
             document.getElementById('productModal').classList.remove('hidden');
         };
 
         window.editProduct = function(id) {
             const prod = allProducts.find(p => p.id === id || p.firebaseId === id);
             if (!prod) return;
-
             document.getElementById('f_editingId').value = prod.id;
             document.getElementById('f_name').value = prod.name;
             document.getElementById('f_code').value = prod.code;
@@ -917,61 +802,39 @@
             document.getElementById('f_specs').value = prod.specs;
             document.getElementById('f_highlight').checked = !!prod.highlight;
             document.getElementById('f_oferta').checked = !!prod.oferta;
-
-            document.getElementById('modalTitle').textContent = "Editar Repuesto: " + prod.name;
             document.getElementById('productModal').classList.remove('hidden');
         }
 
         document.getElementById('productForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const editingId = document.getElementById('f_editingId').value;
-            const name = document.getElementById('f_name').value.trim();
-            const code = document.getElementById('f_code').value.trim();
-            const isOferta = document.getElementById('f_oferta').checked;
-            const isHighlight = document.getElementById('f_highlight').checked;
-
-            if (isOferta && allProducts.filter(p => p.oferta && String(p.id) !== editingId).length >= 5) { alert("⚠️ Límite de 5 ofertas alcanzado."); return; }
-            if (isHighlight && allProducts.filter(p => p.highlight && String(p.id) !== editingId).length >= 5) { alert("⚠️ Límite de 5 destacados alcanzado."); return; }
-
             let existing = editingId ? allProducts.find(p => String(p.id) === editingId) : null;
-
             const prod = {
                 id: existing ? existing.id : Date.now(),
                 firebaseId: existing ? existing.firebaseId : null,
-                name: name,
-                code: code,
+                name: document.getElementById('f_name').value.trim(),
+                code: document.getElementById('f_code').value.trim(),
                 brand: document.getElementById('f_brand').value.trim().toUpperCase() || 'GENÉRICO',
                 category: document.getElementById('f_category').value,
-                image: document.getElementById('f_imageUrl').value.trim() || 'https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN',
+                image: document.getElementById('f_imageUrl').value.trim() || 'https://placehold.co/400',
                 specs: document.getElementById('f_specs').value.trim(),
-                highlight: isHighlight,
-                oferta: isOferta,
+                highlight: document.getElementById('f_highlight').checked,
+                oferta: document.getElementById('f_oferta').checked,
                 stock: document.getElementById('f_stock').value
             };
-
-            await saveProductFirebase(prod);
+            const { collection, addDoc, doc, setDoc } = window.firebaseFunctions;
+            if (prod.firebaseId) await setDoc(doc(window.firebaseDB, "products", prod.firebaseId), prod);
+            else await addDoc(collection(window.firebaseDB, "products"), prod);
             document.getElementById('productModal').classList.add('hidden');
-            await loadProductsFromFirebase();
+            loadProductsFromFirebase();
         });
 
-        async function saveProductFirebase(producto) {
-            const { collection, addDoc, doc, setDoc } = window.firebaseFunctions;
-            let fbId = producto.firebaseId;
-            let datos = { ...producto };
-            delete datos.firebaseId;
-
-            if (fbId) await setDoc(doc(window.firebaseDB, "products", fbId), datos);
-            else await addDoc(collection(window.firebaseDB, "products"), datos);
-            localStorage.setItem('carrillo_cache_time', '0');
-        }
-
         window.deleteProduct = async function(id) {
-            if (!confirm('¿Eliminar repuesto permanentemente?')) return;
+            if (!confirm('¿Eliminar repuesto?')) return;
             const prod = allProducts.find(p => p.id === id || p.firebaseId === id);
             if (prod && prod.firebaseId) {
-                const { doc, deleteDoc } = window.firebaseFunctions;
                 await deleteDoc(doc(window.firebaseDB, "products", prod.firebaseId));
-                await loadProductsFromFirebase();
+                loadProductsFromFirebase();
             }
         };
 
@@ -987,39 +850,6 @@
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
-        window.openDeliveryModal = function() { document.getElementById("deliveryForm").reset(); document.getElementById("deliveryModal").classList.remove("hidden"); };
-        window.closeDeliveryModal = function() { document.getElementById("deliveryModal").classList.add("hidden"); };
-        window.saveDelivery = async function(e) {
-            e.preventDefault();
-            const { collection, addDoc, serverTimestamp } = window.firebaseFunctions;
-            await addDoc(collection(window.firebaseDB, "deliveries"), {
-                client: document.getElementById("deliveryClient").value.trim(),
-                product: document.getElementById("deliveryProduct").value.trim(),
-                location: document.getElementById("deliveryLocation").value.trim(),
-                image: document.getElementById("deliveryImage").value.trim(),
-                fecha: serverTimestamp()
-            });
-            window.closeDeliveryModal();
-            await window.loadDeliveriesFromFirebase();
-        };
-        window.deleteDelivery = async function(id) {
-            if (!confirm("¿Eliminar registro?")) return;
-            const { doc, deleteDoc } = window.firebaseFunctions;
-            await deleteDoc(doc(window.firebaseDB, "deliveries", id));
-            await window.loadDeliveriesFromFirebase();
-        };
-        function normalizeImageUrl(url) {
-            if (!url) return 'https://placehold.co/400x400/151517/FFC72C?text=SIN+IMAGEN';
-            if (url.includes('drive.google.com')) {
-                const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) return `https://lh3.googleusercontent.com/d/${match[1]}`;
-            }
-            return url;
-        }
-
-        // =========================================================
-        // LÓGICA DE RECOMENDADOS (DESTACADOS)
-        // =========================================================
         window.renderRecommendedList = function() {
             const tbody = document.getElementById('recommendedTableBody');
             if (!tbody) return;
@@ -1028,56 +858,40 @@
                 <tr class="hover:bg-zinc-900/40">
                     <td class="p-4 font-bold text-white">${p.name} <br> <span class="text-steel font-normal">Cód: ${p.code}</span></td>
                     <td class="p-4"><span class="text-green-500 font-bold text-[10px] bg-green-500/10 px-2 py-1 rounded-full">Destacado</span></td>
-                    <td class="p-4 text-right"><button onclick="toggleHighlight(${p.id}, false)" class="text-red-400 hover:text-white text-xs font-bold"><i class="fa-solid fa-trash mr-1"></i> Eliminar</button></td>
+                    <td class="p-4 text-right"><button onclick="toggleHighlight(${p.id}, false)" class="text-red-400 text-xs font-bold">Eliminar</button></td>
                 </tr>
-            `).join('') : `<tr><td colspan="3" class="p-4 text-steel text-center text-xs">No hay productos destacados en la vitrina.</td></tr>`;
+            `).join('') : `<tr><td colspan="3" class="p-4 text-steel text-center text-xs">No hay productos destacados.</td></tr>`;
         };
 
         window.renderRecommendedInventory = function() {
             const tbody = document.getElementById('inventoryForHighlightBody');
             if(!tbody) return;
             const query = document.getElementById('recSearchInput').value.toLowerCase();
-            let disponibles = allProducts.filter(p => p.highlight === false && ((p.name || "").toLowerCase().includes(query) || (p.code || "").toLowerCase().includes(query)));
-            disponibles.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-            
-            const start = (currentPage - 1) * perPage;
-            const paginated = disponibles.slice(start, start + perPage);
-
-            tbody.innerHTML = paginated.length > 0 ? paginated.map(p => `
+            let disponibles = allProducts.filter(p => p.highlight === false && (p.name.toLowerCase().includes(query) || p.code.toLowerCase().includes(query)));
+            tbody.innerHTML = disponibles.length > 0 ? disponibles.slice(0, 5).map(p => `
                 <tr class="hover:bg-zinc-900/40">
-                    <td class="p-4 font-bold text-white">${p.name || 'Sin nombre'}</td>
-                    <td class="p-4 text-steel">Cód: ${p.code || 'S/N'}</td>
-                    <td class="p-4 text-right"><button onclick="toggleHighlight(${p.id}, true)" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-1.5 px-3 rounded-lg text-xs">+ Añadir</button></td>
+                    <td class="p-4 font-bold text-white">${p.name}</td>
+                    <td class="p-4 text-steel">Cód: ${p.code}</td>
+                    <td class="p-4 text-right"><button onclick="toggleHighlight(${p.id}, true)" class="bg-yellow text-black font-bold py-1.5 px-3 rounded-lg text-xs">+ Añadir</button></td>
                 </tr>
-            `).join('') : `<tr><td colspan="3" class="p-4 text-center text-steel">No hay más productos disponibles.</td></tr>`;
-            document.getElementById('currentPageText').innerText = currentPage;
+            `).join('') : `<tr><td colspan="3" class="p-4 text-center text-steel">No hay más productos.</td></tr>`;
         };
-
-        window.changePage = function(dir) { currentPage += dir; if(currentPage < 1) currentPage = 1; renderRecommendedInventory(); };
 
         window.toggleHighlight = async function(id, status) {
             const prod = allProducts.find(p => p.id === id);
             if (!prod) return;
-            if (status && allProducts.filter(p => p.highlight).length >= 5) { alert("⚠️ Límite de 5 destacados alcanzado."); return; }
+            if (status && allProducts.filter(p => p.highlight).length >= 5) { alert("⚠️ Límite de 5 destacados."); return; }
             prod.highlight = status;
             await saveProductFirebase(prod);
-            renderRecommendedList();
-            renderRecommendedInventory();
-            renderAdminTableLocally();
+            loadProductsFromFirebase();
         };
 
         window.clearAllHighlights = async function() {
-            if (!confirm("¿Quitar destacado a TODOS los productos?")) return;
+            if (!confirm("¿Quitar destacados?")) return;
             for (let p of allProducts.filter(p => p.highlight)) { p.highlight = false; await saveProductFirebase(p); }
-            renderRecommendedList();
-            renderRecommendedInventory();
-            renderAdminTableLocally();
-            alert("Vitrina limpiada correctamente.");
+            loadProductsFromFirebase();
         };
 
-        // =========================================================
-        // LÓGICA DE OFERTAS (IDÉNTICA A RECOMENDADOS)
-        // =========================================================
         window.renderOfertasList = function() {
             const tbody = document.getElementById('ofertasTableBody');
             if (!tbody) return;
@@ -1086,51 +900,38 @@
                 <tr class="hover:bg-zinc-900/40">
                     <td class="p-4 font-bold text-white">${p.name} <br> <span class="text-steel font-normal">Cód: ${p.code}</span></td>
                     <td class="p-4"><span class="text-red-400 font-bold text-[10px] bg-red-500/10 px-2 py-1 rounded-full">Oferta</span></td>
-                    <td class="p-4 text-right"><button onclick="toggleOferta(${p.id}, false)" class="text-red-400 hover:text-white text-xs font-bold"><i class="fa-solid fa-trash mr-1"></i> Eliminar</button></td>
+                    <td class="p-4 text-right"><button onclick="toggleOferta(${p.id}, false)" class="text-red-400 text-xs font-bold">Eliminar</button></td>
                 </tr>
-            `).join('') : `<tr><td colspan="3" class="p-4 text-steel text-center text-xs">No hay productos en oferta en la vitrina.</td></tr>`;
+            `).join('') : `<tr><td colspan="3" class="p-4 text-steel text-center text-xs">No hay ofertas.</td></tr>`;
         };
 
         window.renderOfertaInventory = function() {
             const tbody = document.getElementById('inventoryForOfertaBody');
             if(!tbody) return;
             const query = document.getElementById('ofertaSearchInput').value.toLowerCase();
-            let disponibles = allProducts.filter(p => p.oferta === false && ((p.name || "").toLowerCase().includes(query) || (p.code || "").toLowerCase().includes(query)));
-            disponibles.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-            
-            const start = (currentOfertaPage - 1) * perPage;
-            const paginated = disponibles.slice(start, start + perPage);
-
-            tbody.innerHTML = paginated.length > 0 ? paginated.map(p => `
+            let disponibles = allProducts.filter(p => p.oferta === false && (p.name.toLowerCase().includes(query) || p.code.toLowerCase().includes(query)));
+            tbody.innerHTML = disponibles.length > 0 ? disponibles.slice(0, 5).map(p => `
                 <tr class="hover:bg-zinc-900/40">
-                    <td class="p-4 font-bold text-white">${p.name || 'Sin nombre'}</td>
-                    <td class="p-4 text-steel">Cód: ${p.code || 'S/N'}</td>
-                    <td class="p-4 text-right"><button onclick="toggleOferta(${p.id}, true)" class="bg-yellow hover:bg-yellow/90 text-black font-bold py-1.5 px-3 rounded-lg text-xs">+ Añadir</button></td>
+                    <td class="p-4 font-bold text-white">${p.name}</td>
+                    <td class="p-4 text-steel">Cód: ${p.code}</td>
+                    <td class="p-4 text-right"><button onclick="toggleOferta(${p.id}, true)" class="bg-yellow text-black font-bold py-1.5 px-3 rounded-lg text-xs">+ Añadir</button></td>
                 </tr>
-            `).join('') : `<tr><td colspan="3" class="p-4 text-center text-steel">No hay más productos disponibles.</td></tr>`;
-            document.getElementById('currentOfertaPageText').innerText = currentOfertaPage;
+            `).join('') : `<tr><td colspan="3" class="p-4 text-center text-steel">No hay más productos.</td></tr>`;
         };
-
-        window.changeOfertaPage = function(dir) { currentOfertaPage += dir; if(currentOfertaPage < 1) currentOfertaPage = 1; renderOfertaInventory(); };
 
         window.toggleOferta = async function(id, status) {
             const prod = allProducts.find(p => p.id === id);
             if (!prod) return;
-            if (status && allProducts.filter(p => p.oferta).length >= 5) { alert("⚠️ Límite de 5 ofertas alcanzado."); return; }
+            if (status && allProducts.filter(p => p.oferta).length >= 5) { alert("⚠️ Límite de 5 ofertas."); return; }
             prod.oferta = status;
             await saveProductFirebase(prod);
-            renderOfertasList();
-            renderOfertaInventory();
-            renderAdminTableLocally();
+            loadProductsFromFirebase();
         };
 
         window.clearAllOfertas = async function() {
-            if (!confirm("¿Quitar oferta a TODOS los productos?")) return;
+            if (!confirm("¿Quitar ofertas?")) return;
             for (let p of allProducts.filter(p => p.oferta)) { p.oferta = false; await saveProductFirebase(p); }
-            renderOfertasList();
-            renderOfertaInventory();
-            renderAdminTableLocally();
-            alert("Vitrina de ofertas limpiada correctamente.");
+            loadProductsFromFirebase();
         };
     </script>
 </body>
