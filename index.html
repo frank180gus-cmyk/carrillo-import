@@ -49,6 +49,9 @@
     background-size: cover;
     color: #ffffff !important;
   }
+  body.no-scroll {
+    overflow: hidden;
+  }
   ::selection { background:#FFC72C; color:#0a0a0b; }
 
   .plate {
@@ -122,7 +125,7 @@
     <!-- FONDO OSCURO PARA MÓVIL CUANDO EL MENÚ ESTÁ ABIERTO -->
     <div id="sidebarOverlay" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/70 z-30 hidden md:hidden transition-opacity"></div>
 
-    <!-- SIDEBAR IZQUIERDA CON EL PREMIO Y EL TROFEO EN MOVIMIENTO -->
+    <!-- SIDEBAR IZQUIERDA (FIJA Y BLOQUEADA PARA EVITAR MOVER EL FONDO) -->
     <aside id="sidebar" class="fixed md:sticky top-0 h-screen w-72 bg-panel border-r border-line p-5 shrink-0 z-40 overflow-y-auto custom-scrollbar transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col justify-between">
         <div>
             <div class="flex items-center justify-between mb-6 pb-4 border-b border-line">
@@ -301,7 +304,7 @@
                 </div>
             </div>
 
-            <!-- VISTA 3: SISTEMA DE TRABAJO (CON LAS RUTAS APUNTANDO A LA CARPETA Imagenes/) -->
+            <!-- VISTA 3: SISTEMA DE TRABAJO -->
             <div id="view-sistema" class="hidden space-y-8 text-white">
                 <div class="border-b border-line pb-4">
                     <span class="text-[10px] bg-yellow/10 text-yellow font-extrabold px-3 py-1 rounded-full uppercase tracking-widest border border-yellow/20">Especialidades Carrillo Import</span>
@@ -309,7 +312,7 @@
                     <p class="text-xs text-steel mt-1">Conoce las marcas con las que trabajamos y nuestras especialidades de repuestos oficiales.</p>
                 </div>
 
-                <!-- 🌟 CARRUSEL DESLIZABLE DE LAS 20 FOTOS -->
+                <!-- CARRUSEL DESLIZABLE DE 20 FOTOS -->
                 <div class="bg-panel border border-line p-6 rounded-2xl text-center space-y-4 shadow-xl">
                     <h3 class="font-display text-base tracking-wide uppercase text-yellow">Galería de Componentes Importados</h3>
                     <p class="text-xs text-steel">Haz clic y arrastra con el mouse (o desliza con el dedo) para explorar los componentes.</p>
@@ -964,11 +967,13 @@ window.closeModal = function() {
     document.getElementById('productModal').classList.add('hidden');
 };
 
+// 📱 CONTROLADOR MEJORADO DEL MENÚ MÓVIL (BLOQUEA EL SCROLL DE LA PÁGINA TRASERA)
 window.toggleMobileSidebar = function() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
     sidebar.classList.toggle('-translate-x-full');
     overlay.classList.toggle('hidden');
+    document.body.classList.toggle('no-scroll');
 };
 
 async function loadClientGalleryInPublicSite() {
