@@ -301,7 +301,7 @@
                 </div>
             </div>
 
-            <!-- VISTA 3: SISTEMA DE TRABAJO -->
+            <!-- VISTA 3: SISTEMA DE TRABAJO (CON LAS 20 FOTOS LIMPIAS Y SIN DUPLICADOS) -->
             <div id="view-sistema" class="hidden space-y-8 text-white">
                 <div class="border-b border-line pb-4">
                     <span class="text-[10px] bg-yellow/10 text-yellow font-extrabold px-3 py-1 rounded-full uppercase tracking-widest border border-yellow/20">Especialidades Carrillo Import</span>
@@ -309,7 +309,7 @@
                     <p class="text-xs text-steel mt-1">Conoce las marcas con las que trabajamos y nuestras especialidades de repuestos oficiales.</p>
                 </div>
 
-                <!-- CARRUSEL DESLIZABLE DE 20 FOTOS -->
+                <!-- 🌟 CARRUSEL DESLIZABLE DE LAS 20 FOTOS EXACTAS -->
                 <div class="bg-panel border border-line p-6 rounded-2xl text-center space-y-4 shadow-xl">
                     <h3 class="font-display text-base tracking-wide uppercase text-yellow">Galería de Componentes Importados</h3>
                     <p class="text-xs text-steel">Haz clic y arrastra con el mouse (o desliza con el dedo) para explorar los componentes.</p>
@@ -1016,7 +1016,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         slider.addEventListener('mouseup', () => {
             isDown = false;
-            slider.classList.remove('active');
+            slider.classList.remove('active*/');
         });
         slider.addEventListener('mousemove', (e) => {
             if(!isDown) return;
